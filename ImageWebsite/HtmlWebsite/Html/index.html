@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat vs Dog Classifier</title>
+  <link rel="stylesheet" href="../CSS/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="plot-container">
+    <h1>Training Results</h1>
+
+    <!-- Two graphs left-right -->
+    <div class="charts">
+      <div class="chart-box">
+        <h2>Model Loss</h2>
+        <img src="AIModel/static/plots/loss.png" alt="Loss Plot">
+      </div>
+      <div class="chart-box">
+        <h2>Model Accuracy</h2>
+        <img src="AIModel/static/plots/accuracy.png" alt="Accuracy Plot">
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload form BELOW graphs -->
+  <div class="upload-section">
+    <div class="card">
+      <h1 class="title">📷 Upload an Image</h1>
+      <form method="post" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
+        <div class="preview" id="preview"></div>
+        <button type="submit">🔍 Upload & Predict</button>
+      </form>
+      <div class="prediction">
+        {{result}}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function previewImage(event) {
+      const preview = document.getElementById("preview");
+      preview.innerHTML = "";
+      const file = event.target.files[0];
+      if (file) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.onload = () => URL.revokeObjectURL(img.src);
+        preview.appendChild(img);
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+Django
+pyttsx3
+psutil
+pyautogui
+win10toast
+pywin32
+python-dotenv
+pytesseract
+pillow
+pyperclip
+kagglehub
+scikit-learn
+numpy
+pandas
+seaborn
+gradio
+xgboost
