@@ -18,21 +18,27 @@ Chocolatey  download \
 GitHub CLI (gh) download \
 choco install gh \
 gh auth login \
+git config user.name "pragyasavarna" \
+git config user.email "savarnapragya181751@gmail.com" \
+git config user.email \
+git config user.name \
 git clone https://github.com/pragyasavarna/PragyaPythonProject.git \
 git remote -v \
 git init \
 git status \
+git add . \
 git add filename \
 git reset filename \
 git config --global user.email "email_id" \
 git config --global push.autoSetupRemote true \
 git commit -m "First Commit" \
+git push -u origin main \
 git push -u origin \
 git pull origin \
 git fetch \
 git stash \
 git stash pop \
-git switch main
+git switch main \
 
 # Python Command
 Run in Pycharm terminal for checking path of Python environment in Terminal \
