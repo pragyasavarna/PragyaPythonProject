@@ -1,0 +1,37 @@
+name: aiassistant
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyter
+  - notebook
+  - tensorflow
+  - keras
+  - fastapi
+  - uvicorn
+  - django
+  - sqlalchemy
+  - alembic
+  - requests
+  - beautifulsoup4
+  - pillow
+  - pyyaml
+  - tqdm
+  - pip:
+      - gradio
+      - djangorestframework
+      - rich
+      - python-dotenv
+      - sounddevice
+      - vosk
+      - pyttsx3
+      - pytesseract
+      - opencv-python
