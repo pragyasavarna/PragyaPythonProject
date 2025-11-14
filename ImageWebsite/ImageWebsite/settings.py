@@ -72,6 +72,8 @@ TEMPLATES = [
         },
     },
 ]
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "savarnapragya181751@gmail.com"
 
 WSGI_APPLICATION = "ImageWebsite.wsgi.application"
 
