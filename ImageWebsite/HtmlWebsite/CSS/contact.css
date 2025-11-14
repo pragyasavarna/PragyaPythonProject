@@ -1,0 +1,60 @@
+/* Contact Us Page */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid var(--cyan);
+    background: rgba(255,255,255,0.1);
+    color: var(--text-light);
+    outline: none;
+  }
+
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder {
+    color: #ccc;
+  }
+
+  .btn-submit {
+    padding: 12px;
+    background: var(--cyan);
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    transition: 0.3s;
+  }
+
+  .btn-submit:hover {
+    background: #00a3cc;
+  }
+  .form-group label {
+  margin-bottom: 6px;   /* space between label and input */
+  display: block;       /* ensures margin works properly */
+  }
+
+  @media (max-width: 768px) {
+  .contact-form {
+    gap: 8px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+  }
+  }

@@ -1,157 +1,170 @@
+/* ===========================
+   🔹 GLOBAL STYLES
+=========================== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
+:root {
+  --navy-1: #050612;
+  --navy-2: #0b0f2a;
+  --purple: #120036;
+  --cyan: #00c8ff;
+  --magenta: #ff43c5;
+  --text-light: #f1e5d8;
+  --text-dim: #cccccc;
+}
+
+html, body {
+  height: 100%;
+  color: var(--text-light);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ===========================
+   🔹 DYNAMIC BACKGROUND
+=========================== */
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background: url('../Image/b.png') no-repeat;
-    background-size: cover;
-    background-position: center;
-    padding: 20px;
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  overflow-x: hidden;
+  color: var(--text-light);
 }
 
-h1, h2 {
-    color: #333;
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* ---------- Training Results & Plots ---------- */
-.plot-container {
-    text-align: center;
-    margin: 30px auto;
-    max-width: 1000px;
-    width: 100%;
+/* Animated floating neon layer */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(0,200,255,0.2),
+    rgba(255,67,197,0.2),
+    rgba(0,200,255,0.2),
+    rgba(255,67,197,0.2)
+  );
+  animation: rotateGlow 25s linear infinite;
+  opacity: 0.25;
+  z-index: 0;
 }
 
-/* Two graphs left-to-right */
-.charts {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;   /* stack only on small screen */
+@keyframes rotateGlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.chart-box {
-    flex: 1 1 45%;
-    background: rgba(255, 255, 255, 0.85);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    text-align: center;
+/* Bring content above animation */
+header, .container, footer {
+  position: relative;
+  z-index: 2;
 }
 
-.chart-box h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #3a3ac9;
-    font-weight: 600;
+
+
+/* ===========================
+   🔹 CONTAINER & SECTIONS
+=========================== */
+.container {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 20px;
 }
 
-.chart-box img {
-    width: 100%;
-    max-height: 250px;
-    object-fit: contain;
-    border-radius: 6px;
+.section {
+  background: rgba(255,255,255,0.05);
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 40px;
+  box-shadow: 0 0 15px rgba(0,234,255,0.15);
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ---------- Upload Section ---------- */
-.upload-section {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-    width: 100%;
+.section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(0,234,255,0.25);
 }
 
-.card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    padding: 25px;
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-    transition: transform 0.3s ease;
+.section h2, .section h3 {
+  color: var(--cyan);
+  margin-bottom: 15px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
+ul {
+  padding-left: 20px;
+  color: #ddd;
+  line-height: 1.8;
 }
 
-/* Upload form */
-.upload-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* ===========================
+   🔹 PROJECTS SECTION (your hover style)
+=========================== */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin: 60px auto;
+  max-width: 1000px;
+  position: relative;
+  z-index: 2;
 }
 
-.upload-form input[type="file"] {
-    margin: 10px 0;
-    padding: 12px;
-    border: 2px dashed #6c63ff;
-    border-radius: 10px;
-    background: #fafafa;
-    cursor: pointer;
-    width: 100%;
-    max-width: 280px;
+.project-card {
+  background: rgba(255,255,255,0.07);
+  padding: 25px;
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(0,200,255,0.1);
 }
 
-.upload-form button {
-    margin-top: 15px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 25px;
-    background: #6c63ff;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0,200,255,0.3);
 }
 
-.upload-form button:hover {
-    background: #5348c7;
+.project-card h3 {
+  color: var(--cyan);
+  margin-bottom: 10px;
+  font-size: 1.2rem;
 }
 
-/* Prediction text */
-.prediction {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #1d2b64;
+.project-card p {
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .charts {
-        flex-direction: column;
-        align-items: center;
-    }
-    .chart-box {
-        flex: 1 1 100%;
-        max-width: 90%;
-    }
-}
-/* Preview image inside card */
-.preview {
-    margin-top: 15px;
-    width: 100%;
-    max-width: 300px;  /* same as card width */
-    height: auto;
-    overflow: hidden;
-    border-radius: 10px;
+/* ===========================
+   🔹 TECH TAGS
+=========================== */
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.preview img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: block;
-    border-radius: 10px;
-    margin: 0 auto;
+.tech span {
+  background: #00eaff25;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  color: var(--cyan);
+  border: 1px solid #00eaff50;
 }

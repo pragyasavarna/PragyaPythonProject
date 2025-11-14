@@ -49,12 +49,29 @@ pip install Django==4.2.4 \
 python -m django --version \
 django-admin startproject MyWebsite \
 cd MyWebsite \
+1. When creating a NEW Django app + NEW models \
 python manage.py startapp first_app \
-python manage.py runserver \
+python manage.py makemigrations \
 python manage.py migrate \
-python manage.py sqlmigrate first_app 0001 \
-python manage.py makemigrations first_app \
 python manage.py createsuperuser \
+python manage.py runserver \
+2. When making CHANGES to existing models \
+python manage.py makemigrations \
+python manage.py migrate \
+python manage.py runserver \
+3. To SEE the SQL table in Django \
+python manage.py sqlmigrate first_app 0001 \
+4. delete all data but keep tables \
+python manage.py flush \
+5. DELETE ALL TABLES \
+Step 1: Delete the entire database file :- del db.sqlite3 \
+Step 2: Delete migration files :- \
+Get-ChildItem -Recurse -Include *.py -Path *\migrations | Where-Object { $_.Name -ne "__init__.py" } | Remove-Item \
+Step 3: Recreate database tables
+python manage.py makemigrations \
+python manage.py migrate \
+python manage.py createsuperuser \
+python manage.py runserver \
 
 # Conda Command
 conda info --envs \

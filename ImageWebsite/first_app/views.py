@@ -2,11 +2,16 @@ import os
 
 import numpy as np
 from PIL import Image
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render, redirect
+from django.template import loader
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.middleware.csrf import get_token
 from django.views.static import serve
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from tensorflow.keras.preprocessing import image
+from .models import UserAccount, ContactMessage
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -50,11 +55,14 @@ def serve_html(request, html_file='index.html'):  # default to index.html
 
     # Check if file exists
     if os.path.exists(html_path):
-        with open(html_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        return HttpResponse(content)
+        # with open(html_path, 'r', encoding='utf-8') as f:
+        #     content = f.read()
+        # return HttpResponse(content)
+        template = loader.get_template(html_file)
+        return HttpResponse(template.render({}, request))
     else:
         return HttpResponse(f"HTML file not found: {html_file}", status=404)
+
 
 def predict_image(img_file):
     img = Image.open(img_file)
@@ -66,47 +74,85 @@ def predict_image(img_file):
 
 @csrf_exempt
 def upload_and_predict(request):
-    # Always load your external HTML file
-    html_path = os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Html/', "index.html")
-    if not os.path.exists(html_path):
-        return HttpResponse("HTML file not found", status=404)
-
-    with open(html_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    if request.method == "POST" and "image" in request.FILES:
-        img_file = request.FILES["image"]
-        prediction = predict_image(img_file)
-        content = content.replace("{{result}}", f"<h3>Prediction: {prediction}</h3>")
-    else:
-        content = content.replace("{{result}}", "")
-
-        # Force CSRF cookie to be created
-
-    response = HttpResponse(content)
-    return response
-
-
-@csrf_exempt
-def upload_and_predict1(request):
-    # Debug logs
     print("COOKIES:", request.COOKIES)
     print("POST csrf:", request.POST.get('csrfmiddlewaretoken'))
-
     # Path to your HTML file
-    html_path = os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Html/', "index.html")
+    html_path = os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Html/', "project.html")
     if not os.path.exists(html_path):
         return HttpResponse("HTML file not found", status=404)
-
-    with open(html_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    context = {}  # Variables for the template
 
     if request.method == "POST" and request.FILES.get("image"):
         img_file = request.FILES["image"]
         prediction = predict_image(img_file)
-        content = content.replace("{{result}}", f"<h3>Prediction: {prediction}</h3>")
+        context["result"] = f"Prediction: {prediction}"
     else:
-        # No result placeholder if no POST
-        content = content.replace("{{result}}", "")
+        context["result"] = ""
 
-    return HttpResponse(content)
+    # The path here should be relative to your Django TEMPLATES settings
+    # e.g., 'project.html' should be inside a templates directory
+    return render(request, "project.html", context)
+
+
+
+def contact_page(request):
+    success = False
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        )
+
+        success = True
+
+    return render(request, "contact.html", {"success": success})
+
+def register_page(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        if UserAccount.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
+            return redirect("register")
+
+        user = UserAccount.objects.create_user(
+            email=email,
+            name=name,
+            password=password
+        )
+        messages.success(request, "Account created successfully!")
+        return redirect("login")
+
+    return render(request, "register.html")
+
+
+def login_page(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        user = authenticate(request, email=email, password=password)
+
+        if user is None:
+            messages.error(request, "Invalid email or password.")
+            return redirect("login")
+
+        login(request, user)
+        return redirect("/")
+
+    return render(request, "login.html")
+
+
+def logout_page(request):
+    logout(request)
+    return redirect("/")

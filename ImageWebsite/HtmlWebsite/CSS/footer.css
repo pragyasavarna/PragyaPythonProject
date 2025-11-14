@@ -1,0 +1,11 @@
+footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
+  border-top: 1px solid rgba(0, 200, 255, 0.2);
+  box-shadow: 0 -5px 25px rgba(0, 200, 255, 0.1);
+  font-size: 0.95rem;
+  color: var(--text-light);
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(0, 200, 255, 0.4);
+}

@@ -1,17 +1,29 @@
-const wrapper = document.querySelector('.wrapper');
-const loginLink = document.querySelector('.login-link');
-const registerLink = document.querySelector('.register-link');
-const btnpopup = document.querySelector('.btnlogin-popup');
+document.addEventListener("DOMContentLoaded", function () {
+  const currentPath = window.location.pathname;
+  const navLinks = document.querySelectorAll("nav a");
 
+  navLinks.forEach(link => {
+    const linkPath = link.getAttribute("href");
 
-registerLink.addEventListener('click', ()=>{
-    wrapper.classList.add('active');
+    if (
+      (currentPath === "/" && linkPath === "/") ||
+      (currentPath.startsWith(linkPath) && linkPath !== "/")
+    ) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
 });
 
-loginLink.addEventListener('click', ()=>{
-    wrapper.classList.remove('active');
-});
-
-btnpopup.addEventListener('click', ()=>{
-    wrapper.classList.add('active-popup');
-});
+function previewImage(event) {
+      const preview = document.getElementById("preview");
+      preview.innerHTML = "";
+      const file = event.target.files[0];
+      if (file) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.onload = () => URL.revokeObjectURL(img.src);
+        preview.appendChild(img);
+      }
+    }

@@ -1,0 +1,125 @@
+/* ---------- Page Container ---------- */
+
+.auth-container {
+  max-width: 450px;
+  margin: 60px auto;
+  background: rgba(255,255,255,0.07);
+  padding: 30px;
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(0, 200, 255, 0.15),
+              0 0 30px rgba(255, 67, 197, 0.15);
+  color: var(--text-light);
+}
+
+/* ---------- Headers ---------- */
+
+.auth-header h2 {
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 1.8rem;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.auth-header p {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #ddd;
+}
+
+/* ---------- Form ---------- */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #eee;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--cyan);
+  background: rgba(255,255,255,0.1);
+  color: var(--text-light);
+  outline: none;
+}
+
+.auth-form input::placeholder {
+  color: #bbb;
+}
+
+/* ---------- Button ---------- */
+
+.btn-submit {
+  padding: 12px;
+  background: var(--cyan);
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: black;
+  transition: 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #00a3cc;
+}
+
+/* ---------- Error Message ---------- */
+
+.error-msg {
+  color: #ff6b6b;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* ---------- Switch Link ---------- */
+
+.switch-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.switch-link a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .auth-container {
+    margin: 40px 15px;
+    padding: 25px;
+  }
+
+  .auth-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .auth-form input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cognilume | MCA Projects{% endblock %}</title>
+    <!-- Default / Global CSS -->
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <!-- Dynamic CSS Block -->
+    {% block extra_css %}
+    <!-- Child templates will insert their CSS here -->
+    {% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/Image/logo.svg">
+
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <img src="/Image/logo.jpeg" alt="Cognilume Logo" class="logo" />
+    <h1>Cognilume :- Illuminating Vision Through Intelligence</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/project/">Projects</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        {% if user.is_authenticated %}
+        <span style="color: var(--cyan); margin-left: 20px;">
+          Welcome, {{ user.name }}!
+        </span>
+        <a href="/logout/">Logout</a>
+        {% else %}
+        <a href="/login/">Login</a>
+        <a href="/register/">Register</a>
+        {% endif %}
+
+    </nav>
+  </header>
+
+  <!-- ===== CONTENT SECTION ===== -->
+  <main>
+      {% block content %}
+      <!-- Child pages will load here -->
+      {% endblock %}
+  </main>
+
+  <!-- Common Footer -->
+  <footer>
+    © 2025 MCA Final Year Project | Developed by <strong>Cognilume</strong>
+  </footer>
+<script src="../JavaScript/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "master.html" %}
+{% block title %}Project | Cognilume{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="../CSS/project.css">
+{% endblock %}
+{% block content %}
+
+  <!-- ===== CAT VS DOG CLASSIFIER SECTION ===== -->
+  <section class="section classifier-section" id="classifier">
+    <h2>Cat vs Dog Classifier</h2>
+
+    <div class="plot-container">
+      <h3>Training Results</h3>
+
+      <!-- Charts side by side -->
+      <div class="charts">
+        <div class="chart-box">
+          <h4>Model Loss</h4>
+          <img src="/AIModel/static/plots/loss.png" alt="Loss Plot">
+        </div>
+        <div class="chart-box">
+          <h4>Model Accuracy</h4>
+          <img src="/AIModel/static/plots/accuracy.png" alt="Accuracy Plot">
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload form -->
+    <div class="upload-section">
+      <div class="card">
+        <h3 class="title">📷 Upload an Image</h3>
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+          <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
+          <div class="preview" id="preview"></div>
+          <button type="submit">🔍 Upload & Predict</button>
+        </form>
+        <div class="prediction">
+          {{result}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
