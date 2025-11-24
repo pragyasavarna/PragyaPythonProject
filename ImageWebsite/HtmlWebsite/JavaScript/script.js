@@ -17,13 +17,54 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function previewImage(event) {
-      const preview = document.getElementById("preview");
-      preview.innerHTML = "";
-      const file = event.target.files[0];
-      if (file) {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.onload = () => URL.revokeObjectURL(img.src);
-        preview.appendChild(img);
-      }
+  const preview = document.getElementById("preview");
+  const errorMessage = document.getElementById("error-message");
+
+  preview.innerHTML = "";
+  if (errorMessage) {
+    errorMessage.style.display = "none";
+    errorMessage.textContent = "";
+  }
+
+  const file = event.target.files[0];
+
+  if (file) {
+    console.log("File selected:", file.name);
+    console.log("File type:", file.type);
+
+    // robust validation: check mime type and extension
+    const validMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
+    const validExtensions = ["png", "jpg", "jpeg"];
+
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const isValidMime = validMimeTypes.includes(file.type);
+    const isValidExt = validExtensions.includes(fileExtension);
+
+    // If mime type is empty (sometimes happens), rely on extension. 
+    // If mime type is present, it must be valid.
+    let isValid = false;
+
+    if (file.type === "") {
+      isValid = isValidExt;
+    } else {
+      isValid = isValidMime;
     }
+
+    if (!isValid) {
+      console.log("Invalid file. Type:", file.type, "Extension:", fileExtension);
+      if (errorMessage) {
+        errorMessage.textContent = "Please select a PNG, JPG, or JPEG image.";
+        errorMessage.style.display = "block";
+      } else {
+        alert("Please select a PNG, JPG, or JPEG image."); // Fallback
+      }
+      event.target.value = ""; // Clear the input
+      return;
+    }
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    img.onload = () => URL.revokeObjectURL(img.src);
+    preview.appendChild(img);
+  }
+}
