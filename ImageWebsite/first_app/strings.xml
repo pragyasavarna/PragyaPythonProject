@@ -8,4 +8,10 @@
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="logout_text">Logout</string>
+    <string name="cat_vs_dog_classifier_text">Cat vs Dog Classifier</string>
+    <string name="training_results_text">Training Results</string>
+    <string name="model_loss_text">Model Loss</string>
+    <string name="model_accuracy_text">Model Accuracy</string>
+    <string name="upload_image_text">Upload an Image</string>
+    <string name="upload_and_predict_text">Upload & Predict</string>
 </resources>

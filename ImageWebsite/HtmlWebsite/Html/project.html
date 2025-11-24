@@ -8,19 +8,19 @@
 
 <!-- ===== CAT VS DOG CLASSIFIER SECTION ===== -->
 <section class="section classifier-section" id="classifier">
-  <h2>Cat vs Dog Classifier</h2>
+  <h2>{% get_string 'cat_vs_dog_classifier_text' %}</h2>
 
   <div class="plot-container">
-    <h3>Training Results</h3>
+    <h3>{% get_string 'training_results_text' %}</h3>
 
     <!-- Charts side by side -->
     <div class="charts">
       <div class="chart-box">
-        <h4>Model Loss</h4>
+        <h4>{% get_string 'model_loss_text' %}</h4>
         <img src="/AIModel/static/plots/loss.png" alt="Loss Plot">
       </div>
       <div class="chart-box">
-        <h4>Model Accuracy</h4>
+        <h4>{% get_string 'model_accuracy_text' %}</h4>
         <img src="/AIModel/static/plots/accuracy.png" alt="Accuracy Plot">
       </div>
     </div>
@@ -29,11 +29,11 @@
   <!-- Upload form -->
   <div class="upload-section">
     <div class="card">
-      <h3 class="title">📷 Upload an Image</h3>
+      <h3 class="title">📷 {% get_string 'upload_image_text' %}</h3>
       <form method="post" enctype="multipart/form-data" class="upload-form">
         <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
         <div class="preview" id="preview"></div>
-        <button type="submit">🔍 Upload & Predict</button>
+        <button type="submit">🔍 {% get_string 'upload_and_predict_text' %}</button>
       </form>
       <div class="prediction">
         {{result}}
