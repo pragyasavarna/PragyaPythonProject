@@ -13,5 +13,5 @@
     <string name="model_loss_text">Model Loss</string>
     <string name="model_accuracy_text">Model Accuracy</string>
     <string name="upload_image_text">Upload an Image</string>
-    <string name="upload_and_predict_text">Upload & Predict</string>
+    <string name="upload_and_predict_text">Upload &amp; Predict</string>
 </resources>
