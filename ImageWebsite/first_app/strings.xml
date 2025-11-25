@@ -14,4 +14,7 @@
     <string name="model_accuracy_text">Model Accuracy</string>
     <string name="upload_image_text">Upload an Image</string>
     <string name="upload_and_predict_text">Upload &amp; Predict</string>
+    <string name="about_cognilume_text">About Cognilume</string>
+    <string name="about_introduction_text">Cognilume is an AI-driven innovation hub focused on building practical, real-world applications using Machine Learning, Deep Learning, and modern web technologies. Our mission is to empower students, researchers, and developers by providing cutting-edge solutions and hands-on projects that blend intelligent systems with user-friendly interfaces.</string>
+    <string name="about_introduction_text1">From advanced image recognition models to cloud-based AI deployments, Cognilume strives to make artificial intelligence accessible, scalable, and impactful.</string>
 </resources>

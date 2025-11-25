@@ -1,5 +1,6 @@
 {% extends "master.html" %}
-{% block title %}About Us | Cognilume{% endblock %}
+{% load string_utils %}
+{% block title %}About Us | {% get_string 'app_name' %}{% endblock %}
 
 {% block content %}
 
@@ -7,16 +8,12 @@
 
   <!-- ===== ABOUT SECTION ===== -->
   <section class="section">
-    <h2>About Cognilume</h2>
+    <h2>{% get_string 'about_cognilume_text' %}</h2>
     <p>
-      Cognilume is an AI-driven innovation hub focused on building practical, real-world applications 
-      using Machine Learning, Deep Learning, and modern web technologies. Our mission is to empower 
-      students, researchers, and developers by providing cutting-edge solutions and hands-on projects 
-      that blend intelligent systems with user-friendly interfaces.
+      {% get_string 'about_introduction_text' %}
     </p>
     <p>
-      From advanced image recognition models to cloud-based AI deployments, Cognilume strives to make 
-      artificial intelligence accessible, scalable, and impactful.
+      {% get_string 'about_introduction_text1' %}
     </p>
   </section>
 
@@ -38,7 +35,7 @@
       <div class="project-card">
         <h3>AI Research & Development</h3>
         <p>
-          We develop ML and DL models including CNNs, RNNs, and custom neural architectures for 
+          We develop ML and DL models including CNNs, RNNs, and custom neural architectures for
           vision, classification, detection, and prediction tasks.
         </p>
       </div>
@@ -46,7 +43,7 @@
       <div class="project-card">
         <h3>Web-Based AI Solutions</h3>
         <p>
-          Our team integrates machine learning models into full-stack web applications using Django, 
+          Our team integrates machine learning models into full-stack web applications using Django,
           ensuring seamless interaction between users and AI systems.
         </p>
       </div>
@@ -54,7 +51,7 @@
       <div class="project-card">
         <h3>Cloud Deployment</h3>
         <p>
-          We prepare AI models for cloud platforms like AWS for high-speed computation, scalability, 
+          We prepare AI models for cloud platforms like AWS for high-speed computation, scalability,
           and real-time processing capabilities.
         </p>
       </div>
@@ -76,8 +73,8 @@
   <section class="section">
     <h2>Our Team</h2>
     <p>
-      Cognilume is powered by passionate developers, AI enthusiasts, researchers, and 
-      technology learners who believe in transforming ideas into intelligent solutions. 
+      Cognilume is powered by passionate developers, AI enthusiasts, researchers, and
+      technology learners who believe in transforming ideas into intelligent solutions.
       Together, we push the boundaries of innovation and creativity.
     </p>
   </section>
