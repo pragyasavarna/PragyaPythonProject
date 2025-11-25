@@ -39,6 +39,8 @@ git fetch \
 git stash \
 git stash pop \
 git switch main \
+Git Deleted files Command \
+for /f "delims=" %i in ('git ls-files --deleted') do git add "%i" \
 
 # Python Command
 Run in Pycharm terminal for checking path of Python environment in Terminal \
