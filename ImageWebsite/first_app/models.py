@@ -15,6 +15,22 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.name} — {self.subject}"
 
+class Feedback(models.Model):
+    ISSUE_TYPE_CHOICES = [
+        ('General Feedback', 'General Feedback'),
+        ('Bug', 'Bug'),
+        ('Feature Request', 'Feature Request'),
+    ]
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    issue_type = models.CharField(max_length=50, choices=ISSUE_TYPE_CHOICES)
+    subject = models.CharField(max_length=200)
+    description = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.issue_type} - {self.subject}"
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, name, password=None):
         if not email:

@@ -37,4 +37,5 @@ urlpatterns = [
     path("forgot-password/", views.forgot_password, name="forgot_password"),
     path("reset-password/<uidb64>/<token>/", views.reset_password, name="reset_password"),
     path('face_model/', lambda request: views.serve_html(request, 'face_recognition.html'), name='face-model'),
+    path('feedback/', views.feedback_page, name='feedback'),
 ]

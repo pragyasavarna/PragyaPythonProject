@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import UserAccount, ContactMessage
+from .models import UserAccount, ContactMessage, Feedback
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -222,3 +222,26 @@ def reset_password(request, uidb64, token):
     else:
         error = "Invalid or expired password reset link."
         return render(request, "reset_password.html", {"error": error})
+
+
+def feedback_page(request):
+    success = False
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        issue_type = request.POST.get("issue_type")
+        subject = request.POST.get("subject")
+        description = request.POST.get("description")
+
+        Feedback.objects.create(
+            name=name,
+            email=email,
+            issue_type=issue_type,
+            subject=subject,
+            description=description
+        )
+
+        success = True
+
+    return render(request, "feedback.html", {"success": success})

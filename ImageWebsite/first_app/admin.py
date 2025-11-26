@@ -1,11 +1,12 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 admin.site.register(ContactMessage)
+admin.site.register(Feedback)
 admin.site.register(UploadedImage)
 
 
