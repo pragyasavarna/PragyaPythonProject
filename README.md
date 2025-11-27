@@ -13,6 +13,7 @@ pip --version
 # Git Command
 Github download \
 https://git-scm.com/downloads \
+https://git-lfs.com/ \
 Chocolatey  download \
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" \
 GitHub CLI (gh) download \
@@ -41,6 +42,9 @@ git stash pop \
 git switch main \
 Git Deleted files Command \
 for /f "delims=" %i in ('git ls-files --deleted') do git add "%i" \
+set up Git LFS for your user account by running: \
+git lfs install \
+git lfs track "*.keras" \
 
 # Python Command
 Run in Pycharm terminal for checking path of Python environment in Terminal \
