@@ -94,3 +94,6 @@ conda env remove -n aiassistant \
 To enable running scripts on the system \
 In PowerShell as Administrator, run the following :- \ 
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted \
+
+# Dataset Url
+https://www.kaggle.com/datasets/anthonytherrien/image-classification-64-classes-animal
