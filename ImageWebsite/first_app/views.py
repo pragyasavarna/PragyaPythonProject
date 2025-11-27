@@ -1,5 +1,5 @@
 import os
-
+import json
 import numpy as np
 from PIL import Image
 from django.http import HttpResponse
@@ -25,8 +25,13 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
-
+ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_model_final.keras")
+ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_class_names.json")
 saved_model = tf.keras.models.load_model(MODEL_PATH)
+saved_animal_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
+with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
+    class_names = json.load(f)
+
 # External AIModel folder
 
 # Map folder names to their actual paths
@@ -69,13 +74,23 @@ def serve_html(request, html_file='index.html'):  # default to index.html
         return HttpResponse(f"HTML file not found: {html_file}", status=404)
 
 
-def predict_image(img_file):
+def predict_image_old(img_file):
     img = Image.open(img_file)
     img = img.resize((200, 200))  # adjust size as per training
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     result = saved_model.predict(img_array)
     return "Dog" if result >= 0.5 else "Cat"
+
+def predict_image(img_file):
+    img = Image.open(img_file)
+    img = img.resize((200, 200))      # same size as training
+    img_array = image.img_to_array(img)   # DO NOT divide by 255
+    img_array = np.expand_dims(img_array, axis=0)
+    result = saved_animal_model.predict(img_array)
+    pred_idx = np.argmax(result)          # pick top predicted class
+    return class_names[pred_idx]          # return class name
+
 
 @csrf_exempt
 def upload_and_predict(request):

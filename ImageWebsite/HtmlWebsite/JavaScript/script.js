@@ -21,6 +21,7 @@ function previewImage(event) {
   const errorMessage = document.getElementById("error-message");
 
   preview.innerHTML = "";
+
   if (errorMessage) {
     errorMessage.style.display = "none";
     errorMessage.textContent = "";
@@ -66,5 +67,7 @@ function previewImage(event) {
     img.src = URL.createObjectURL(file);
     img.onload = () => URL.revokeObjectURL(img.src);
     preview.appendChild(img);
+    // 👉 CLEAR prediction div whenever a new image is chosen
+    document.querySelector(".prediction").textContent = "";
   }
 }
