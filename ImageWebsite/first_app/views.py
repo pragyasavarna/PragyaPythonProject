@@ -40,6 +40,7 @@ STATIC_FOLDERS = {
     'Image': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Image/'),
     'JavaScript': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/JavaScript/'),
     'AIModel': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/'),
+    'Artifacts': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/artifacts/'),
 }
 
 
