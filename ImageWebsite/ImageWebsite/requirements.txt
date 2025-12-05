@@ -1,17 +1,28 @@
+# --- Core Django ---
 Django
-pyttsx3
-psutil
-pyautogui
-win10toast
-pywin32
 python-dotenv
-pytesseract
 pillow
-pyperclip
-kagglehub
-scikit-learn
+
+# --- System & Utilities (Works on both) ---
+psutil
+pyttsx3
 numpy
 pandas
-seaborn
-gradio
+scikit-learn
 xgboost
+seaborn
+kagglehub
+pytesseract
+
+# --- Web Interface ---
+gradio
+
+# --- Windows ONLY (Skipped on DigitalOcean) ---
+win10toast; sys_platform == 'win32'
+pywin32; sys_platform == 'win32'
+pyautogui; sys_platform == 'win32'
+pyperclip; sys_platform == 'win32'
+
+# --- Linux/Server ONLY (Skipped on Windows) ---
+gunicorn; sys_platform != 'win32'
+psycopg2-binary; sys_platform != 'win32'
