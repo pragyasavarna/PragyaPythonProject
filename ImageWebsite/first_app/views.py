@@ -27,6 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
 ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_model_final.keras")
 ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_class_names.json")
+ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "AIModel", "Model", "artifacts", "animal_model_final.keras")
+ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "AIModel", "Model", "artifacts", "animal_class_names.json")
 saved_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 saved_animal_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
@@ -35,14 +37,22 @@ with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
 # External AIModel folder
 
 # Map folder names to their actual paths
-STATIC_FOLDERS = {
-    'CSS': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/CSS/'),
-    'Image': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Image/'),
-    'JavaScript': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/JavaScript/'),
-    'AIModel': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/'),
-    'Artifacts': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/artifacts/'),
-}
+# STATIC_FOLDERS = {
+#     'CSS': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/CSS/'),
+#     'Image': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Image/'),
+#     'JavaScript': os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/JavaScript/'),
+#     'AIModel': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/'),
+#     'Artifacts': os.path.join(BASE_DIR, '../ImageWebsite/AIModel/Model/artifacts/'),
+# }
+# CHANGE THIS ENTIRE DICT TO:
 
+STATIC_FOLDERS = {
+    'CSS': os.path.join(BASE_DIR, 'HtmlWebsite', 'CSS'),
+    'Image': os.path.join(BASE_DIR, 'HtmlWebsite', 'Image'),
+    'JavaScript': os.path.join(BASE_DIR, 'HtmlWebsite', 'JavaScript'),
+    'AIModel': os.path.join(BASE_DIR, 'AIModel', 'Model'),
+    'Artifacts': os.path.join(BASE_DIR, 'AIModel', 'Model', 'artifacts'),
+}
 
 def serve_static(request, folder, path):
     if folder in STATIC_FOLDERS:
