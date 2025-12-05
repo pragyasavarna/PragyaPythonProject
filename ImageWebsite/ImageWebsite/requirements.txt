@@ -13,6 +13,7 @@ xgboost
 seaborn
 kagglehub
 pytesseract
+tensorflow
 
 # --- Web Interface ---
 gradio
