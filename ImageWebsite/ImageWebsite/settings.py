@@ -25,9 +25,20 @@ BASE_DIR1 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = django_secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# settings.py
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+# 1. Set defaults for the SERVER (Production)
+DEBUG = False
+ALLOWED_HOSTS = ['pragyasarvana.com', 'www.pragyasarvana.com']
+
+# ... rest of your settings ...
+
+# 2. Add this at the VERY BOTTOM of the file
+try:
+    from .local_settings import *
+except ImportError:
+    # If the file doesn't exist (like on the server), do nothing
+    pass
 
 
 # Application definition
@@ -124,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
