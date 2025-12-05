@@ -135,7 +135,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+# This is where collectstatic puts files (The destination)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# This is where your custom files ARE RIGHT NOW (The source)
+# Based on your previous code, they are in 'HtmlWebsite' inside your project
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'HtmlWebsite'),
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
