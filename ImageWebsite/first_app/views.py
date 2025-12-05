@@ -24,10 +24,10 @@ import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
+# MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
 ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_model_final.keras")
 ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_class_names.json")
-saved_model = tf.keras.models.load_model(MODEL_PATH)
+saved_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 saved_animal_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
     class_names = json.load(f)
