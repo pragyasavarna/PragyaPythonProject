@@ -29,7 +29,7 @@ SECRET_KEY = django_secret_key
 
 # 1. Set defaults for the SERVER (Production)
 DEBUG = False
-ALLOWED_HOSTS = ['pragyasarvana.com', 'www.pragyasarvana.com']
+ALLOWED_HOSTS = ['pragyasavarna.com', 'www.pragyasavarna.com']
 
 # ... rest of your settings ...
 
