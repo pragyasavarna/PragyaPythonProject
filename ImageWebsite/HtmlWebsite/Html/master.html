@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="../CSS/style.css">
   <link rel="stylesheet" href="../CSS/header.css">
   <link rel="stylesheet" href="../CSS/footer.css">
+  <link rel="stylesheet" href="../CSS/mobile_menu.css">
   <!-- Dynamic CSS Block -->
   {% block extra_css %}
   <!-- Child templates will insert their CSS here -->
@@ -32,7 +33,17 @@
   <header>
     <img src="/Image/Logo.jpeg" alt="Cognilume Logo" class="logo" />
     <h1>{% get_string 'app_name' %}</h1>
-    <nav>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav id="nav-menu">
+      <div class="mobile-header-content mobile-only">
+        <img src="/Image/Logo.jpeg" alt="Cognilume Logo" class="logo">
+
+        <h1>{% get_string 'app_name' %}</h1>
+      </div>
       <a href="/">{% get_string 'home_text' %}</a>
       <a href="/about/">{% get_string 'about_text' %}</a>
       <a href="/contact/">{% get_string 'contact_text' %}</a>

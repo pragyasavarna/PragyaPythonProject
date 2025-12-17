@@ -8,6 +8,7 @@ where anaconda \
 C:\Users\pragya\anaconda3 :- add the path to python.exe in your PATH environment variable  \
 python --version \
 C:\Users\pragya\anaconda3\Scripts  :- add the path to pip.exe in your PATH environment variable \
+setx PATH "%PATH%;C:\Users\pragya\AppData\Roaming\Python\Python312\Scripts" :- add the path in your PATH environment variable to remove script error \
 pip --version
 
 # Git Command
@@ -45,6 +46,8 @@ for /f "delims=" %i in ('git ls-files --deleted') do git add "%i" \
 set up Git LFS for your user account by running: \
 git lfs install \
 git lfs track "*.keras" \
+Undoes the git commit and unstage the files \
+git reset HEAD~1
 
 # Python Command
 Run in Pycharm terminal for checking path of Python environment in Terminal \
@@ -54,21 +57,21 @@ For installing all python modules, run setup.py file \
 pip install Django==4.2.4 \
 python -m django --version \
 django-admin startproject MyWebsite \
-cd MyWebsite \
+cd MyWebsite
 1. When creating a NEW Django app + NEW models \
 python manage.py startapp first_app \
 python manage.py makemigrations \
 python manage.py migrate \
 python manage.py createsuperuser \
-python manage.py runserver \
+python manage.py runserver
 2. When making CHANGES to existing models \
 python manage.py makemigrations \
 python manage.py migrate \
-python manage.py runserver \
+python manage.py runserver
 3. To SEE the SQL table in Django \
-python manage.py sqlmigrate first_app 0001 \
+python manage.py sqlmigrate first_app 0001
 4. delete all data but keep tables \
-python manage.py flush \
+python manage.py flush
 5. DELETE ALL TABLES \
 Step 1: Delete the entire database file :- del db.sqlite3 \
 Step 2: Delete migration files :- \
@@ -77,7 +80,9 @@ Step 3: Recreate database tables
 python manage.py makemigrations \
 python manage.py migrate \
 python manage.py createsuperuser \
-python manage.py runserver \
+python manage.py runserver
+6. To Run Django Server in Mobile also on LocalHost \
+python manage.py runserver 0.0.0.0:8000
 
 # Conda Command
 conda info --envs \
@@ -88,12 +93,12 @@ setx PATH "%PATH%;C:\Program Files\Tesseract-OCR" \
 tesseract --version \
 pip install pytesseract pyperclip pyttsx3 pyautogui vosk sounddevice \
 conda deactivate \
-conda env remove -n aiassistant \
+conda env remove -n aiassistant
 
 # Admin Commands
 To enable running scripts on the system \
 In PowerShell as Administrator, run the following :- \ 
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted \
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
 
 # Dataset Url
 https://www.kaggle.com/datasets/anthonytherrien/image-classification-64-classes-animal

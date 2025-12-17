@@ -71,3 +71,38 @@ function previewImage(event) {
     document.querySelector(".prediction").textContent = "";
   }
 }
+
+/* ===========================
+   📱 MOBILE MENU TOGGLE
+=========================== */
+function toggleMenu() {
+  const menu = document.getElementById('nav-menu');
+  const body = document.body;
+  // 1. Toggle the menu visibility
+  menu.classList.toggle('active');
+  // 2. Toggle the "Body Scroll Lock"
+  // This adds/removes the class 'no-scroll' from the <body> tag
+  body.classList.toggle('no-scroll');
+}
+
+/* ===========================
+   🔹 NEW: CLOSE MENU ON OUTSIDE CLICK
+   (Paste this at the bottom of your script.js)
+=========================== */
+document.addEventListener('click', function (event) {
+  const menu = document.getElementById('nav-menu');
+  const hamburger = document.querySelector('.hamburger');
+  const body = document.body;
+
+  // 1. Check if the menu is actually OPEN
+  if (menu.classList.contains('active')) {
+
+    // 2. Check if the click was NOT inside the menu AND NOT on the hamburger icon
+    if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+
+      // 3. Close the menu and unfreeze the body
+      menu.classList.remove('active');
+      body.classList.remove('no-scroll');
+    }
+  }
+});

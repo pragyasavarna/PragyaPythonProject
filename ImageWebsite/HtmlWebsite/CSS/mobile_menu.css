@@ -1,0 +1,158 @@
+/* ===========================
+   📱 MOBILE FIX: 2-Line Title
+   (Paste this at the very bottom of style.css)
+=========================== */
+
+/* 1. Hamburger Icon */
+.hamburger {
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2000;
+    -webkit-tap-highlight-color: transparent;
+    /* 1. Stops the blue box on Android/iOS */
+    outline: none;
+    /* 2. Stops the border on some browsers */
+    user-select: none;
+    /* 3. Stops it from being selected like text */
+}
+
+.hamburger span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background-color: var(--cyan);
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+/* ===========================
+   🔹 NEW: HIDE MOBILE HEADER CONTENT ON DESKTOP
+=========================== */
+.mobile-only {
+    display: none;
+}
+
+/* 2. Mobile Layout (Phones & Tablets) */
+@media screen and (max-width: 768px) {
+
+    /* Show the Menu Button */
+    .hamburger {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    /* --- 2. Navigation Drawer (The Black Menu) --- */
+    header nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        height: 100vh;
+
+        /* 👇 ADD THESE TWO LINES FOR SCROLLING 👇 */
+        overflow-y: auto;
+        /* Enables vertical scrolling */
+        -webkit-overflow-scrolling: touch;
+        /* Makes scrolling smooth on iPhones */
+
+        /* Background matching your theme */
+        background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
+        border-left: 1px solid rgba(0, 200, 255, 0.2);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+        z-index: 1500;
+        transition: 0.4s ease-in-out;
+
+        /* 🔴 FIX: Start items from the TOP, not center */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 60px;
+        /* Push content down from the very top */
+    }
+
+    header nav.active {
+        right: 0;
+    }
+
+    /* --- 3. Menu Links --- */
+    header nav a {
+        display: block;
+        font-size: 1.2rem !important;
+        margin: 15px 0 !important;
+        color: var(--text-light);
+        width: 100%;
+        text-align: center;
+        /* Stop the blue touch highlight on Android/iOS */
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Force remove background colors on click/active */
+    header nav a:active,
+    header nav a:focus,
+    header nav a.active {
+        background: transparent !important;
+        /* Removes the box */
+        outline: none !important;
+        /* Removes the outline */
+        box-shadow: none !important;
+        /* Removes any shadow */
+        color: var(--cyan) !important;
+        /* Keep text color if you want */
+    }
+
+    header nav span {
+        display: block;
+        margin: 15px 0;
+        text-align: center;
+        font-size: 1rem;
+        color: var(--cyan) !important;
+    }
+
+    /* --- 4. Logo & Title Inside Drawer (Mobile Only) --- */
+    .mobile-only {
+        display: flex;
+        flex-direction: column;
+        /* Stack them for better centering */
+        align-items: center;
+        /* Center everything horizontally */
+        justify-content: center;
+        width: 100%;
+        padding: 0 20px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 20px;
+    }
+
+    .mobile-only img {
+        width: 60px;
+        /* Adjusted size to match home screen better */
+        height: auto;
+        margin-bottom: 15px;
+        /* Add space between logo and text */
+        object-fit: contain;
+        align-self: center;
+        flex-shrink: 0;
+    }
+
+    .mobile-only h1 {
+        color: var(--cyan);
+        text-transform: uppercase;
+        background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+        background-size: 200%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        animation: titleGlow 8s linear infinite;
+        text-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+        display: block;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 0 10px;
+        white-space: normal;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+}
