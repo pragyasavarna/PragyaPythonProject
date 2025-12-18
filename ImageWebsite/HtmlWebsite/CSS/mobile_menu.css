@@ -9,6 +9,7 @@
     cursor: pointer;
     flex-direction: column;
     gap: 5px;
+    padding-bottom: 10px;
     z-index: 2000;
     -webkit-tap-highlight-color: transparent;
     /* 1. Stops the blue box on Android/iOS */
@@ -43,34 +44,43 @@
         flex-shrink: 0;
     }
 
-    /* --- 2. Navigation Drawer (The Black Menu) --- */
+    header {
+        backdrop-filter: none !important;
+        transform: none !important;
+        z-index: 50 !important;
+    }
+
     header nav {
-        position: fixed;
-        top: 0;
+        /* 1. Positioning (Force to Top-Right) */
+        position: fixed !important;
+        top: 0 !important;
         right: -100%;
+        /* Hidden by default */
+        z-index: 9999 !important;
+
+        /* 2. Sizing & Spacing */
         width: 75%;
-        height: 100vh;
+        height: 100vh !important;
+        margin-top: 0 !important;
+        /* Overrides header margin */
+        padding-top: 20px !important;
+        /* Internal spacing */
 
-        /* 👇 ADD THESE TWO LINES FOR SCROLLING 👇 */
-        overflow-y: auto;
-        /* Enables vertical scrolling */
-        -webkit-overflow-scrolling: touch;
-        /* Makes scrolling smooth on iPhones */
-
-        /* Background matching your theme */
-        background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
-        border-left: 1px solid rgba(0, 200, 255, 0.2);
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
-        z-index: 1500;
-        transition: 0.4s ease-in-out;
-
-        /* 🔴 FIX: Start items from the TOP, not center */
+        /* 3. Layout (Flexbox) */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        padding-top: 60px;
-        /* Push content down from the very top */
+
+        /* 4. Scrolling Behavior */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+
+        /* 5. Visual Styling */
+        background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
+        border-left: none;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+        transition: 0.4s ease-in-out;
     }
 
     header nav.active {
