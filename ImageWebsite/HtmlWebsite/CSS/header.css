@@ -100,9 +100,19 @@ nav a:hover::after {
 
   /* Adjust Logo for Mobile Header */
   header .logo {
-    height: 60px;
-    /* Slightly smaller to fit header */
-    width: auto;
+    /* 1. Use WIDTH for smoother resizing (Stable) */
+    width: 18vw;
+    /* Dynamically sizes based on screen width */
+    height: auto;
+    /* Keeps the logo shape correct */
+
+    /* 2. Safety Caps (Replaces clamp) */
+    min-width: 50px;
+    /* Never gets too small */
+    max-width: 80px;
+    /* Never gets too big */
+
+    /* 3. Positioning */
     object-fit: contain;
     align-self: center;
     flex-shrink: 0;
