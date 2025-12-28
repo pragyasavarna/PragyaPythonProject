@@ -88,6 +88,7 @@ python manage.py runserver 0.0.0.0:8000
 conda info --envs \
 conda create -n aiassistant python \
 conda activate aiassistant \
+conda install python=3.12.12 \
 https://github.com/UB-Mannheim/tesseract/wiki?utm_source=chatgpt.com
 setx PATH "%PATH%;C:\Program Files\Tesseract-OCR" \
 tesseract --version \
