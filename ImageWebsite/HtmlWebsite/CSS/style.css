@@ -37,6 +37,7 @@ body {
   animation: gradientShift 20s ease infinite;
   overflow-x: hidden;
   color: var(--text-light);
+  padding-bottom: 60px;
 }
 
 @keyframes gradientShift {
