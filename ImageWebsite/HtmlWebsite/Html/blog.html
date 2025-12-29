@@ -1,0 +1,74 @@
+{% extends "master.html" %}
+{% block title %}Blog | Cognilume{% endblock %}
+{% block description %}Read the latest articles and tutorials on Deep Learning, CNN Architectures, Django Deployment, and AWS Cloud Integration at Cognilume.{% endblock %}
+{% block keywords %}CNN, Deep Learning, Artificial Intelligence, Django, Digital Ocean, AWS, Cloud Computing, Web Development, Tutorials{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/blog.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="container" id="blog-page">
+
+  <section class="section">
+    <h2 style="color: var(--cyan);">Latest Updates & Articles</h2>
+    <p style="margin-bottom: 0;">
+      Explore our latest insights on Artificial Intelligence, Machine Learning architectures, and Web Development.
+    </p>
+  </section>
+
+  <div class="blog-grid">
+
+    <article class="blog-card">
+      <div class="blog-header">
+        <div class="blog-meta">
+          <i class="far fa-calendar-alt"></i>
+          <span>Dec 28, 2025</span>
+        </div>
+        <span class="blog-category">Deep Learning</span>
+      </div>
+      <h3>Understanding CNN Architectures</h3>
+      <p>
+        Convolutional Neural Networks (CNNs) are the backbone of modern image recognition.
+        Learn how layers like MaxPooling and Dropout help improve accuracy while reducing overfitting in criminal
+        identification systems.
+      </p>
+      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
+    </article>
+
+    <article class="blog-card">
+      <div class="blog-header">
+        <div class="blog-meta">
+          <i class="far fa-calendar-alt"></i>
+          <span>Dec 15, 2025</span>
+        </div>
+        <span class="blog-category tech-web">Web Dev</span>
+      </div>
+      <h3>Deploying Django on Digital Ocean</h3>
+      <p>
+        A step-by-step guide to setting up a production-ready Django environment on an Ubuntu Droplet.
+        We cover Nginx configuration, Gunicorn optimization, and static file handling.
+      </p>
+      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
+    </article>
+
+    <article class="blog-card">
+      <div class="blog-header">
+        <div class="blog-meta">
+          <i class="far fa-calendar-alt"></i>
+          <span>Nov 30, 2025</span>
+        </div>
+        <span class="blog-category tech-cloud">AWS Integration</span>
+      </div>
+      <h3>Scaling AI with Cloud Computing</h3>
+      <p>
+        Why move local projects to the cloud? We explore the benefits of integrating AWS
+        for faster computation, virtualization, and handling large datasets for real-world applications.
+      </p>
+      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
+    </article>
+
+  </div>
+</div>
+
+{% endblock %}

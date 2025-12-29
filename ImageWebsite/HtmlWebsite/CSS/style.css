@@ -18,9 +18,16 @@
   --text-dim: #cccccc;
 }
 
+html {
+  /* 🟢 Matches your darkest background color */
+  background-color: var(--navy-1);
+
+  /* Optional: Prevents the "bounce" effect that reveals the background */
+  overscroll-behavior-y: none;
+}
+
 html,
 body {
-  height: 100%;
   color: var(--text-light);
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -37,7 +44,7 @@ body {
   animation: gradientShift 20s ease infinite;
   overflow-x: hidden;
   color: var(--text-light);
-  padding-bottom: 60px;
+  padding-bottom: 0px;
 }
 
 @keyframes gradientShift {
@@ -192,7 +199,6 @@ ul {
 body.no-scroll {
   overflow: hidden;
   /* ⛔ Freezes the background */
-  height: 100vh;
   /* Ensures it doesn't jump */
 }
 

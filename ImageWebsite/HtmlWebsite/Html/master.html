@@ -6,6 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{% endblock %}</title>
+  <meta name="description" content="{% block description %}Welcome to Cognilume, a platform showcasing projects in Artificial Intelligence, Machine Learning, and Web Development.{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}Cognilume, AI, Machine Learning, Web Development, Projects, Portfolio{% endblock %}">
   <meta property="og:title" content="Cognilume | Illuminating Vision Through Intelligence">
   <meta property="og:description" content="Current semester projects and portfolios from the Cognilume platform.">
   <meta property="og:type" content="website">
@@ -48,6 +50,7 @@
       <a href="/about/">{% get_string 'about_text' %}</a>
       <a href="/contact/">{% get_string 'contact_text' %}</a>
       <a href="/feedback/">{% get_string 'feedback_text' %}</a>
+      <a href="/blog/">{% get_string 'blog_text' %}</a>
       {% if user.is_authenticated %}
       <a href="/project/">{% get_string 'project_text' %}</a>
       <span style="color: var(--cyan); margin-left: 20px;">

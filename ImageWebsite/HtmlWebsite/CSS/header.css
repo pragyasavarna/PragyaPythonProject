@@ -10,7 +10,8 @@ header {
   text-align: center;
   padding: 10px 25px 10px;
   box-shadow: 0 0 25px rgba(0, 200, 255, 0.2), 0 0 40px rgba(255, 67, 197, 0.1);
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 10;
   border-bottom: 1px solid rgba(0, 200, 255, 0.2);

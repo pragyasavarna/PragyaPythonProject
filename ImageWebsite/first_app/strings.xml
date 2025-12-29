@@ -5,6 +5,7 @@
     <string name="about_text">About</string>
     <string name="contact_text">Contact</string>
     <string name="feedback_text">Feedback</string>
+    <string name="blog_text">Blog</string>
     <string name="project_text">Projects</string>
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
