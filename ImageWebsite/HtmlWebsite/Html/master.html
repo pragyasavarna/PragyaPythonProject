@@ -77,6 +77,9 @@
     {% get_string 'footer_text' %}
   </footer>
   <script src="../JavaScript/script.js"></script>
+  {% block extra_js %}
+  <!-- Child templates will insert their CSS here -->
+  {% endblock %}
 </body>
 
 </html>

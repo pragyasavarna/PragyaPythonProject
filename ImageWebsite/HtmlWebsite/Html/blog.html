@@ -19,55 +19,34 @@
 
   <div class="blog-grid">
 
+    {% for blog in blogs %}
     <article class="blog-card">
       <div class="blog-header">
         <div class="blog-meta">
           <i class="far fa-calendar-alt"></i>
-          <span>Dec 28, 2025</span>
+          <span>{{ blog.published_at|date:"M d, Y" }}</span>
         </div>
-        <span class="blog-category">Deep Learning</span>
-      </div>
-      <h3>Understanding CNN Architectures</h3>
-      <p>
-        Convolutional Neural Networks (CNNs) are the backbone of modern image recognition.
-        Learn how layers like MaxPooling and Dropout help improve accuracy while reducing overfitting in criminal
-        identification systems.
-      </p>
-      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-    </article>
 
-    <article class="blog-card">
-      <div class="blog-header">
-        <div class="blog-meta">
-          <i class="far fa-calendar-alt"></i>
-          <span>Dec 15, 2025</span>
-        </div>
-        <span class="blog-category tech-web">Web Dev</span>
+        <span class="blog-category {{ blog.category_css_class }}">
+          {{ blog.category }}
+        </span>
       </div>
-      <h3>Deploying Django on Digital Ocean</h3>
-      <p>
-        A step-by-step guide to setting up a production-ready Django environment on an Ubuntu Droplet.
-        We cover Nginx configuration, Gunicorn optimization, and static file handling.
-      </p>
-      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-    </article>
 
-    <article class="blog-card">
-      <div class="blog-header">
-        <div class="blog-meta">
-          <i class="far fa-calendar-alt"></i>
-          <span>Nov 30, 2025</span>
-        </div>
-        <span class="blog-category tech-cloud">AWS Integration</span>
-      </div>
-      <h3>Scaling AI with Cloud Computing</h3>
-      <p>
-        Why move local projects to the cloud? We explore the benefits of integrating AWS
-        for faster computation, virtualization, and handling large datasets for real-world applications.
-      </p>
-      <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-    </article>
+      <h3>{{ blog.title }}</h3>
 
+      <p>
+        {{ blog.content }}
+      </p>
+
+      <a href="{% url 'blog_detail' blog.slug %}" class="read-more-btn">
+        Read Article <i class="fas fa-arrow-right"></i>
+      </a>
+    </article>
+    {% empty %}
+    <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">
+      No blog posts available at the moment.
+    </p>
+    {% endfor %}
   </div>
 </div>
 

@@ -1,0 +1,40 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}{{ blog.title }} | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/blog_detail.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="detail-page-container">
+
+    <article class="section detail-content-wrapper">
+
+        <div class="detail-header">
+            <div class="detail-meta">
+                <span class="blog-category {{ blog.category_css_class }}">
+                    {{ blog.category }}
+                </span>
+                <span class="detail-date">
+                    <i class="far fa-calendar-alt"></i> {{ blog.published_at|date:"M d, Y" }}
+                </span>
+            </div>
+
+            <h1 class="detail-title">{{ blog.title }}</h1>
+        </div>
+
+        <div class="detail-body-text">
+            {{ blog.content|linebreaks }}
+        </div>
+
+        <div class="detail-footer">
+            <a href="{% url 'blog' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Blogs
+            </a>
+        </div>
+
+    </article>
+</div>
+{% endblock %}

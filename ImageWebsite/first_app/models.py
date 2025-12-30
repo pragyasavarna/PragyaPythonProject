@@ -65,3 +65,20 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, max_length=200, null=True, blank=True, help_text="URL-friendly name (e.g. my-first-post)")
+    category = models.CharField(max_length=100, help_text="e.g. Deep Learning, Web Dev")
+    # This field lets you apply the 'tech-web' class for the Cyan color
+    category_css_class = models.CharField(
+        max_length=50, 
+        blank=True, 
+        help_text="Leave empty for Pink. Type 'tech-web' for Cyan."
+    )
+    content = models.TextField()
+    published_at = models.DateField()
+    link = models.URLField(blank=True, null=True, help_text="Link to full article (optional)")
+
+    def __str__(self):
+        return self.title

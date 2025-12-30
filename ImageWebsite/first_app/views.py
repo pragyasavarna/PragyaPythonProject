@@ -3,7 +3,7 @@ import json
 import numpy as np
 from PIL import Image
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.middleware.csrf import get_token
@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import UserAccount, ContactMessage, Feedback
+from .models import UserAccount, ContactMessage, Feedback, BlogPost
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -271,3 +271,18 @@ def feedback_page(request):
         success = True
 
     return render(request, "feedback.html", {"success": success})
+
+def blog_page(request):
+    # Fetch all blogs, ordered by newest date first
+    blogs = BlogPost.objects.all().order_by('-published_at')
+    
+    context = {
+        'blogs': blogs
+    }
+    return render(request, "blog.html", context)
+
+def blog_detail(request, slug):
+    # Tries to get the blog with this ID, or shows 404 error if not found
+    blog_post = get_object_or_404(BlogPost, slug=slug)
+    
+    return render(request, 'blog_detail.html', {'blog': blog_post})
