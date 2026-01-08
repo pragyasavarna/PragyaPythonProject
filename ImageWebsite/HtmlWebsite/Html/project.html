@@ -10,6 +10,21 @@
 <section class="section classifier-section" id="classifier">
   <h2>{% get_string 'animal_classifier_text' %}</h2>
 
+  <!-- Upload form -->
+  <div class="upload-section">
+    <div class="card">
+      <h3 class="title">📷 {% get_string 'upload_image_text' %}</h3>
+      <form method="post" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
+        <div class="preview" id="preview"></div>
+        <button type="submit">🔍 {% get_string 'upload_and_predict_text' %}</button>
+      </form>
+      <div class="prediction">
+        {{result}}
+      </div>
+    </div>
+  </div>
+
   <div class="plot-container">
     <h3>{% get_string 'training_results_text' %}</h3>
 
@@ -26,20 +41,6 @@
     </div>
   </div>
 
-  <!-- Upload form -->
-  <div class="upload-section">
-    <div class="card">
-      <h3 class="title">📷 {% get_string 'upload_image_text' %}</h3>
-      <form method="post" enctype="multipart/form-data" class="upload-form">
-        <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
-        <div class="preview" id="preview"></div>
-        <button type="submit">🔍 {% get_string 'upload_and_predict_text' %}</button>
-      </form>
-      <div class="prediction">
-        {{result}}
-      </div>
-    </div>
-  </div>
 </section>
 
 {% endblock %}
