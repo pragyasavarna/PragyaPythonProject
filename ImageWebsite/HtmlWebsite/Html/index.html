@@ -3,66 +3,65 @@
 
 {% block content %}
 
-  <!-- ===== HOME SECTION ===== -->
-  <div class="container" id="home">
-    <section class="section" id="projects">
-      <h2>Current Semester Projects</h2>
-      <section class="projects">
-        <div class="project-card">
-          <h3>1. Face Recognition System Based on CNN for Criminal Identification</h3>
-          <p>
-            This project uses Convolutional Neural Networks (CNN) to identify and verify criminal faces
-            through facial image datasets. The model is integrated into a Django web interface
-            for real-time face recognition and identity verification.
-          </p>
-        </div>
-
-        <div class="project-card">
-          <h3>2. Image Classification of Cats and Dogs using CNN</h3>
-          <p>
-            A CNN-based image classification project that identifies whether the given image
-            belongs to a cat or a dog. The model includes layers for feature extraction,
-            pooling, and dense classification, achieving efficient binary classification results.
-          </p>
-        </div>
-    </section>
-    </section>
-
-    <section class="section">
-      <h2>Model Architecture (Main Model Used)</h2>
-      <ul>
-        <li>Implemented a Convolutional Neural Network (CNN) integrated with a Django web app.</li>
-        <li>2D Convolutional layers + MaxPooling for progressive feature extraction.</li>
-        <li>ReLU activation in all intermediate layers.</li>
-        <li>Dense layers with Batch Normalization & Dropout to prevent overfitting.</li>
-        <li>Sigmoid activation in the output layer for binary classification.</li>
-        <li>Trained with Binary Cross-Entropy loss & evaluated via accuracy and confusion matrix.</li>
-      </ul>
-    </section>
-
-    <section class="section">
-      <h2>Future Scope</h2>
-      <p>
-        In future updates, the system will be integrated with <strong>Amazon Web Services (AWS)</strong>
-        to achieve better scalability, speed, and security. Cloud-based deployment will enable
-        faster computation, virtualization, and cost-effective execution, making the project
-        suitable for real-world applications.
-      </p>
-    </section>
-
-    <section class="section">
-      <h2>Technologies Used</h2>
-      <div class="tech">
-        <span>Python</span>
-        <span>Deep Learning</span>
-        <span>Machine Learning</span>
-        <span>Artificial Intelligence</span>
-        <span>Django</span>
-        <span>HTML</span>
-        <span>CSS</span>
-        <span>JavaScript</span>
+<!-- ===== HOME SECTION ===== -->
+<div class="container" id="home">
+  <section class="section" id="projects">
+    <h2>Current Semester Projects</h2>
+    <section class="projects">
+      <div class="project-card">
+        <h3>1. Image Classification of All Animals using CNN</h3>
+        <p>
+          A CNN-based image classification project that identifies whether the given image
+          belongs to any category of the animals. The model includes layers for feature extraction,
+          pooling, and dense classification, achieving efficient binary classification results.
+        </p>
       </div>
+      <!-- <div class="project-card">
+        <h3>2. Face Recognition System Based on CNN for Criminal Identification</h3>
+        <p>
+          This project uses Convolutional Neural Networks (CNN) to identify and verify criminal faces
+          through facial image datasets. The model is integrated into a Django web interface
+          for real-time face recognition and identity verification.
+        </p>
+      </div> -->
     </section>
-  </div>
+  </section>
+
+  <section class="section">
+    <h2>Model Architecture (Main Model Used)</h2>
+    <ul>
+      <li>Implemented a Convolutional Neural Network (CNN) integrated with a Django web app.</li>
+      <li>2D Convolutional layers + MaxPooling for progressive feature extraction.</li>
+      <li>ReLU activation in all intermediate layers.</li>
+      <li>Dense layers with Batch Normalization & Dropout to prevent overfitting.</li>
+      <li>Sigmoid activation in the output layer for binary classification.</li>
+      <li>Trained with Binary Cross-Entropy loss & evaluated via accuracy and confusion matrix.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Future Scope</h2>
+    <p>
+      In future updates, the system will be integrated with <strong>Amazon Web Services (AWS)</strong>
+      to achieve better scalability, speed, and security. Cloud-based deployment will enable
+      faster computation, virtualization, and cost-effective execution, making the project
+      suitable for real-world applications.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Technologies Used</h2>
+    <div class="tech">
+      <span>Python</span>
+      <span>Deep Learning</span>
+      <span>Machine Learning</span>
+      <span>Artificial Intelligence</span>
+      <span>Django</span>
+      <span>HTML</span>
+      <span>CSS</span>
+      <span>JavaScript</span>
+    </div>
+  </section>
+</div>
 
 {% endblock %}
