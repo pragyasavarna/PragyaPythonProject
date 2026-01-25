@@ -1,0 +1,73 @@
+/* --- VOICE MODULE CONTAINER --- */
+.voice-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* --- BUTTON (Blue Neon Gradient) --- */
+#record_btn {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 0 18px rgba(0, 140, 255, 0.7);
+    transition: 0.3s ease;
+}
+
+#record_btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 28px rgba(0, 140, 255, 1);
+}
+
+/* --- OUTPUT BOX (Blue Glass Neon) --- */
+.voice-output {
+    width: 80%;
+    max-width: 800px;
+    padding: 18px 22px;
+
+    background: rgba(15, 20, 45, 0.6);
+    /* glass */
+    backdrop-filter: blur(12px);
+
+    border-radius: 18px;
+    border: 1px solid rgba(0, 200, 255, 0.4);
+
+    color: #b8e6ff;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+
+    margin-top: 20px;
+
+    /* BLUE NEON GLOW */
+    box-shadow: 0 0 18px rgba(0, 180, 255, 0.6),
+        inset 0 0 20px rgba(0, 140, 255, 0.25);
+
+    text-shadow: 0 0 4px rgba(0, 220, 255, 0.6);
+    transition: 0.3s ease;
+}
+
+/* --- ICON COLORS INSIDE OUTPUT --- */
+.voice-output i {
+    color: #00eaff;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    #record_btn {
+        font-size: 16px;
+        padding: 12px 26px;
+    }
+
+    .voice-output {
+        width: 92%;
+        font-size: 14px;
+    }
+}

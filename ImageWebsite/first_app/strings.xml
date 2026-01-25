@@ -10,6 +10,7 @@
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="logout_text">Logout</string>
+    <string name="srs_text">SRS Home Page</string>
     <string name="animal_classifier_text">Animal Classifier</string>
     <string name="training_results_text">Training Results</string>
     <string name="model_loss_text">Model Loss</string>

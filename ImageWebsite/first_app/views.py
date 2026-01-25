@@ -2,10 +2,10 @@ import os
 import json
 import numpy as np
 from PIL import Image
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
 from django.views.static import serve
 from django.contrib.auth import authenticate, login, logout
@@ -21,7 +21,6 @@ from .models import UserAccount, ContactMessage, Feedback, BlogPost
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 import tensorflow as tf
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
@@ -33,6 +32,7 @@ saved_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 saved_animal_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
     class_names = json.load(f)
+
 
 # External AIModel folder
 
@@ -286,3 +286,25 @@ def blog_detail(request, slug):
     blog_post = get_object_or_404(BlogPost, slug=slug)
     
     return render(request, 'blog_detail.html', {'blog': blog_post})
+
+@csrf_exempt
+def process_text(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=400)
+
+    data = json.loads(request.body)
+    text = data.get("text", "")
+
+    print("User said:", text)
+
+    # Example logic
+    if "jarvis" in text.lower():
+        reply = "Yes, how can I help you?"
+    else:
+        reply = "Hey Pragya"
+
+    # TODO: save to DB / call AI model here
+
+    return JsonResponse({
+        "reply": reply
+    })

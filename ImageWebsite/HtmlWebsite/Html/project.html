@@ -3,12 +3,23 @@
 {% block title %}Project | {% get_string 'app_name' %}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/project.css">
+<link rel="stylesheet" href="../CSS/ai.css">
 {% endblock %}
 {% block content %}
 
 <!-- ===== CAT VS DOG CLASSIFIER SECTION ===== -->
 <section class="section classifier-section" id="classifier">
   <h2>{% get_string 'animal_classifier_text' %}</h2>
+  <h2>🎤 Mobile Microphone</h2>
+  <section class="voice-section">
+    <button id="record_btn">Start Speaking</button>
+
+    <div id="output" class="voice-output">
+      Waiting...
+    </div>
+
+  </section>
+
 
   <!-- Upload form -->
   <div class="upload-section">
@@ -42,5 +53,8 @@
   </div>
 
 </section>
+{% block extra_jss %}
+<script src="../JavaScript/voice.js"></script>
+{% endblock %}
 
 {% endblock %}
