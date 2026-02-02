@@ -7,6 +7,7 @@
     <string name="feedback_text">Feedback</string>
     <string name="blog_text">Blog</string>
     <string name="project_text">Projects</string>
+    <string name="python_compiler_text">Python Compiler</string>
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="logout_text">Logout</string>

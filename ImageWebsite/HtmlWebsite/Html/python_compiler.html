@@ -1,0 +1,36 @@
+{% extends "master.html" %}
+{% block title %}Python Compiler | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/python_compiler.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="python-compiler">
+    <div class="row">
+        <!-- Code Editor -->
+        <div class="col-md-6">
+            <h4 class="section-title">Write Python Code:</h4>
+            <textarea id="codeEditor" class="form-control code-area" rows="15">print("Hello, Cognilume!")
+            </textarea>
+        </div>
+
+        <!-- Output -->
+        <div class="col-md-6">
+            <h4 class="section-title">Output:</h4>
+            <pre id="outputBox" class="output-area"></pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="runCodeBtn" class="btn run-btn px-5 py-2">Run Code</button>
+    </div>
+</div>
+
+{% block extra_jss %}
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<script type="module" src="../JavaScript/python_compiler.js"></script>
+{% endblock %}
+
+{% endblock %}
