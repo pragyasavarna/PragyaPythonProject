@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
 
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='uploads/')
@@ -82,3 +83,20 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+class CodeExecution(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    code = models.TextField()
+    output = models.TextField()
+    executed_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        user_display = self.user.name if self.user else "Unknown"
+        # show IST on header
+        from django.utils.timezone import localtime
+        ist_time = localtime(self.executed_at)
+        return f"{user_display} - {ist_time.strftime('%b %d, %Y %I:%M %p')}"

@@ -27,4 +27,5 @@ urlpatterns = [
     path('srs/', lambda request: views.serve_html(request, 'srs.html'), name='srs'),
     path("process-text/", views.process_text, name="process_text"),
     path('python-compiler/', lambda request: views.serve_html(request, 'python_compiler.html'), name='python-compiler'),
+    path("save-execution/", views.save_execution, name="save_execution"),
 ]

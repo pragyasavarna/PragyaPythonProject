@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import UserAccount, ContactMessage, Feedback, BlogPost
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -308,3 +308,47 @@ def process_text(request):
     return JsonResponse({
         "reply": reply
     })
+
+@csrf_exempt
+def save_execution(request):
+    if request.method == "POST":
+
+        code = request.POST.get("code_input", "")
+        output = request.POST.get("code_output", "")
+        ip = get_client_ip(request)
+        location = get_location_from_ip(ip)
+        CodeExecution.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            code=code,
+            output=output,
+            ip_address=ip,
+            city=location.get("city") if location else None,
+            state=location.get("region") if location else None,
+            country=location.get("country") if location else None,
+        )
+
+        return JsonResponse({"status": "saved", "ip": ip})
+
+    return JsonResponse({"status": "invalid", "ip": ip}, status=400)
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+import requests
+
+def get_location_from_ip(ip):
+    try:
+        url = f"https://ipapi.co/{ip}/json/"
+        data = requests.get(url, timeout=3).json()
+        return {
+            "city": data.get("city"),
+            "region": data.get("region"),
+            "country": data.get("country_name"),
+        }
+    except:
+        return None
