@@ -16,6 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.gis.geoip2 import GeoIP2
 from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution
 
 # Load your trained model once
@@ -343,12 +344,19 @@ import requests
 
 def get_location_from_ip(ip):
     try:
-        url = f"https://ipapi.co/{ip}/json/"
-        data = requests.get(url, timeout=3).json()
+        g = GeoIP2()
+        city = g.city(ip)
+
         return {
-            "city": data.get("city"),
-            "region": data.get("region"),
-            "country": data.get("country_name"),
+            "city": city.get("city"),
+            "region": city.get("region"),        # State
+            "country": city.get("country_name"),
         }
-    except:
-        return None
+    except Exception as e:
+        print("GeoIP error:", e)
+        return {
+            "city": None,
+            "region": None,
+            "country": None,
+        }
+

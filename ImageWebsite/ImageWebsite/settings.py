@@ -138,6 +138,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'HtmlWebsite'),
 ]
+GEOIP_PATH = os.path.join(BASE_DIR, "GeoIP")
 
 
 # Default primary key field type

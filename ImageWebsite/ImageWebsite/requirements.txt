@@ -16,6 +16,9 @@ pytesseract
 tensorflow
 django-import-export
 
+# --- GeoIP (MaxMind) ---
+geoip2
+
 # --- Web Interface ---
 gradio
 

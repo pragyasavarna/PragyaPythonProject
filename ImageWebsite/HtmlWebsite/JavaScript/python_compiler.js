@@ -1,10 +1,7 @@
-let skOutput = "";  // Holds output for THIS execution only
-
 function outf(text) {
-    skOutput += text;                       // collect output
-    document.getElementById("outputBox").innerText += text;  // show output live
+    const outputBox = document.getElementById("outputBox");
+    outputBox.innerHTML += text;
 }
-
 
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
@@ -37,14 +34,16 @@ function cleanIndentation(code) {
 }
 
 document.getElementById("runCodeBtn").addEventListener("click", function () {
-
     let editor = document.getElementById("codeEditor");
-    let code = cleanIndentation(editor.value);
-    editor.value = code;
+    let code = editor.value;
+
+    // Clean indentation (remove leading spaces)
+    let cleaned = cleanIndentation(code);
+
+    editor.value = cleaned;
 
     let outputBox = document.getElementById("outputBox");
-    outputBox.innerText = "";   // clear old output
-    skOutput = "";              // reset collected output
+    outputBox.innerHTML = ""; // Clear previous output
 
     Sk.configure({
         output: outf,
@@ -52,18 +51,16 @@ document.getElementById("runCodeBtn").addEventListener("click", function () {
     });
 
     Sk.misceval.asyncToPromise(() => {
-        return Sk.importMainWithBody("<stdin>", false, code, true);
+        return Sk.importMainWithBody("<stdin>", false, cleaned, true);
     })
         .then(() => {
-            saveExecution(code, skOutput.trim());
+            saveExecution(cleaned, outputBox.innerText);
         })
         .catch(err => {
-            skOutput = err.toString();
-            outputBox.innerText = skOutput;
-            saveExecution(code, skOutput);
+            outputBox.innerHTML = err.toString();
+            saveExecution(cleaned, err.toString());
         });
 });
-
 
 
 function saveExecution(inputCode, outputText) {
