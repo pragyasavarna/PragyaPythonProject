@@ -63,41 +63,16 @@ document.getElementById("runCodeBtn").addEventListener("click", function () {
 });
 
 
-// =======================================
-//   SAVE EXECUTION TO DATABASE (POST)
-// =======================================
 function saveExecution(inputCode, outputText) {
+    let formData = new FormData();
+    formData.append("code_input", inputCode);
+    formData.append("code_output", outputText);
+
     fetch("/save-execution/", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRFToken": getCSRFToken()
-        },
-        body: `code_input=${encodeURIComponent(inputCode)}&code_output=${encodeURIComponent(outputText)}`
+        body: formData
     })
         .then(res => res.json())
-        .then(data => {
-            console.log("Saved:", data);
-        })
-        .catch(err => {
-            console.error("Save error:", err);
-        });
-}
-
-
-
-// =======================================
-//        CSRF TOKEN FETCHER
-// =======================================
-function getCSRFToken() {
-    let name = "csrftoken=";
-    let decodedCookies = decodeURIComponent(document.cookie).split(";");
-
-    for (let cookie of decodedCookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(name)) {
-            return cookie.substring(name.length, cookie.length);
-        }
-    }
-    return "";
+        .then(data => console.log("Saved:", data))
+        .catch(err => console.error("Save error:", err));
 }
