@@ -20,6 +20,10 @@ SECRET_KEY = django_secret_key
 DEBUG = False
 ALLOWED_HOSTS = ['pragyasavarna.com', 'www.pragyasavarna.com']
 
+# Allow Django to trust real client IP from proxy/load balancer
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # ... rest of your settings ...
 
 # 2. Add this at the VERY BOTTOM of the file
