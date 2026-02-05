@@ -32,6 +32,32 @@ function cleanIndentation(code) {
 
     return cleaned;
 }
+// ========== INPUT HANDLER FOR input() ==========
+let inputResolve = null;
+
+function inputHandler(prompt) {
+    // Show input area
+    document.getElementById("inputArea").style.display = "flex";
+    outf(prompt);  // print prompt inside output box
+    return new Promise((resolve) => {
+        inputResolve = resolve;
+    });
+}
+
+// expose globally (important)
+window.inputHandler = inputHandler;
+
+// Submit Input button
+document.getElementById("submitInputBtn").addEventListener("click", function () {
+    if (inputResolve) {
+        const val = document.getElementById("userInput").value;
+        document.getElementById("userInput").value = "";
+        // Hide input area after submitting
+        document.getElementById("inputArea").style.display = "none";
+        inputResolve(val);
+        inputResolve = null;
+    }
+});
 
 document.getElementById("runCodeBtn").addEventListener("click", function () {
     let editor = document.getElementById("codeEditor");
@@ -47,7 +73,9 @@ document.getElementById("runCodeBtn").addEventListener("click", function () {
 
     Sk.configure({
         output: outf,
-        read: builtinRead
+        read: builtinRead,
+        inputfun: window.inputHandler,  // <-- added
+        inputfunTakesPrompt: true
     });
 
     Sk.misceval.asyncToPromise(() => {

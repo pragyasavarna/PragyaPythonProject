@@ -19,6 +19,10 @@
         <div class="col-md-6">
             <h4 class="section-title">Output:</h4>
             <pre id="outputBox" class="output-area"></pre>
+            <div id="inputArea">
+                <input id="userInput" class="form-control" placeholder=" Please enter input here...">
+                <button id="submitInputBtn" class="btn btn-secondary mt-2">Submit Input</button>
+            </div>
         </div>
     </div>
 
@@ -30,7 +34,7 @@
 {% block extra_jss %}
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
-<script type="module" src="../JavaScript/python_compiler.js"></script>
+<script src="../JavaScript/python_compiler.js"></script>
 {% endblock %}
 
 {% endblock %}

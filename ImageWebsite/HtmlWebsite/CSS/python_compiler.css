@@ -83,6 +83,64 @@
     box-shadow: 0px 0px 18px #0be881dd;
 }
 
+/* ==============================
+   INPUT AREA STYLING (NEW BLOCK)
+   ============================== */
+
+#inputArea {
+    display: none;
+    margin-top: 12px;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+/* Input box */
+#userInput {
+    flex: 1;
+    padding: 8px 12px;
+    background: #0d0d20;
+    color: #e2e8f0;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+#userInput:focus {
+    border-color: #00d27f;
+    box-shadow: 0 0 10px #00d27f;
+}
+
+/* Submit Button */
+#submitInputBtn {
+    background: linear-gradient(135deg, #00d27f, #0be881);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    transition: 0.25s ease;
+}
+
+#submitInputBtn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 12px #0be881aa;
+}
+
+/* Remove excessive top margin only on compiler page */
+#python-compiler {
+    margin-top: 5px !important;
+    padding-top: 0 !important;
+}
+
+/* Also override container spacing for just this page */
+#python-compiler.container,
+#python-compiler .container {
+    margin-top: 20px !important;
+}
 
 /* ------------ Responsive ------------- */
 
@@ -100,5 +158,15 @@
     .output-area {
         height: 220px;
         /* adjust for small devices */
+    }
+
+    #inputArea {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #submitInputBtn {
+        width: 100%;
+        margin-top: 6px;
     }
 }
