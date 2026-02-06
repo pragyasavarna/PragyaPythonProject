@@ -17,6 +17,31 @@
     max-width: 48%;
 }
 
+#python-compiler .info-text {
+    color: #a8e4ff;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: 400;
+    margin: 0 auto 20px auto;
+    max-width: 90%;
+}
+
+#python-compiler .info-text a {
+    color: #48eaff;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(72, 234, 255, 0.6);
+    padding-bottom: 2px;
+    transition: 0.25s ease;
+}
+
+#python-compiler .info-text a:hover {
+    color: #0be881;
+    border-bottom-color: #0be881;
+}
+
+
 /* Section Title */
 .section-title {
     color: #89CFF0;
@@ -168,5 +193,33 @@
     #submitInputBtn {
         width: 100%;
         margin-top: 6px;
+    }
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+    #python-compiler .info-text {
+        font-size: 14px;
+        /* slightly smaller, fits well */
+        line-height: 1.6;
+        text-align: left;
+        /* more readable on mobile */
+        max-width: 100%;
+        /* full width */
+        padding: 0 12px;
+        /* give breathing room */
+        margin-top: 10px;
+    }
+
+    #python-compiler .info-text a {
+        display: inline-block;
+        border-bottom: 1px solid rgba(72, 234, 255, 0.4);
+        /* prevents weird wrapping */
+        margin-top: 5px;
+    }
+
+    #python-compiler {
+        padding: 0 10px !important;
+        /* reduce side pressure */
     }
 }
