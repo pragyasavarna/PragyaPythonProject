@@ -104,3 +104,39 @@ function saveExecution(inputCode, outputText) {
         .then(data => console.log("Saved:", data))
         .catch(err => console.error("Save error:", err));
 }
+
+document.getElementById("codeEditor").addEventListener("keydown", function (e) {
+    const textarea = this;
+
+    if (e.key === "Enter") {
+        e.preventDefault();
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+
+        // Get start of current line
+        const lineStart = text.lastIndexOf("\n", start - 1) + 1;
+        const currentLine = text.substring(lineStart, start);
+
+        // Count leading spaces
+        const indentMatch = currentLine.match(/^\s*/);
+        const baseIndent = indentMatch ? indentMatch[0] : "";
+
+        let newIndent = baseIndent;
+
+        // If previous line ends with colon -> add one indentation level
+        if (currentLine.trim().endsWith(":")) {
+            newIndent += "    "; // 4 spaces
+        }
+
+        // Insert new line with correct indentation
+        textarea.value =
+            text.substring(0, start) +
+            "\n" + newIndent +
+            text.substring(end);
+
+        // Move cursor correctly
+        textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length;
+    }
+});
