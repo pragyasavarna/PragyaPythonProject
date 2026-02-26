@@ -26,8 +26,8 @@ urlpatterns = [
     path('blog-<slug:slug>', views.blog_detail, name='blog_detail'),
     path('srs/', lambda request: views.serve_html(request, 'srs.html'), name='srs'),
     path("process-text/", views.process_text, name="process_text"),
-    path('python-compiler/', lambda request: views.serve_html(request, 'python_compiler.html'), name='python-compiler'),
     path("save-execution/", views.save_execution, name="save_execution"),
     path('ai-tutor/', lambda request: views.serve_html(request, 'ai-tutor.html'), name='ai-tutor'),
     path('ai-tutor/animal-classifier/', views.upload_and_predict, name='animal-classifier'),
+    path('ai-tutor/python-compiler/', lambda request: views.serve_html(request, 'python_compiler.html'), name='python-compiler'),
 ]
