@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 urlpatterns = [
     # path('', views.serve_html, name='home'),
-    path('project/', views.upload_and_predict, name='project'),
+   
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly
     re_path(r'^(?P<folder>CSS|Image|JavaScript|AIModel|Artifacts)/(?P<path>.*)$',
             lambda request, folder, path: views.serve_static(request, folder, path)),
@@ -28,4 +28,6 @@ urlpatterns = [
     path("process-text/", views.process_text, name="process_text"),
     path('python-compiler/', lambda request: views.serve_html(request, 'python_compiler.html'), name='python-compiler'),
     path("save-execution/", views.save_execution, name="save_execution"),
+    path('ai-tutor/', lambda request: views.serve_html(request, 'ai-tutor.html'), name='ai-tutor'),
+    path('ai-tutor/animal-classifier/', views.upload_and_predict, name='animal-classifier'),
 ]

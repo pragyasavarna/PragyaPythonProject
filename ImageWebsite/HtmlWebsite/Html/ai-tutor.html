@@ -1,0 +1,56 @@
+{% extends "master.html" %}
+{% load string_utils %}
+{% block title %}AI Tutor | Cognilume{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/ai_tutor.css">
+{% endblock %}
+{% block content %}
+<div class="container" id="ai-tutor">
+
+    <h2 class="ai-title">AI Tutor – Core Learning Tools</h2>
+
+    <div class="ai-grid">
+        <div class="ai-card">
+            <a href="/ai-tutor/animal-classifier/" class="ai-card-link">{% get_string 'animal_classifier_text' %}</a>
+        </div>
+        <div class="ai-card">
+            <a href="/ai/notes-generator" class="ai-card-link">AI Notes / Summary Generator</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/topic-explainer" class="ai-card-link">Topic Explanation / Ask Tutor</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/quiz-generator" class="ai-card-link">AI Quiz Generator (MCQ)</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/assignment-generator" class="ai-card-link">AI Assignment / Question Generator</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/flashcards" class="ai-card-link">AI Flashcard Generator</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/study-path" class="ai-card-link">AI Study Path Generator</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/topic-recommender" class="ai-card-link">AI Topic Recommender</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/doubt-solver" class="ai-card-link">AI Doubt Solver</a>
+        </div>
+
+        <div class="ai-card">
+            <a href="/ai/text-simplifier" class="ai-card-link">AI Text Simplifier</a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
