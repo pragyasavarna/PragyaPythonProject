@@ -6,8 +6,6 @@ from sentence_transformers import SentenceTransformer
 from keybert import KeyBERT
 import os
 import nltk
-torch.set_num_threads(os.cpu_count())
-torch.set_num_interop_threads(1)
 
 # -------------------------------
 # Download punkt tokenizer once
