@@ -213,3 +213,26 @@
 .result-box::-webkit-scrollbar-thumb:hover {
     background: #00e6a3;
 }
+
+.typing::after {
+    content: "|";
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#summaryResult {
+    white-space: pre-wrap;
+}

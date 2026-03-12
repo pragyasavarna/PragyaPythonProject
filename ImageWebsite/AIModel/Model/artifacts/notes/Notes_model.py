@@ -6,14 +6,22 @@ from sentence_transformers import SentenceTransformer
 from keybert import KeyBERT
 import os
 import nltk
+torch.set_num_threads(os.cpu_count())
+torch.set_num_interop_threads(1)
 
 # -------------------------------
 # Download punkt tokenizer once
 # -------------------------------
+
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt', quiet=True)
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    nltk.download('punkt_tab')
 
 # -------------------------------
 # Paths
@@ -34,7 +42,7 @@ torch.set_grad_enabled(False)
 # -------------------------------
 print("Loading summarization model...")
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, use_fast=True)
 
 model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_PATH,
@@ -72,7 +80,7 @@ def clean_text(text):
 # -------------------------------
 # SPLIT TEXT INTO CHUNKS
 # -------------------------------
-def split_text(text, max_tokens=900):
+def split_text(text, max_tokens=600):
 
     sentences = sent_tokenize(text)
 
@@ -82,7 +90,7 @@ def split_text(text, max_tokens=900):
     for sentence in sentences:
 
         token_len = len(
-            tokenizer.encode(current_chunk + sentence, add_special_tokens=False)
+            tokenizer.tokenize(current_chunk + sentence)
         )
 
         if token_len < max_tokens:
@@ -106,20 +114,26 @@ def summarize_chunk(chunk):
         chunk,
         return_tensors="pt",
         truncation=True,
-        max_length=1024
+        max_length=800
     ).to(device)
+    with torch.no_grad():
+        summary_ids = model.generate(
+            inputs["input_ids"],
+            max_length=80,
+            min_length=40,
+            num_beams=3,
+            length_penalty=1.1,
+            no_repeat_ngram_size=3,
+            early_stopping=True
+        )
 
-    summary_ids = model.generate(
-        inputs["input_ids"],
-        max_length=200,
-        min_length=80,
-        num_beams=6,
-        length_penalty=1.2,
-        no_repeat_ngram_size=3,
-        early_stopping=True
+    summary = tokenizer.decode(
+        summary_ids[0],
+        skip_special_tokens=True,
+        clean_up_tokenization_spaces=True
     )
-
-    return tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    summary = re.sub(r'\s+', ' ', summary).strip()
+    return summary
 
 
 # -------------------------------
@@ -129,14 +143,11 @@ def summarize_notes(text):
 
     text = clean_text(text)
 
-    sections = split_text(text)
 
     summaries = []
+    sections = [s for s in split_text(text) if len(s.split()) >= 40]
 
     for section in sections:
-
-        if len(section.split()) < 40:
-            continue
 
         summaries.append(summarize_chunk(section))
 
@@ -146,9 +157,7 @@ def summarize_notes(text):
 # -------------------------------
 # BULLET SUMMARY
 # -------------------------------
-def bullet_summary(text):
-
-    summary = summarize_notes(text)
+def bullet_summary(summary):
 
     sentences = sent_tokenize(summary)
 
@@ -162,11 +171,16 @@ def bullet_summary(text):
 # -------------------------------
 def extract_keywords(text):
 
-    keywords = kw_model.extract_keywords(
-        text,
-        keyphrase_ngram_range=(1, 3),
-        stop_words="english",
-        top_n=10
-    )
+    try:
 
-    return [k[0] for k in keywords]
+        keywords = kw_model.extract_keywords(
+            text,
+            keyphrase_ngram_range=(1, 3),
+            stop_words="english",
+            top_n=10
+        )
+
+        return [k[0] for k in keywords]
+
+    except:
+        return []

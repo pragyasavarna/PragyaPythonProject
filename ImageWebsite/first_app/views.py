@@ -2,7 +2,7 @@ import os
 import json
 import numpy as np
 from PIL import Image
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
@@ -21,7 +21,7 @@ from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecuti
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
-import traceback
+import time
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -378,7 +378,7 @@ def summarize_text(request):
             text = data.get("text", "")
 
             summary = AI_Notes_model.summarize_notes(text)
-            bullets = AI_Notes_model.bullet_summary(text)
+            bullets = AI_Notes_model.bullet_summary(summary)
             keywords = AI_Notes_model.extract_keywords(text)
 
             return JsonResponse({
@@ -388,8 +388,26 @@ def summarize_text(request):
             })
 
         except Exception as e:
-            print("ERROR:", str(e))
-            traceback.print_exc()
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def stream_summary(request):
+
+    text = request.GET.get("text", "")
+
+    def event_stream():
+
+        summary = AI_Notes_model.summarize_notes(text)
+
+        for char in summary:
+            yield f"data: {char}\n\n"
+            time.sleep(0.01)
+
+        yield "data: [END]\n\n"
+
+    return StreamingHttpResponse(
+        event_stream(),
+        content_type="text/event-stream"
+    )
