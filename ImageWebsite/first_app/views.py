@@ -369,14 +369,24 @@ def get_location_from_ip(ip):
 
 @csrf_exempt
 def summarize_text(request):
+
     if request.method == "POST":
-        data = json.loads(request.body)
-        text = data.get("text", "")
-        summary = AI_Notes_model.summarize_notes(text)
-        bullets = AI_Notes_model.bullet_summary(text)
-        keywords = AI_Notes_model.extract_keywords(text)
-        return JsonResponse({
-            "summary": summary,
-            "bullets": bullets,
-            "keywords": keywords
-        })
+
+        try:
+            data = json.loads(request.body)
+            text = data.get("text", "")
+
+            summary = AI_Notes_model.summarize_notes(text)
+            bullets = AI_Notes_model.bullet_summary(text)
+            keywords = AI_Notes_model.extract_keywords(text)
+
+            return JsonResponse({
+                "summary": summary,
+                "bullets": bullets,
+                "keywords": keywords
+            })
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
