@@ -21,6 +21,7 @@ from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecuti
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
+import traceback
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -387,6 +388,8 @@ def summarize_text(request):
             })
 
         except Exception as e:
+            print("ERROR:", str(e))
+            traceback.print_exc()
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request"}, status=400)

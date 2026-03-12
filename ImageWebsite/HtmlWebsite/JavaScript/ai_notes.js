@@ -33,11 +33,11 @@ function summarizeNotes() {
 
             let keywordsHTML = "";
 
-            data.keywords.forEach(k => {
-
-                keywordsHTML += `<span class="keyword-tag">${k}</span>`;
-
-            });
+            if (data.keywords) {
+                data.keywords.forEach(k => {
+                    keywordsHTML += `<span class="keyword-tag">${k}</span>`;
+                });
+            }
 
             document.getElementById("keywordResult").innerHTML = keywordsHTML;
 
