@@ -3,6 +3,13 @@ Django
 python-dotenv
 pillow
 
+# --- AI / NLP Models ---
+torch
+transformers
+sentence-transformers
+keybert
+nltk
+
 # --- System & Utilities (Works on both) ---
 psutil
 pyttsx3

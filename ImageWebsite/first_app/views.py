@@ -18,6 +18,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import torch
+import importlib.util
 
 # Load your trained model once
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -25,15 +28,19 @@ import tensorflow as tf
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/my_model.keras")
-ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_model_final.keras")
-ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_class_names.json")
+# ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_model_final.keras")
+# ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "../ImageWebsite/AIModel/Model/artifacts/animal_class_names.json")
 ANIMAL_MODEL_PATH = os.path.join(BASE_DIR, "AIModel", "Model", "artifacts", "animal_model_final.keras")
 ANIMAL_CLASS_NAMES_PATH = os.path.join(BASE_DIR, "AIModel", "Model", "artifacts", "animal_class_names.json")
+AI_NOTES_FILE_PATH = os.path.join(BASE_DIR, "AIModel", "Model", "artifacts","notes","Notes_model.py")
+
+spec = importlib.util.spec_from_file_location("Notes_model", AI_NOTES_FILE_PATH)
+AI_Notes_model = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(AI_Notes_model)
 saved_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 saved_animal_model = tf.keras.models.load_model(ANIMAL_MODEL_PATH)
 with open(ANIMAL_CLASS_NAMES_PATH, "r") as f:
     class_names = json.load(f)
-
 
 # External AIModel folder
 
@@ -360,3 +367,16 @@ def get_location_from_ip(ip):
             "country": None,
         }
 
+@csrf_exempt
+def summarize_text(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        text = data.get("text", "")
+        summary = AI_Notes_model.summarize_notes(text)
+        bullets = AI_Notes_model.bullet_summary(text)
+        keywords = AI_Notes_model.extract_keywords(text)
+        return JsonResponse({
+            "summary": summary,
+            "bullets": bullets,
+            "keywords": keywords
+        })

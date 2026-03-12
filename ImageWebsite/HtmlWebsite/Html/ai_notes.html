@@ -1,0 +1,60 @@
+{% extends "master.html" %}
+{% load string_utils %}
+{% block title %}Project | {% get_string 'app_name' %}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/ai_notes.css">
+{% endblock %}
+{% block content %}
+
+<div class="container" id="notes-container">
+
+    <h2>AI Notes Summarizer</h2>
+
+    <div class="notes-row">
+
+        <!-- INPUT -->
+        <div class="notes-box">
+
+            <label>Paste Notes:</label>
+
+            <textarea id="inputText" placeholder="Paste your notes here..."></textarea>
+
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="notes-box">
+
+            <label>Output:</label>
+
+            <div class="result-box">
+
+                <div id="loader" class="loader" style="display:none;"></div>
+
+                <h3>Summary</h3>
+                <p id="summaryResult"></p>
+
+                <h3>Bullet Points</h3>
+                <pre id="bulletResult"></pre>
+
+                <h3>Keywords</h3>
+                <p id="keywordResult"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="notes-button">
+
+        <button onclick="summarizeNotes()">Summarize</button>
+
+    </div>
+
+</div>
+
+{% block extra_jss %}
+<script src="../JavaScript/ai_notes.js"></script>
+{% endblock %}
+
+{% endblock %}

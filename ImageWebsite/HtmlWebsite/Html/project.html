@@ -10,7 +10,7 @@
 <!-- ===== CAT VS DOG CLASSIFIER SECTION ===== -->
 <section class="section classifier-section" id="classifier">
   <h2>{% get_string 'animal_classifier_text' %}</h2>
-  <h2>🎤 Mobile Microphone</h2>
+  <!-- <h2>🎤 Mobile Microphone</h2>
   <section class="voice-section">
     <button id="record_btn">Start Speaking</button>
 
@@ -18,7 +18,7 @@
       Waiting...
     </div>
 
-  </section>
+  </section> -->
 
 
   <!-- Upload form -->
@@ -32,22 +32,6 @@
       </form>
       <div class="prediction">
         {{result}}
-      </div>
-    </div>
-  </div>
-
-  <div class="plot-container">
-    <h3>{% get_string 'training_results_text' %}</h3>
-
-    <!-- Charts side by side -->
-    <div class="charts">
-      <div class="chart-box">
-        <h4>{% get_string 'model_loss_text' %}</h4>
-        <img src="/AIModel/static/plots/animal_loss.png" alt="Loss Plot">
-      </div>
-      <div class="chart-box">
-        <h4>{% get_string 'model_accuracy_text' %}</h4>
-        <img src="/AIModel/static/plots/animal_accuracy.png" alt="Accuracy Plot">
       </div>
     </div>
   </div>
