@@ -1,10 +1,27 @@
 {% extends "master.html" %}
+{% load string_utils %}
 {% block title %}Home | Cognilume{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/typing.css">
+{% endblock %}
 {% block content %}
 
 <!-- ===== HOME SECTION ===== -->
 <div class="container" id="home">
+  <section class="cognilume-hero">
+  <div class="hero-container">
+    <h1>{% get_string 'app_title' %}</h1>
+    <p class="hero-subtitle">
+      Tools and trends evolve, but collaboration endures. With Cognilume, 
+      developers, agents, and code come together on one platform.
+    </p>
+    
+    <div class="hero-actions">
+      <a href="/register/" class="btn-signup">Sign up for Cognilume</a>
+      <a href="/ai-tutor/" class="btn-outline">Try AI Tutor free</a>
+    </div>
+  </div>
+  </section>
   <section class="section" id="projects">
     <h2>Current Semester Projects</h2>
     <section class="projects">
@@ -64,5 +81,7 @@
   </section>
 
 </div>
-
+{% block extra_jss %}
+<script src="../JavaScript/typing.js"></script>
+{% endblock %}
 {% endblock %}

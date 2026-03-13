@@ -9,7 +9,6 @@
 <nav id="nav-menu">
     <div class="mobile-header-content mobile-only">
         <img src="/Image/logo.svg" alt="Cognilume Logo" class="logo">
-
         <h1>{% get_string 'app_name' %}</h1>
     </div>
     {% if user.is_superuser and 'srs' in request.path %}
