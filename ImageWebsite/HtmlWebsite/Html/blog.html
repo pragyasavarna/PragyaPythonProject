@@ -11,15 +11,15 @@
 <div class="container" id="blog-page">
 
   <section class="section">
-    <h2 style="color: var(--cyan);">Latest Updates & Articles</h2>
-    <p style="margin-bottom: 0;">
+    <h2>Latest Updates & Articles</h2>
+    <p class="blog-subtitle">
       Explore our latest insights on Artificial Intelligence, Machine Learning architectures, and Web Development.
     </p>
   </section>
 
   <div class="blog-grid">
 
-    {% for blog in blogs %}
+    {% for blog in page_obj %}
     <article class="blog-card">
       <div class="blog-header">
         <div class="blog-meta">
@@ -43,11 +43,47 @@
       </a>
     </article>
     {% empty %}
-    <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">
+    <p class="no-blogs-message">
       No blog posts available at the moment.
     </p>
     {% endfor %}
   </div>
+
+  {% if page_obj.has_other_pages %}
+  <form method="POST" action="">
+      {% csrf_token %}
+      <div class="pagination-container">
+          
+          {% if page_obj.number > 1 %}
+            <button type="submit" name="page" value="1" class="page-link">First</button>
+          {% else %}
+            <span class="page-link disabled">First</span>
+          {% endif %}
+
+          {% if page_obj.has_previous %}
+            <button type="submit" name="page" value="{{ page_obj.previous_page_number }}" class="page-link">&laquo; Prev</button>
+          {% else %}
+            <span class="page-link disabled">&laquo; Prev</span>
+          {% endif %}
+
+          <span class="page-link active">{{ page_obj.number }}</span>
+
+          {% if page_obj.has_next %}
+            <button type="submit" name="page" value="{{ page_obj.next_page_number }}" class="page-link">Next &raquo;</button>
+          {% else %}
+            <span class="page-link disabled">Next &raquo;</span>
+          {% endif %}
+
+          {% if page_obj.number != page_obj.paginator.num_pages %}
+            <button type="submit" name="page" value="{{ page_obj.paginator.num_pages }}" class="page-link">Last</button>
+          {% else %}
+            <span class="page-link disabled">Last</span>
+          {% endif %}
+
+      </div>
+  </form>
+{% endif %}
+
 </div>
 
 {% endblock %}

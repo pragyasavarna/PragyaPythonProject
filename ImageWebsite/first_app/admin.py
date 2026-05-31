@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
 from import_export.admin import ImportExportModelAdmin
+from import_export import resources, fields
+from import_export.widgets import DateWidget
 
 User = get_user_model()
 
@@ -14,8 +16,24 @@ admin.site.register(Feedback)
 admin.site.register(UploadedImage)
 
 # 1. Register BlogPost
+class BlogPostResource(resources.ModelResource):
+    # This specifically tells the importer how to parse the date string 
+    # for BOTH importing and comparing against existing records.
+    published_at = fields.Field(
+        column_name='published_at',
+        attribute='published_at',
+        widget=DateWidget(format='%d-%m-%Y') 
+    )
+
+    class Meta:
+        model = BlogPost
+        # Optional: This tells it to use the 'slug' to check if a post already exists, 
+        # rather than needing an ID.
+        import_id_fields = ('slug',) 
+
 @admin.register(BlogPost)
 class BlogPostAdmin(ImportExportModelAdmin):
+    resource_class = BlogPostResource
     list_display = ('title', 'category', 'published_at')
     ordering = ('-published_at',)
     prepopulated_fields = {'slug': ('title',)}

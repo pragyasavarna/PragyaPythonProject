@@ -14,6 +14,7 @@ from tensorflow.keras.preprocessing import image
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
@@ -24,7 +25,6 @@ import importlib.util
 import time
 
 # Load your trained model once
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 import tensorflow as tf
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -283,10 +283,19 @@ def feedback_page(request):
 
 def blog_page(request):
     # Fetch all blogs, ordered by newest date first
-    blogs = BlogPost.objects.all().order_by('-published_at')
+    blogs_list = BlogPost.objects.all().order_by('-published_at')
+    
+    # Set up Pagination: Show 6 blogs per page (adjust this number as you like)
+    paginator = Paginator(blogs_list, 6) 
+    
+    # Get the page number from the URL (e.g., /blog/?page=2)
+    page_number = request.POST.get('page') or request.GET.get('page')
+    
+    # Get the specific blogs for the requested page
+    page_obj = paginator.get_page(page_number)
     
     context = {
-        'blogs': blogs
+        'page_obj': page_obj 
     }
     return render(request, "blog.html", context)
 

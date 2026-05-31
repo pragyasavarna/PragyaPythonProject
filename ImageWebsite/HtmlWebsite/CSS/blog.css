@@ -159,6 +159,57 @@
     /* Moves arrow slightly right */
 }
 
+/* ===========================
+   🔹 PAGINATION STYLES (ADDED)
+=========================== */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.page-link {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 200, 255, 0.15);
+    color: var(--text-light, #ffffff);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover:not(.disabled):not(.active) {
+    background-color: rgba(0, 200, 255, 0.1);
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px -5px rgba(0, 200, 255, 0.3);
+}
+
+.page-link.active {
+    background-color: var(--cyan);
+    color: #000;
+    border-color: var(--cyan);
+    font-weight: bold;
+}
+
+.page-link.disabled {
+    color: var(--text-dim, #888888);
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+}
+
+button.page-link {
+    font-family: inherit;
+    cursor: pointer;
+}
+
 /* Mobile Responsiveness */
 @media screen and (max-width: 768px) {
     .container {
@@ -190,5 +241,10 @@
 
         /* 4. Reduce space between text and button */
         margin-bottom: 15px;
+    }
+
+    .page-link {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
