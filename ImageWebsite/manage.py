@@ -4,6 +4,7 @@ import os
 import sys
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 
 
 def main():
