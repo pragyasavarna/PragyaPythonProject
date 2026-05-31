@@ -15,7 +15,7 @@ admin.site.register(UploadedImage)
 
 # 1. Register BlogPost
 @admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(ImportExportModelAdmin):
     list_display = ('title', 'category', 'published_at')
     ordering = ('-published_at',)
     prepopulated_fields = {'slug': ('title',)}
