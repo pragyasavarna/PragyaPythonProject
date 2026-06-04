@@ -1,0 +1,145 @@
+#coding.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(15, 20, 35, 0.9);
+    /* Dark background matching your theme */
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.directory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #00d2ff;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.directory-header h2 {
+    color: #00d2ff;
+    /* Neon cyan accent */
+    margin: 0;
+    font-size: 1rem;
+}
+
+.search-input {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #3a4b75;
+    background: #0a0e17;
+    color: #fff;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+}
+
+.directory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px;
+    background: #1a233a;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #a3b1c6;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Ensure the emoji never shrinks if the text gets too long */
+.list-item .icon {
+    flex-shrink: 0;
+}
+
+.list-item .file-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.4;
+    font-size: 0.8rem;
+}
+
+.list-item:hover {
+    background: #232f4e;
+    color: #ffffff;
+    transform: translateX(5px);
+}
+
+.list-item.folder {
+    color: #00d2ff;
+    font-weight: 600;
+}
+
+.list-item.file {
+    color: #e0e0e0;
+}
+
+.list-item.parent-dir {
+    background: #2a1b3d;
+    color: #d884ff;
+}
+
+.empty-state {
+    text-align: center;
+    color: #6c7a9c;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* =========================================
+   Mobile View (Screens smaller than 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    #coding.container {
+        /* Reduce the huge 40px margins and 20px padding to save screen space */
+        margin: 20px 15px;
+        padding: 15px;
+        border-radius: 8px;
+        /* Slightly softer corners for mobile */
+    }
+
+    .directory-header {
+        /* Change from side-by-side to stacked (one on top of the other) */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        /* Add space between the title and search bar */
+        text-align: center;
+        /* Center the title */
+    }
+
+    .directory-header h2 {
+        font-size: 1.3rem;
+        /* Slightly scale down the title */
+    }
+
+    .search-input {
+        /* Force the search bar to span the entire width of the container */
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 15px;
+        /* Slightly taller for easier tapping */
+    }
+
+    /* Disable the hover slide effect on touchscreens, 
+       as it can make scrolling feel sticky or glitchy */
+    @media (hover: none) {
+        .list-item:hover {
+            transform: none;
+            background: #1a233a;
+            /* Keeps the original background */
+        }
+    }
+}

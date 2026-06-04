@@ -23,6 +23,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
 import time
+import nbformat
+from nbconvert import HTMLExporter
 
 # Load your trained model once
 import tensorflow as tf
@@ -61,8 +63,92 @@ STATIC_FOLDERS = {
     'JavaScript': os.path.join(BASE_DIR, 'HtmlWebsite', 'JavaScript'),
     'AIModel': os.path.join(BASE_DIR, 'AIModel', 'Model'),
     'Artifacts': os.path.join(BASE_DIR, 'AIModel', 'Model', 'artifacts'),
+    'Coding': os.path.join(BASE_DIR, 'Coding'),
 }
 
+# ---------------------------------------------------------
+# VIEW 1: Dedicated view for the highly customized Coding folder
+# ---------------------------------------------------------
+def coding_directory_view(request, path=""):
+    # 1. Admin Protection
+    # if not (request.user.is_authenticated and request.user.is_staff):
+    #     return HttpResponse("Permission Denied: Admin access required.", status=403)
+
+    document_root = os.path.join(BASE_DIR, 'Coding')
+    full_path = os.path.join(document_root, path)
+
+    # Prevent directory traversal attacks (e.g., trying to access ../../etc/passwd)
+    if not os.path.abspath(full_path).startswith(os.path.abspath(document_root)):
+        return HttpResponse("Permission Denied.", status=403)
+
+    if not os.path.exists(full_path):
+        return HttpResponse("Not Found", status=404)
+
+    # 2. Handle Jupyter Notebooks
+    if full_path.endswith('.ipynb'):
+        # If the iframe is requesting the raw notebook content
+        if request.GET.get('raw') == 'true':
+            try:
+                with open(full_path, 'r', encoding='utf-8') as f:
+                    notebook_node = nbformat.read(f, as_version=4)
+                html_exporter = HTMLExporter()
+                (body, resources) = html_exporter.from_notebook_node(notebook_node)
+                return HttpResponse(body)
+            except Exception as e:
+                return HttpResponse(f"Error rendering notebook: {e}", status=500)
+        
+        # If the user just clicked the link, serve the Cognilume wrapper
+        else:
+            # Dynamically calculate the parent directory
+            parent_dir = os.path.dirname(path)
+            
+            # If inside a subfolder (like Strings), go to /Coding/Strings/
+            # If already in the root, go to /Coding/
+            back_url = f"/Coding/{parent_dir}/" if parent_dir else "/Coding/"
+
+            context = {
+                'file_name': os.path.basename(full_path),
+                'current_path': path,
+                'back_url': back_url # <-- Passing the exact URL to the template
+            }
+            return render(request, 'notebook_view.html', context)
+    
+    # 3. Handle Directories (The Custom UI)
+    if os.path.isdir(full_path):
+        clean_path = path.strip('/')
+        parent_path = os.path.dirname(clean_path) if clean_path else None
+        
+        directories = []
+        files = []
+        
+        try:
+            for item in sorted(os.listdir(full_path)):
+                if item.startswith('.'):
+                    continue
+                item_path = os.path.join(full_path, item)
+                if os.path.isdir(item_path):
+                    directories.append(item)
+                else:
+                    files.append(item)
+        except Exception as e:
+            return HttpResponse(f"Error reading directory: {e}", status=500)
+
+        context = {
+            'current_path': clean_path,
+            'parent_path': parent_path,
+            'directories': directories,
+            'files': files,
+            'base_folder': 'Coding', # Hardcoded since this view only handles Coding
+        }
+        return render(request, 'coding_index.html', context)
+    
+    # 4. Handle regular files (.py, .txt, etc.)
+    return serve(request, path, document_root=document_root)
+
+
+# ---------------------------------------------------------
+# VIEW 2: Simple, lightweight view for CSS, JS, and Images
+# ---------------------------------------------------------
 def serve_static(request, folder, path):
     if folder in STATIC_FOLDERS:
         return serve(request, path, document_root=STATIC_FOLDERS[folder])

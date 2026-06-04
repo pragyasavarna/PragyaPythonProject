@@ -22,6 +22,8 @@ kagglehub
 pytesseract
 tensorflow
 django-import-export
+nbformat
+nbconvert
 
 # --- GeoIP (MaxMind) ---
 geoip2

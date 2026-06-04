@@ -1,0 +1,38 @@
+{% extends "master.html" %}
+
+{% block title %}{{ file_name }} | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/notebook_view.css">
+{% endblock %}
+
+{% block content %}
+<div class="container notebook-container">
+    
+    <div class="notebook-header">
+        <h2>
+            <span class="icon">📄</span>
+            <span class="file-text">{{ file_name }}</span>
+        </h2>
+        <a href="{{ back_url }}" class="back-btn">⬅ Go Back</a>
+    </div>
+    
+    <div class="iframe-wrapper">
+        <div id="notebook-loader" class="loader-container">
+            <div class="spinner"></div>
+            <p>Loading Notebook...</p>
+        </div>
+        
+        <iframe 
+            id="notebook-iframe" 
+            src="/Coding/{{ current_path }}?raw=true">
+        </iframe>
+    </div>
+
+</div>
+
+
+{% block extra_jss %}
+<script src="../JavaScript/notebook_view.js"></script>
+{% endblock %}
+{% endblock %}

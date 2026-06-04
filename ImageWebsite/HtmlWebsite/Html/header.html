@@ -11,16 +11,13 @@
         <img src="/Image/logo.svg" alt="Cognilume Logo" class="logo">
         <h1>{% get_string 'app_name' %}</h1>
     </div>
-    {% if user.is_superuser and 'srs' in request.path %}
-    <a href="/srs/">{% get_string 'srs_text' %}</a>
-    {% else %}
     <a href="/">{% get_string 'home_text' %}</a>
     <a href="/ai-tutor/">{% get_string 'ai_tutor_text' %}</a>
+    <a href="/Coding/">{% get_string 'coding_text' %}</a>
     <a href="/blog/">{% get_string 'blog_text' %}</a>
     <a href="/about/">{% get_string 'about_text' %}</a>
     <a href="/contact/">{% get_string 'contact_text' %}</a>
     <a href="/feedback/">{% get_string 'feedback_text' %}</a>
-    {% endif %}
     {% if user.is_authenticated %}
     <span style="color: var(--cyan); margin-left: 20px;">
         Welcome, {{ user.name }}!

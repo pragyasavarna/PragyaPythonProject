@@ -9,6 +9,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 urlpatterns = [
     # path('', views.serve_html, name='home'),
    
+    # 1. Route specifically for the Coding folder and all its sub-paths
+    # We use a non-capturing group for the optional trailing path
+    re_path(r'^Coding(?:/(?P<path>.*))?$', views.coding_directory_view, name='coding_directory'),
+
+    # 2. Route for standard static assets (CSS, JS, Images, etc.)
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly
     re_path(r'^(?P<folder>CSS|Image|JavaScript|AIModel|Artifacts)/(?P<path>.*)$',
             lambda request, folder, path: views.serve_static(request, folder, path)),

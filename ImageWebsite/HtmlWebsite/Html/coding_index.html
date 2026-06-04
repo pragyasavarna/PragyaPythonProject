@@ -1,0 +1,53 @@
+{% extends "master.html" %}
+{% load string_utils %}
+
+{% block title %}Coding | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/coding.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="coding">
+    
+    <div class="directory-header">
+        <h2>
+            Index of /Coding/{% if current_path %}{{ current_path }}/{% endif %}
+        </h2>
+        
+        <input type="text" id="fileSearch" placeholder="Search files..." class="search-input">
+    </div>
+
+    <div class="directory-list">
+        {% if current_path %}
+            <a href="/{{ base_folder }}/{{ parent_path }}" class="list-item parent-dir">
+                <span class="icon">📁</span>
+                <span class="file-text"><strong>.. (Go Back)</strong></span>
+            </a>
+        {% endif %}
+
+        {% for dir in directories %}
+            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ dir }}/" class="list-item folder">
+                <span class="icon">📁</span>
+                <span class="file-text">{{ dir }}</span>
+            </a>
+        {% empty %}
+            {% if not files %}
+                <p class="empty-state">This directory is empty.</p>
+            {% endif %}
+        {% endfor %}
+
+        {% for file in files %}
+            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file }}" class="list-item file">
+                <span class="icon">📄</span>
+                <span class="file-text">{{ file }}</span>
+            </a>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% block extra_jss %}
+<script src="../JavaScript/coding.js"></script>
+{% endblock %}
+{% endblock %}
