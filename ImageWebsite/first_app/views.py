@@ -63,7 +63,7 @@ STATIC_FOLDERS = {
     'JavaScript': os.path.join(BASE_DIR, 'HtmlWebsite', 'JavaScript'),
     'AIModel': os.path.join(BASE_DIR, 'AIModel', 'Model'),
     'Artifacts': os.path.join(BASE_DIR, 'AIModel', 'Model', 'artifacts'),
-    'Coding': os.path.join(BASE_DIR, 'Coding'),
+    'Interview': os.path.join(BASE_DIR, 'Interview'),
 }
 
 # ---------------------------------------------------------
@@ -74,7 +74,7 @@ def coding_directory_view(request, path=""):
     # if not (request.user.is_authenticated and request.user.is_staff):
     #     return HttpResponse("Permission Denied: Admin access required.", status=403)
 
-    document_root = os.path.join(BASE_DIR, 'Coding')
+    document_root = os.path.join(BASE_DIR, 'Interview')
     full_path = os.path.join(document_root, path)
 
     # Prevent directory traversal attacks (e.g., trying to access ../../etc/passwd)
@@ -102,12 +102,15 @@ def coding_directory_view(request, path=""):
             # Dynamically calculate the parent directory
             parent_dir = os.path.dirname(path)
             
-            # If inside a subfolder (like Strings), go to /Coding/Strings/
-            # If already in the root, go to /Coding/
-            back_url = f"/Coding/{parent_dir}/" if parent_dir else "/Coding/"
+            # If inside a subfolder (like Strings), go to /Interview/Strings/
+            # If already in the root, go to /Interview/
+            back_url = f"/Interview/{parent_dir}/" if parent_dir else "/Interview/"
+            # --- CHANGED: Clean the file name for display ---
+            raw_name = os.path.basename(full_path)
+            clean_name = os.path.splitext(raw_name)[0].replace('_', ' ')
 
             context = {
-                'file_name': os.path.basename(full_path),
+                'file_name': clean_name,
                 'current_path': path,
                 'back_url': back_url # <-- Passing the exact URL to the template
             }
@@ -117,6 +120,12 @@ def coding_directory_view(request, path=""):
     if os.path.isdir(full_path):
         clean_path = path.strip('/')
         parent_path = os.path.dirname(clean_path) if clean_path else None
+        if clean_path:
+            formatted_topic = clean_path.replace('_', ' ').replace('/', ' - ').title()
+            page_title = f"📂 {formatted_topic} Interview Questions"
+        else:
+            # If the user is at the root /Interview/ directory, display the main title
+            page_title = "📚 Interview Preparation Modules"
         
         directories = []
         files = []
@@ -129,7 +138,11 @@ def coding_directory_view(request, path=""):
                 if os.path.isdir(item_path):
                     directories.append(item)
                 else:
-                    files.append(item)
+                    clean_name = os.path.splitext(item)[0].replace('_', ' ')
+                    files.append({
+                        'real_name': item,
+                        'display_name': clean_name
+                    })
         except Exception as e:
             return HttpResponse(f"Error reading directory: {e}", status=500)
 
@@ -138,7 +151,8 @@ def coding_directory_view(request, path=""):
             'parent_path': parent_path,
             'directories': directories,
             'files': files,
-            'base_folder': 'Coding', # Hardcoded since this view only handles Coding
+            'base_folder': 'Interview',
+            'page_title': page_title,
         }
         return render(request, 'coding_index.html', context)
     

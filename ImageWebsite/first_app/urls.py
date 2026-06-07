@@ -11,7 +11,7 @@ urlpatterns = [
    
     # 1. Route specifically for the Coding folder and all its sub-paths
     # We use a non-capturing group for the optional trailing path
-    re_path(r'^Coding(?:/(?P<path>.*))?$', views.coding_directory_view, name='coding_directory'),
+    re_path(r'^Interview(?:/(?P<path>.*))?$', views.coding_directory_view, name='coding_directory'),
 
     # 2. Route for standard static assets (CSS, JS, Images, etc.)
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly

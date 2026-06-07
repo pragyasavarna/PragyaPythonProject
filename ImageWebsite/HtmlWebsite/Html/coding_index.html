@@ -1,7 +1,7 @@
 {% extends "master.html" %}
 {% load string_utils %}
 
-{% block title %}Coding | Cognilume{% endblock %}
+{% block title %}Interview | Cognilume{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/coding.css">
@@ -11,10 +11,7 @@
 <div class="container" id="coding">
     
     <div class="directory-header">
-        <h2>
-            Index of /Coding/{% if current_path %}{{ current_path }}/{% endif %}
-        </h2>
-        
+        <h2>{{ page_title }}</h2>
         <input type="text" id="fileSearch" placeholder="Search files..." class="search-input">
     </div>
 
@@ -38,9 +35,9 @@
         {% endfor %}
 
         {% for file in files %}
-            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file }}" class="list-item file">
+            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file.real_name }}" class="list-item file">
                 <span class="icon">📄</span>
-                <span class="file-text">{{ file }}</span>
+                <span class="file-text">{{ file.display_name }}</span>
             </a>
         {% endfor %}
     </div>
