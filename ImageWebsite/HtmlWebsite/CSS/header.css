@@ -107,9 +107,9 @@ nav a:hover::after {
     /* Keeps the logo shape correct */
 
     /* 2. Safety Caps (Replaces clamp) */
-    min-width: 80px;
+    min-width: 120px;
     /* Never gets too small */
-    max-width: 120px;
+    max-width: 160px;
     /* Never gets too big */
 
     /* 3. Positioning */
