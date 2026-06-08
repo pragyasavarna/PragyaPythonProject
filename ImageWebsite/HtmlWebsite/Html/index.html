@@ -2,6 +2,7 @@
 {% load string_utils %}
 {% block title %}Home | Cognilume{% endblock %}
 {% block extra_css %}
+<link rel="stylesheet" href="../CSS/home.css">
 <link rel="stylesheet" href="../CSS/typing.css">
 {% endblock %}
 {% block content %}
@@ -10,75 +11,76 @@
 <div class="container" id="home">
   <section class="cognilume-hero">
   <div class="hero-container">
-    <h1>{% get_string 'app_title' %}</h1>
-    <p class="hero-subtitle">
-      Tools may evolve and trends may fade, but power lies in collaboration. 
-      Cognilume is where developers, intelligent agents, and code converge to shape the future.
-    </p>
     
-    <div class="hero-actions">
-      <a href="/register/" class="btn-signup">Sign up for Cognilume</a>
-      <a href="/ai-tutor/" class="btn-outline">Try AI Tutor free</a>
+    <div class="hero-text-content">
+      <h1 class="type-text">{% get_string 'app_title' %}</h1>
+      <p class="hero-subtitle type-text">
+        Tools may evolve and trends may fade, but power lies in collaboration. 
+        Cognilume is where developers, intelligent agents, and code converge to shape the future.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="/register/" class="btn-signup type-text">Sign up for Cognilume</a>
+        <a href="/ai-tutor/" class="btn-outline type-text">Try AI Tutor free</a>
+      </div>
     </div>
+
+    <div class="hero-image-content">
+      <img src="/Image/brain.jpeg" alt="Cognilume Intelligence" />
+    </div>
+
   </div>
   </section>
-  <section class="section" id="projects">
-    <h2>Current Semester Projects</h2>
-    <section class="projects">
-      <div class="project-card">
-        <h3>1. Image Classification of All Animals using CNN</h3>
-        <p>
-          A CNN-based image classification project that identifies whether the given image
-          belongs to any category of the animals. The model includes layers for feature extraction,
-          pooling, and dense classification, achieving efficient binary classification results.
-        </p>
-      </div>
-      <div class="project-card">
-        <h3>2. Face Recognition System Based on CNN for Criminal Identification</h3>
-        <p>
-          This project uses Convolutional Neural Networks (CNN) to identify and verify criminal faces
-          through facial image datasets. The model is integrated into a Django web interface
-          for real-time face recognition and identity verification.
-        </p>
-      </div>
-    </section>
-  </section>
+  <section class="what-we-do-section">
+  <div class="what-we-do-section-header">
+    <span class="what-we-do-section-label type-text">WHAT WE DO</span>
+    <h2 class="type-text">Intelligent Solutions for a <span class="highlight">Smarter Tomorrow</span></h2>
+  </div>
 
-  <section class="section">
-    <h2>Model Architecture (Main Model Used)</h2>
-    <ul>
-      <li>Implemented a Convolutional Neural Network (CNN) integrated with a Django web app.</li>
-      <li>2D Convolutional layers + MaxPooling for progressive feature extraction.</li>
-      <li>ReLU activation in all intermediate layers.</li>
-      <li>Dense layers with Batch Normalization & Dropout to prevent overfitting.</li>
-      <li>Sigmoid activation in the output layer for binary classification.</li>
-      <li>Trained with Binary Cross-Entropy loss & evaluated via accuracy and confusion matrix.</li>
-    </ul>
-  </section>
-
-  <section class="section">
-    <h2>Future Scope</h2>
-    <p>
-      In future updates, the system will be integrated with <strong>Amazon Web Services (AWS)</strong>
-      to achieve better scalability, speed, and security. Cloud-based deployment will enable
-      faster computation, virtualization, and cost-effective execution, making the project
-      suitable for real-world applications.
-    </p>
-  </section>
-
-  <section class="section">
-    <h2>Technologies Used</h2>
-    <div class="tech">
-      <span>Python</span>
-      <span>Deep Learning</span>
-      <span>Machine Learning</span>
-      <span>Artificial Intelligence</span>
-      <span>Django</span>
-      <span>HTML</span>
-      <span>CSS</span>
-      <span>JavaScript</span>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="icon">🧠</div> 
+      <h3 class="type-text">Artificial Intelligence</h3>
+      <p class="type-text">Custom AI solutions and model development to solve real-world problems.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
     </div>
-  </section>
+
+    <div class="service-card">
+      <div class="icon">⚙️</div>
+      <h3 class="type-text">Machine Learning</h3>
+      <p class="type-text">Build predictive models and intelligent systems that learn and improve.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
+    </div>
+
+    <div class="service-card">
+      <div class="icon">💻</div>
+      <h3 class="type-text">Web Development</h3>
+      <p class="type-text">Modern, responsive and high-performance websites and web apps.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
+    </div>
+
+    <div class="service-card">
+      <div class="icon">📊</div>
+      <h3 class="type-text">Data Analytics</h3>
+      <p class="type-text">Turn data into actionable insights with advanced analytics.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
+    </div>
+
+    <div class="service-card">
+      <div class="icon">🎓</div>
+      <h3 class="type-text">AI Education</h3>
+      <p class="type-text">Courses, workshops and resources to help you master AI & ML.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
+    </div>
+
+    <div class="service-card">
+      <div class="icon">☁️</div>
+      <h3 class="type-text">Cloud Solutions</h3>
+      <p class="type-text">Scalable cloud infrastructure and deployment solutions.</p>
+      <a href="#" class="learn-more">Learn More &rarr;</a>
+    </div>
+  </div>
+</section>
 
 </div>
 {% block extra_jss %}

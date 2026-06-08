@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Cognilume</string>
     <string name="app_title">Where Intelligence Meets Innovation</string>
-    <string name="footer_text">© 2026 MCA Final Year Project | Developed by pragya_savarna</string>
+    <string name="footer_text">© 2026 Cognilume</string>
     <string name="home_text">Home</string>
     <string name="ai_tutor_text">AI Tutor</string>
     <string name="about_text">About</string>

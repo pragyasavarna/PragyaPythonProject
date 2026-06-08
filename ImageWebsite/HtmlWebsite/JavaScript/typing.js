@@ -1,16 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const elements = document.querySelectorAll("#home h2, #home h3, #home p, #home li, #home .tech span");
+    // 🔥 THE FIX: Just look for the class. No hardcoded HTML tags!
+    const elements = document.querySelectorAll(".type-text");
     let currentElementIndex = 0;
 
     function typeHTML(element, speed, callback) {
-        // Reveal the parent background containers just before typing starts
-        const parentSection = element.closest('.section');
-        const parentCard = element.closest('.project-card');
-        const parentTech = element.closest('.tech');
+        // Dynamically find the parent wrappers and fade them in
+        const parentSection = element.closest('section');
+        const parentCard = element.closest('.service-card, .project-card, .tech');
 
         if (parentSection) parentSection.style.opacity = '1';
         if (parentCard) parentCard.style.opacity = '1';
-        if (parentTech) parentTech.style.opacity = '1';
 
         let html = element.innerHTML.trim();
         element.innerHTML = "";

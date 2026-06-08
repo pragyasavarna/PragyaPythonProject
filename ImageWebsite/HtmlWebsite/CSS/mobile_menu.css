@@ -9,7 +9,6 @@
     cursor: pointer;
     flex-direction: column;
     gap: 5px;
-    padding-bottom: 10px;
     z-index: 2000;
     -webkit-tap-highlight-color: transparent;
     /* 1. Stops the blue box on Android/iOS */
@@ -136,17 +135,6 @@
         padding-bottom: 20px;
     }
 
-    .mobile-only img {
-        width: 160px;
-        /* Adjusted size to match home screen better */
-        height: auto;
-        margin-bottom: 15px;
-        /* Add space between logo and text */
-        object-fit: contain;
-        align-self: center;
-        flex-shrink: 0;
-    }
-
     .mobile-only h1 {
         color: var(--cyan);
         text-transform: uppercase;
@@ -164,5 +152,38 @@
         white-space: normal;
         text-align: center;
         letter-spacing: 1px;
+    }
+
+    nav a {
+        margin: 0 10px;
+        font-size: 0.85rem;
+    }
+
+    #nav-menu .mobile-header-content {
+        order: -1 !important;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0 15px 0;
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+    }
+
+    #nav-menu .mobile-header-content .logo-link,
+    #nav-menu .mobile-header-content .logo {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: 130px !important;
+        height: auto;
+        margin: 0 auto !important;
+        display: block !important;
+        object-fit: contain;
+        align-self: center;
+    }
+
+    #nav-menu .mobile-header-content a.logo-link::after {
+        display: none !important;
+        content: none !important;
     }
 }

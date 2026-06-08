@@ -1,5 +1,7 @@
 {% load string_utils %}
-<img src="/Image/logo.png" alt="Cognilume Logo" class="logo" />
+<a href="/" class="logo-link" aria-label="Return to homepage">
+    <img src="/Image/logo.png" alt="Cognilume Logo" class="logo" />
+</a>
 <!-- <h1>{% get_string 'app_name' %}</h1> -->
 <div class="hamburger" onclick="toggleMenu()">
     <span></span>
@@ -8,7 +10,9 @@
 </div>
 <nav id="nav-menu">
     <div class="mobile-header-content mobile-only">
-        <img src="/Image/logo.png" alt="Cognilume Logo" class="logo">
+        <a href="/" class="logo-link" aria-label="Return to homepage">
+            <img src="/Image/logo.png" alt="Cognilume Logo" class="logo" />
+        </a>
         <!-- <h1>{% get_string 'app_name' %}</h1> -->
     </div>
     <a href="/">{% get_string 'home_text' %}</a>
@@ -16,7 +20,7 @@
     <a href="/Interview/">{% get_string 'coding_text' %}</a>
     <a href="/blog/">{% get_string 'blog_text' %}</a>
     <a href="/about/">{% get_string 'about_text' %}</a>
-    <a href="/contact/">{% get_string 'contact_text' %}</a>
+    <!-- <a href="/contact/">{% get_string 'contact_text' %}</a> -->
     <a href="/feedback/">{% get_string 'feedback_text' %}</a>
     {% if user.is_authenticated %}
     <span style="color: var(--cyan); margin-left: 20px;">
@@ -27,5 +31,5 @@
     <a href="/login/">{% get_string 'login_text' %}</a>
     <!-- <a href="/register/">{% get_string 'register_text' %}</a> -->
     {% endif %}
-
 </nav>
+<a href="/contact/" class="header-cta-button">Get in Touch &rarr;</a>

@@ -9,9 +9,9 @@
 }
 
 :root {
-  --navy-1: #050612;
-  --navy-2: #0b0f2a;
-  --purple: #120036;
+  --navy-1: #000000;
+  --navy-2: #050814;
+  --purple: #0a0a1a;
   --cyan: #00c8ff;
   --magenta: #ff43c5;
   --text-light: #f1e5d8;
@@ -39,54 +39,10 @@ body {
 body {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
-  background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
+  background: var(--navy-1);
   overflow-x: hidden;
   color: var(--text-light);
   padding-bottom: 0px;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Animated floating neon layer */
-body::before {
-  content: "";
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(from 0deg,
-      rgba(0, 200, 255, 0.2),
-      rgba(255, 67, 197, 0.2),
-      rgba(0, 200, 255, 0.2),
-      rgba(255, 67, 197, 0.2));
-  animation: rotateGlow 25s linear infinite;
-  opacity: 0.25;
-  z-index: 0;
-}
-
-@keyframes rotateGlow {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* Bring content above animation */
@@ -103,9 +59,8 @@ footer {
    🔹 CONTAINER & SECTIONS
 =========================== */
 .container {
-  max-width: 1100px;
-  margin: 40px auto 20px;
-  padding: 20px;
+  max-width: 90%;
+  margin: 20px auto 20px;
 }
 
 .section {
@@ -223,22 +178,22 @@ body.no-scroll {
 
   /* 1. Adjust Heading 2 (Target: 22px) */
   h2 {
-    font-size: 1.375rem !important;
+    font-size: 1.375rem;
     line-height: 1.3;
-    margin-bottom: 10px !important;
+    margin-bottom: 10px;
   }
 
   /* 2. Adjust Heading 3 (Target: 16px) */
   h3 {
-    font-size: 1rem !important;
+    font-size: 1rem;
     line-height: 1.3;
-    margin-bottom: 10px !important;
+    margin-bottom: 10px;
   }
 
   /* 3. Adjust Paragraphs (Target: 14px) */
   p,
   li {
-    font-size: 0.9rem !important;
+    font-size: 0.9rem;
     line-height: 1.5;
   }
 

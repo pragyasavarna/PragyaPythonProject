@@ -121,7 +121,11 @@ function adjustLayout() {
 
   // --- 1. HEADER ADJUSTMENT (Top Spacing) ---
   if (header) {
-    const headerHeight = header.offsetHeight;
+    let headerHeight = header.offsetHeight;
+    if (window.innerWidth <= 768) {
+      // Reduce the height by 20% (0.20)
+      headerHeight = headerHeight - (headerHeight * 0.70);
+    }
     const currentTop = parseFloat(main.style.paddingTop) || 0;
 
     // Only update if size changed significantly (>1px)
