@@ -14,7 +14,7 @@ function adjustLayout() {
   if (header) {
     let headerHeight = header.offsetHeight;
     if (window.innerWidth <= 768) {
-      // Reduce the height by 20% (0.20)
+      // Reduce the height by 70%
       headerHeight = headerHeight - (headerHeight * 0.70);
     }
     const currentTop = parseFloat(main.style.paddingTop) || 0;
@@ -46,11 +46,24 @@ function adjustLayout() {
 }
 
 // Run on load and resize
-document.addEventListener('DOMContentLoaded', adjustLayout);
-window.addEventListener('load', adjustLayout);
-window.addEventListener('resize', adjustLayout);
+let resizeTimer;
+
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(adjustLayout, 100);
+});
+
+// Run immediately to prevent FOUC (layout shift) on first paint
+adjustLayout();
 
 document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector('header');
+
+  if (header && 'ResizeObserver' in window) {
+    const observer = new ResizeObserver(adjustLayout);
+    observer.observe(header);
+  }
+
   const currentPath = window.location.pathname;
   const navLinks = document.querySelectorAll("nav a");
 
@@ -120,7 +133,10 @@ function previewImage(event) {
     img.onload = () => URL.revokeObjectURL(img.src);
     preview.appendChild(img);
     // 👉 CLEAR prediction div whenever a new image is chosen
-    document.querySelector(".prediction").textContent = "";
+    const prediction = document.querySelector(".prediction");
+    if (prediction) {
+      prediction.textContent = "";
+    }
   }
 }
 
@@ -144,17 +160,15 @@ function toggleMenu() {
 document.addEventListener('click', function (event) {
   const menu = document.getElementById('nav-menu');
   const hamburger = document.querySelector('.hamburger');
-  const body = document.body;
 
-  // 1. Check if the menu is actually OPEN
-  if (menu.classList.contains('active')) {
+  if (!menu || !hamburger) return;
 
-    // 2. Check if the click was NOT inside the menu AND NOT on the hamburger icon
-    if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
-
-      // 3. Close the menu and unfreeze the body
-      menu.classList.remove('active');
-      body.classList.remove('no-scroll');
-    }
+  if (
+    menu.classList.contains('active') &&
+    !menu.contains(event.target) &&
+    !hamburger.contains(event.target)
+  ) {
+    menu.classList.remove('active');
+    document.body.classList.remove('no-scroll');
   }
 });

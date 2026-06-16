@@ -12,6 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (parentCard) parentCard.style.opacity = '1';
 
         let html = element.innerHTML.trim();
+        
+        // 🔥 FIX LAYOUT SHIFT: Lock the element's height before clearing it
+        const computedHeight = window.getComputedStyle(element).height;
+        if (computedHeight && computedHeight !== 'auto' && computedHeight !== '0px') {
+            element.style.minHeight = computedHeight;
+        } else {
+            const rectHeight = element.getBoundingClientRect().height;
+            if (rectHeight > 0) {
+                element.style.minHeight = rectHeight + "px";
+            }
+        }
+
         element.innerHTML = "";
         element.style.visibility = "visible";
         let i = 0;

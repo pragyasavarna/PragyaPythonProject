@@ -64,6 +64,8 @@
     width: 100%;
     max-width: 250px;
     height: auto;
+    object-fit: contain;
+    -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
     mask-image: radial-gradient(circle, black 60%, transparent 100%);
 }
 
