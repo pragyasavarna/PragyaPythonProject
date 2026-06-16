@@ -1,3 +1,55 @@
+/* =========================================
+   🟢 DYNAMIC LAYOUT ADJUSTER
+   (Handles Fixed Header & Fixed Footer spacing)
+========================================= */
+function adjustLayout() {
+  const header = document.querySelector('header');
+  const footer = document.querySelector('footer');
+  const main = document.querySelector('main');
+
+  // Safety check: Ensure elements exist
+  if (!main) return;
+
+  // --- 1. HEADER ADJUSTMENT (Top Spacing) ---
+  if (header) {
+    let headerHeight = header.offsetHeight;
+    if (window.innerWidth <= 768) {
+      // Reduce the height by 20% (0.20)
+      headerHeight = headerHeight - (headerHeight * 0.70);
+    }
+    const currentTop = parseFloat(main.style.paddingTop) || 0;
+
+    // Only update if size changed significantly (>1px)
+    if (Math.abs(headerHeight - currentTop) > 1) {
+      main.style.paddingTop = headerHeight + 'px';
+    }
+  }
+
+  // --- 2. FOOTER ADJUSTMENT (Bottom Spacing) ---
+  // ⚠️ Only keeps content from hiding behind a FIXED footer
+  if (footer) {
+    // Check if footer is actually fixed before applying padding
+    const footerStyle = window.getComputedStyle(footer);
+
+    if (footerStyle.position === 'fixed') {
+      const footerHeight = footer.offsetHeight;
+      const currentBottom = parseFloat(main.style.paddingBottom) || 0;
+
+      if (Math.abs(footerHeight - currentBottom) > 1) {
+        main.style.paddingBottom = footerHeight + 'px';
+      }
+    } else {
+      // If footer is NOT fixed, reset padding to avoid huge gaps
+      main.style.paddingBottom = '0px';
+    }
+  }
+}
+
+// Run on load and resize
+document.addEventListener('DOMContentLoaded', adjustLayout);
+window.addEventListener('load', adjustLayout);
+window.addEventListener('resize', adjustLayout);
+
 document.addEventListener("DOMContentLoaded", function () {
   const currentPath = window.location.pathname;
   const navLinks = document.querySelectorAll("nav a");
@@ -106,54 +158,3 @@ document.addEventListener('click', function (event) {
     }
   }
 });
-
-/* =========================================
-   🟢 DYNAMIC LAYOUT ADJUSTER
-   (Handles Fixed Header & Fixed Footer spacing)
-========================================= */
-function adjustLayout() {
-  const header = document.querySelector('header');
-  const footer = document.querySelector('footer');
-  const main = document.querySelector('main');
-
-  // Safety check: Ensure elements exist
-  if (!main) return;
-
-  // --- 1. HEADER ADJUSTMENT (Top Spacing) ---
-  if (header) {
-    let headerHeight = header.offsetHeight;
-    if (window.innerWidth <= 768) {
-      // Reduce the height by 20% (0.20)
-      headerHeight = headerHeight - (headerHeight * 0.70);
-    }
-    const currentTop = parseFloat(main.style.paddingTop) || 0;
-
-    // Only update if size changed significantly (>1px)
-    if (Math.abs(headerHeight - currentTop) > 1) {
-      main.style.paddingTop = headerHeight + 'px';
-    }
-  }
-
-  // --- 2. FOOTER ADJUSTMENT (Bottom Spacing) ---
-  // ⚠️ Only keeps content from hiding behind a FIXED footer
-  if (footer) {
-    // Check if footer is actually fixed before applying padding
-    const footerStyle = window.getComputedStyle(footer);
-
-    if (footerStyle.position === 'fixed') {
-      const footerHeight = footer.offsetHeight;
-      const currentBottom = parseFloat(main.style.paddingBottom) || 0;
-
-      if (Math.abs(footerHeight - currentBottom) > 1) {
-        main.style.paddingBottom = footerHeight + 'px';
-      }
-    } else {
-      // If footer is NOT fixed, reset padding to avoid huge gaps
-      main.style.paddingBottom = '0px';
-    }
-  }
-}
-
-// Run on load and resize
-window.addEventListener('load', adjustLayout);
-window.addEventListener('resize', adjustLayout);
