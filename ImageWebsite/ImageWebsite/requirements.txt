@@ -21,6 +21,7 @@ seaborn
 kagglehub
 pytesseract
 tensorflow
+psycopg2-binary
 django-import-export
 nbformat
 nbconvert

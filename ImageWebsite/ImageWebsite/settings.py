@@ -1,38 +1,55 @@
 import os
+import sys
 from pathlib import Path
-from .SecretCode import *
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
+
+# Checks the 'ENV_MODE' variable in your .env file.
+CURRENT_MODE = os.environ.get("ENV_MODE", "production")
+
+# --- LOGIC TO PREVENT DOUBLE PRINTING ---
+# We only print if:
+# 1. It is the "Child" process (RUN_MAIN='true') which runs the actual server.
+# 2. OR we are running a different command (like 'migrate') that doesn't use the watcher.
+SHOW_LOGS = (os.environ.get("RUN_MAIN") == "true") or ("runserver" not in sys.argv)
+
+if CURRENT_MODE == "local":
+    if SHOW_LOGS:
+        print("LOG: Running in LOCAL mode.")
+    DEBUG = os.environ.get("LOCAL_DEBUG") == "True"
+    ALLOWED_HOSTS = os.environ.get("LOCAL_ALLOWED_HOSTS").split(",")
+
+    DB_NAME = os.environ.get("LOCAL_DB_NAME")
+    DB_USER = os.environ.get("LOCAL_DB_USER")
+    DB_PASS = os.environ.get("LOCAL_DB_PASSWORD")
+    DB_HOST = os.environ.get("LOCAL_DB_HOST")
+    DB_PORT = os.environ.get("LOCAL_DB_PORT")
+
+elif CURRENT_MODE == "production":
+    if SHOW_LOGS:
+        print("LOG: Running in PRODUCTION SERVER mode.")
+    # Default server settings
+    DEBUG = os.environ.get("PROD_DEBUG") == "True"
+    ALLOWED_HOSTS = os.environ.get("PROD_ALLOWED_HOSTS").split(",")
+
+    DB_NAME = os.environ.get("PROD_DB_NAME")
+    DB_USER = os.environ.get("PROD_DB_USER")
+    DB_PASS = os.environ.get("PROD_DB_PASSWORD")
+    DB_HOST = os.environ.get("PROD_DB_HOST")
+    DB_PORT = os.environ.get("PROD_DB_PORT")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR1 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_secret_key
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# settings.py
-
-# 1. Set defaults for the SERVER (Production)
-DEBUG = False
-ALLOWED_HOSTS = ['pragyasavarna.com', 'www.pragyasavarna.com']
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-fallback-key")
 
 # Allow Django to trust real client IP from proxy/load balancer
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# ... rest of your settings ...
-
-# 2. Add this at the VERY BOTTOM of the file
-try:
-    from .local_settings import *
-except ImportError:
-    # If the file doesn't exist (like on the server), do nothing
-    pass
-
 
 # Application definition
 
@@ -83,15 +100,36 @@ DEFAULT_FROM_EMAIL = "savarnapragya181751@gmail.com"
 WSGI_APPLICATION = "ImageWebsite.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# --- 5. DATABASE CONFIGURATION ---
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Check if we specifically requested SQLite in the .env file
+USE_SQLITE = os.environ.get("USE_SQLITE") == "True"
+
+if USE_SQLITE:
+    # Option A: Use SQLite (Zero Install)
+    if SHOW_LOGS:
+        print("LOG: Using SQLite database.")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    # Option B: Use PostgreSQL (Standard)
+    if SHOW_LOGS:
+        print("LOG: Using PostgreSQL database.")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": DB_NAME,
+            "USER": DB_USER,
+            "PASSWORD": DB_PASS,
+            "HOST": DB_HOST,
+            "PORT": DB_PORT,
+            "CONN_MAX_AGE": 60,
+        }
+    }
 
 
 # Password validation
