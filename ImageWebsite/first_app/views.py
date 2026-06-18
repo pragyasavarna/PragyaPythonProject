@@ -26,6 +26,7 @@ import time
 import nbformat
 from nbconvert import HTMLExporter
 from django.core.cache import cache
+from django.views.decorators.cache import never_cache
 
 # Load your trained model once
 import tensorflow as tf
@@ -67,7 +68,7 @@ STATIC_FOLDERS = {
     'Interview': os.path.join(BASE_DIR, 'Interview'),
 }
 
-
+@never_cache
 def home_page(request):
     validated_home = cache.get('home_page_data')
     all_services = cache.get('services_data')
