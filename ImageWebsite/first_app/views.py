@@ -25,6 +25,7 @@ import importlib.util
 import time
 import nbformat
 from nbconvert import HTMLExporter
+from django.core.cache import cache
 
 # Load your trained model once
 import tensorflow as tf
@@ -68,57 +69,61 @@ STATIC_FOLDERS = {
 
 
 def home_page(request):
-    all_services = Service.objects.all()
-    home_record = HomePage.objects.first()
-
-    # 1. Initialize a perfectly safe dictionary. 
-    # This guarantees the template never crashes, even if the database is completely empty.
-    validated_home = {
-        'title': '',
-        'subtitle': '',
-        'primary_btn_text': '',
-        'primary_btn_link': '',
-        'secondary_btn_text': '',
-        'secondary_btn_link': '',
-        'hero_image': None,
-        'image_alt_text': '',
-        'services_label': '',
-        'services_heading_main': '',
-        'services_heading_highlight': ''
-    }
-
-    # 2. Perform Backend Validation
-    if home_record:
-        if home_record.title:
-            validated_home['title'] = home_record.title
+    validated_home = cache.get('home_page_data')
+    all_services = cache.get('services_data')
+    if not validated_home or not all_services:
+        all_services = list(Service.objects.all())
+        home_record = HomePage.objects.first()
+        # 1. Initialize a perfectly safe dictionary. 
+        # This guarantees the template never crashes, even if the database is completely empty.
+        validated_home = {
+            'title': '',
+            'subtitle': '',
+            'primary_btn_text': '',
+            'primary_btn_link': '',
+            'secondary_btn_text': '',
+            'secondary_btn_link': '',
+            'hero_image': None,
+            'image_alt_text': '',
+            'services_label': '',
+            'services_heading_main': '',
+            'services_heading_highlight': ''
+        }
+        # 2. Perform Backend Validation
+        if home_record:
+            if home_record.title:
+                validated_home['title'] = home_record.title
             
-        if home_record.subtitle:
-            validated_home['subtitle'] = home_record.subtitle
+            if home_record.subtitle:
+                validated_home['subtitle'] = home_record.subtitle
             
-        # VALIDATION: Only pass the primary button if BOTH text and link are filled out
-        if home_record.primary_btn_text and home_record.primary_btn_link:
-            validated_home['primary_btn_text'] = home_record.primary_btn_text
-            validated_home['primary_btn_link'] = home_record.primary_btn_link
+            # VALIDATION: Only pass the primary button if BOTH text and link are filled out
+            if home_record.primary_btn_text and home_record.primary_btn_link:
+                validated_home['primary_btn_text'] = home_record.primary_btn_text
+                validated_home['primary_btn_link'] = home_record.primary_btn_link
             
-        # VALIDATION: Only pass the secondary button if BOTH text and link are filled out
-        if home_record.secondary_btn_text and home_record.secondary_btn_link:
-            validated_home['secondary_btn_text'] = home_record.secondary_btn_text
-            validated_home['secondary_btn_link'] = home_record.secondary_btn_link
+            # VALIDATION: Only pass the secondary button if BOTH text and link are filled out
+            if home_record.secondary_btn_text and home_record.secondary_btn_link:
+                validated_home['secondary_btn_text'] = home_record.secondary_btn_text
+                validated_home['secondary_btn_link'] = home_record.secondary_btn_link
             
-        # VALIDATION: Ensure the image actually exists before passing the file object
-        if home_record.hero_image:
-            validated_home['hero_image'] = home_record.hero_image
-            validated_home['image_alt_text'] = home_record.image_alt_text
-        # VALIDATION: Pass services text if they exist
-        if home_record.services_label:
-            validated_home['services_label'] = home_record.services_label
+            # VALIDATION: Ensure the image actually exists before passing the file object
+            if home_record.hero_image:
+                validated_home['hero_image'] = home_record.hero_image
+                validated_home['image_alt_text'] = home_record.image_alt_text
+                
+            # VALIDATION: Pass services text if they exist
+            if home_record.services_label:
+                validated_home['services_label'] = home_record.services_label
             
-        if home_record.services_heading_main:
-            validated_home['services_heading_main'] = home_record.services_heading_main
+            if home_record.services_heading_main:
+                validated_home['services_heading_main'] = home_record.services_heading_main
             
-        if home_record.services_heading_highlight:
-            validated_home['services_heading_highlight'] = home_record.services_heading_highlight
-
+            if home_record.services_heading_highlight:
+                validated_home['services_heading_highlight'] = home_record.services_heading_highlight
+        # 3. Save this finalized, safe data into the cache for 24 hours (86400 seconds)
+        cache.set('home_page_data', validated_home, 86400)
+        cache.set('services_data', all_services, 86400)
     context = {
         'services': all_services,
         'home': validated_home, # Send the validated dictionary instead of the raw database object

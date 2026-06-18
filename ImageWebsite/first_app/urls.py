@@ -3,7 +3,6 @@ from django.views.static import serve
 from django.http import HttpResponse
 import os
 from . import views
-from django.views.decorators.cache import cache_page
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -18,7 +17,7 @@ urlpatterns = [
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly
     re_path(r'^(?P<folder>CSS|Image|JavaScript|AIModel|Artifacts)/(?P<path>.*)$',
             lambda request, folder, path: views.serve_static(request, folder, path)),
-    path('', cache_page(86400)(views.home_page), name="home"),
+    path('', views.home_page, name="home"),
     path('about/', lambda request: views.serve_html(request, 'about_us.html'), name='about'),
     path("contact/", views.contact_page, name="contact"),
     path("login/", views.login_page, name="login"),
