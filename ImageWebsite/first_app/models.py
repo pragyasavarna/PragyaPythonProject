@@ -3,6 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.core.cache import cache
 
 # 1. Create a strict storage class that deletes old files instead of renaming new ones
 class OverwriteStorage(FileSystemStorage):
@@ -24,6 +27,62 @@ custom_image_storage = OverwriteStorage(
     location=os.path.join(settings.BASE_DIR, 'HtmlWebsite', 'Image'),
     base_url='/Image/'
 )
+
+class HomePage(models.Model):
+    title = models.CharField(max_length=100, default="Cognilume", help_text="Main heading")
+    subtitle = models.TextField()
+    
+    # Primary Button (Sign Up)
+    primary_btn_text = models.CharField(max_length=50, default="Sign up for Cognilume")
+    primary_btn_link = models.CharField(max_length=200, default="/register/")
+    
+    # Secondary Button (Try AI Tutor)
+    secondary_btn_text = models.CharField(max_length=50, default="Try AI Tutor free")
+    secondary_btn_link = models.CharField(max_length=200, default="/ai-tutor/")
+    
+    # Image Configuration
+    hero_image = models.ImageField(
+        storage=custom_image_storage,
+        upload_to='Home/',
+        blank=True, 
+        null=True, 
+        help_text="Upload your brain image here"
+    )
+    image_alt_text = models.CharField(max_length=100, default="Cognilume Intelligence")
+    services_label = models.CharField(max_length=50, blank=True, default="WHAT WE DO")
+    services_heading_main = models.CharField(max_length=100, blank=True, default="Intelligent Solutions for a")
+    services_heading_highlight = models.CharField(max_length=50, blank=True, default="Smarter Tomorrow")
+    class Meta:
+        verbose_name_plural = "Home Page Content" 
+
+    def __str__(self):
+        return "Home Page Settings"
+
+class Service(models.Model):
+    home_page = models.ForeignKey('HomePage', on_delete=models.CASCADE, related_name='services', null=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    icon = models.CharField(max_length=50, help_text="Emoji or FontAwesome class (e.g., 🧠 or 'fas fa-brain')")
+    link = models.CharField(max_length=200, blank=True, null=True, help_text="Link for the 'Learn More' button")
+    order = models.IntegerField(default=0, help_text="Order in which it appears on the page")
+
+    class Meta:
+        ordering = ['order'] # Ensures they display in the correct order
+
+    def __str__(self):
+        return self.title
+
+# 1. Tripwire for the Home Page text/images
+@receiver(post_save, sender=HomePage)
+@receiver(post_delete, sender=HomePage)
+def clear_homepage_cache(sender, **kwargs):
+    cache.clear()  # This instantly deletes the saved HTML snapshot
+
+# 2. Tripwire for the nested Services table
+@receiver(post_save, sender=Service)
+@receiver(post_delete, sender=Service)
+def clear_service_cache(sender, **kwargs):
+    cache.clear()
 
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='uploads/')
@@ -123,47 +182,3 @@ class CodeExecution(models.Model):
         from django.utils.timezone import localtime
         ist_time = localtime(self.executed_at)
         return f"{user_display} - {ist_time.strftime('%b %d, %Y %I:%M %p')}"
-
-class HomePage(models.Model):
-    title = models.CharField(max_length=100, default="Cognilume", help_text="Main heading")
-    subtitle = models.TextField()
-    
-    # Primary Button (Sign Up)
-    primary_btn_text = models.CharField(max_length=50, default="Sign up for Cognilume")
-    primary_btn_link = models.CharField(max_length=200, default="/register/")
-    
-    # Secondary Button (Try AI Tutor)
-    secondary_btn_text = models.CharField(max_length=50, default="Try AI Tutor free")
-    secondary_btn_link = models.CharField(max_length=200, default="/ai-tutor/")
-    
-    # Image Configuration
-    hero_image = models.ImageField(
-        storage=custom_image_storage,
-        upload_to='Home/',
-        blank=True, 
-        null=True, 
-        help_text="Upload your brain image here"
-    )
-    image_alt_text = models.CharField(max_length=100, default="Cognilume Intelligence")
-    services_label = models.CharField(max_length=50, blank=True, default="WHAT WE DO")
-    services_heading_main = models.CharField(max_length=100, blank=True, default="Intelligent Solutions for a")
-    services_heading_highlight = models.CharField(max_length=50, blank=True, default="Smarter Tomorrow")
-    class Meta:
-        verbose_name_plural = "Home Page Content" 
-
-    def __str__(self):
-        return "Home Page Settings"
-
-class Service(models.Model):
-    home_page = models.ForeignKey('HomePage', on_delete=models.CASCADE, related_name='services', null=True)
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    icon = models.CharField(max_length=50, help_text="Emoji or FontAwesome class (e.g., 🧠 or 'fas fa-brain')")
-    link = models.CharField(max_length=200, blank=True, null=True, help_text="Link for the 'Learn More' button")
-    order = models.IntegerField(default=0, help_text="Order in which it appears on the page")
-
-    class Meta:
-        ordering = ['order'] # Ensures they display in the correct order
-
-    def __str__(self):
-        return self.title
