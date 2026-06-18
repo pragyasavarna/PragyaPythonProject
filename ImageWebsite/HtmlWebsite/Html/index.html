@@ -10,79 +10,42 @@
 <!-- ===== HOME SECTION ===== -->
 <div class="container" id="home">
   <section class="cognilume-hero">
-  <div class="hero-container">
-    
-    <div class="hero-text-content">
-      <h1 class="type-text type-text">{% get_string 'app_title' %}</h1>
-      <p class="hero-subtitle type-text">
-        Tools may evolve and trends may fade, but power lies in collaboration. 
-        Cognilume is where developers, intelligent agents, and code converge to shape the future.
-      </p>
-      
-      <div class="hero-actions">
-        <a href="/register/" class="btn-signup type-text">Sign up for Cognilume</a>
-        <a href="/ai-tutor/" class="btn-outline type-text">Try AI Tutor free</a>
+    <div class="hero-container">
+      <div class="hero-text-content">
+        <h1 class="type-text">{{ home.title }}</h1>
+        <p class="hero-subtitle type-text">{{ home.subtitle }}</p>
+        <div class="hero-actions">
+          <a href="{{ home.primary_btn_link }}" class="btn-signup type-text">{{ home.primary_btn_text }}</a>
+          <a href="{{ home.secondary_btn_link }}" class="btn-outline type-text">{{ home.secondary_btn_text }}</a>
+        </div>
+      </div>
+      <div class="hero-image-content type-text">
+        {% if home.hero_image %}
+          <img src="{{ home.hero_image.url }}" alt="{{ home.image_alt_text }}" />
+        {% endif %}
       </div>
     </div>
-
-    <div class="hero-image-content type-text">
-      <img src="/Image/brain.jpeg" alt="Cognilume Intelligence" />
-    </div>
-
-  </div>
   </section>
   <section class="what-we-do-section">
-  <div class="what-we-do-section-header">
-    <span class="what-we-do-section-label type-text">WHAT WE DO</span>
-    <h2 class="type-text">Intelligent Solutions for a <span class="highlight">Smarter Tomorrow</span></h2>
-  </div>
-
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="icon">🧠</div> 
-      <h3 class="type-text">Artificial Intelligence</h3>
-      <p class="type-text">Custom AI solutions and model development to solve real-world problems.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
+    <div class="what-we-do-section-header">
+      <span class="what-we-do-section-label type-text">{{ home.services_label }}</span>
+      <h2 class="type-text">{{ home.services_heading_main }} <span class="highlight">{{ home.services_heading_highlight }}</span></h2>
     </div>
-
-    <div class="service-card">
-      <div class="icon">⚙️</div>
-      <h3 class="type-text">Machine Learning</h3>
-      <p class="type-text">Build predictive models and intelligent systems that learn and improve.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
+    <div class="services-grid">
+      {% for service in services %}
+      <div class="service-card">
+        <div class="icon">{{ service.icon }}</div> 
+        <h3 class="type-text">{{ service.title }}</h3>
+        <p class="type-text">{{ service.description }}</p>
+        <a href="{% if service.link %}{{ service.link }}{% else %}#{% endif %}" class="learn-more">Learn More &rarr;</a>
+      </div>
+      {% empty %}
+        <p class="empty-services-msg type-text">Services coming soon...</p>
+      {% endfor %}
     </div>
-
-    <div class="service-card">
-      <div class="icon">💻</div>
-      <h3 class="type-text">Web Development</h3>
-      <p class="type-text">Modern, responsive and high-performance websites and web apps.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">📊</div>
-      <h3 class="type-text">Data Analytics</h3>
-      <p class="type-text">Turn data into actionable insights with advanced analytics.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">🎓</div>
-      <h3 class="type-text">AI Education</h3>
-      <p class="type-text">Courses, workshops and resources to help you master AI & ML.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">☁️</div>
-      <h3 class="type-text">Cloud Solutions</h3>
-      <p class="type-text">Scalable cloud infrastructure and deployment solutions.</p>
-      <a href="#" class="learn-more">Learn More &rarr;</a>
-    </div>
-  </div>
-</section>
-
+  </section>
 </div>
+
 {% block extra_jss %}
 <script src="../JavaScript/typing.js"></script>
 {% endblock %}

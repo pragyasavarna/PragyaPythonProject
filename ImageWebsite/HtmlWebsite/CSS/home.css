@@ -106,6 +106,10 @@
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
 }
 
+.hero-actions a[href=""] {
+    display: none !important;
+}
+
 /* =========================================
    WHAT WE DO SECTION
    ========================================= */
@@ -254,6 +258,15 @@
 
 .learn-more:hover {
     color: #ffffff;
+}
+
+/* Styling for the empty database fallback message */
+.empty-services-msg {
+    color: #ffffff;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 1rem;
 }
 
 /* ===== MOBILE VIEW STYLES ===== */

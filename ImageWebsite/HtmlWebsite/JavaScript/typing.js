@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (parentCard) parentCard.style.opacity = '1';
 
         let html = element.innerHTML.trim();
-        
+
         // 🔥 FIX LAYOUT SHIFT: Lock the element's height before clearing it
         const computedHeight = window.getComputedStyle(element).height;
         if (computedHeight && computedHeight !== 'auto' && computedHeight !== '0px') {
@@ -56,8 +56,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function processNextElement() {
         if (currentElementIndex < elements.length) {
-            typeHTML(elements[currentElementIndex], 5, processNextElement);
+            // 🔥 THE FIX: Grab the current element, then increase the index BEFORE typing starts
+            let element = elements[currentElementIndex];
             currentElementIndex++;
+
+            typeHTML(element, 5, processNextElement);
         }
     }
 

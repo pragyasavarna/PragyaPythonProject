@@ -17,7 +17,7 @@ urlpatterns = [
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly
     re_path(r'^(?P<folder>CSS|Image|JavaScript|AIModel|Artifacts)/(?P<path>.*)$',
             lambda request, folder, path: views.serve_static(request, folder, path)),
-    path('', lambda request: views.serve_html(request, 'index.html'), name='index'),
+    path('', views.home_page, name="home"),
     path('about/', lambda request: views.serve_html(request, 'about_us.html'), name='about'),
     path("contact/", views.contact_page, name="contact"),
     path("login/", views.login_page, name="login"),

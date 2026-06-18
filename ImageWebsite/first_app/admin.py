@@ -1,10 +1,12 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.forms import Textarea, TextInput
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields
 from import_export.widgets import DateWidget
@@ -31,12 +33,26 @@ class BlogPostResource(resources.ModelResource):
         # rather than needing an ID.
         import_id_fields = ('slug',) 
 
-@admin.register(BlogPost)
-class BlogPostAdmin(ImportExportModelAdmin):
-    resource_class = BlogPostResource
-    list_display = ('title', 'category', 'published_at')
-    ordering = ('-published_at',)
-    prepopulated_fields = {'slug': ('title',)}
+# 1. Create the nested "Inline" table for Services
+class ServiceInline(admin.TabularInline):
+    model = Service
+    extra = 1  # Shows one blank row by default for easy adding
+    ordering = ('order',)  # Keeps your sorting logic intact inside the grid
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})}, # cols controls width
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})},         # size controls width
+        models.URLField:  {'widget': TextInput(attrs={'size': '20'})},
+    }
+
+# 2. Attach the inline to your existing Home Page Admin
+@admin.register(HomePage)
+class HomePageAdmin(ImportExportModelAdmin):
+    list_display = ('__str__', 'title')
+    inlines = [ServiceInline]
+
+@admin.register(Service)
+class ServiceAdmin(ImportExportModelAdmin):
+    list_display = ('title', 'icon', 'order')
 
 class CustomUserAdmin(UserAdmin):
     model = UserAccount
