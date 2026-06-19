@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -53,6 +53,21 @@ class HomePageAdmin(ImportExportModelAdmin):
 @admin.register(Service)
 class ServiceAdmin(ImportExportModelAdmin):
     list_display = ('title', 'icon', 'order')
+
+# This tells Django to display the tools as a list inside the Page view
+class AIToolInline(admin.TabularInline):
+    model = AITool
+    extra = 1 # Shows one blank extra row at the bottom for easy adding
+
+# This registers the Page, and attaches the list of tools to it
+@admin.register(AITutorPage)
+class AITutorPageAdmin(ImportExportModelAdmin):
+    inlines = [AIToolInline]
+
+@admin.register(AITool)
+class AIToolAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'url', 'is_coming_soon', 'order')
+    list_editable = ('is_coming_soon', 'order')
 
 class CustomUserAdmin(UserAdmin):
     model = UserAccount

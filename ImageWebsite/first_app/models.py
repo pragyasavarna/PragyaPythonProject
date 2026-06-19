@@ -84,6 +84,49 @@ def clear_homepage_cache(sender, **kwargs):
 def clear_service_cache(sender, **kwargs):
     cache.clear()
 
+class AITutorPage(models.Model):
+    page_title = models.CharField(max_length=255, default="AI Tutor – Core Learning Tools")
+
+    def __str__(self):
+        return self.page_title
+
+class AITool(models.Model):
+    page = models.ForeignKey(AITutorPage, related_name='tools', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    is_coming_soon = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return self.name
+
+    # NEW: The backend handles the logic here
+    @property
+    def css_class(self):
+        if self.is_coming_soon:
+            return "coming-soon"
+        return ""
+
+# 1. Tripwire for the AI Tutor Page (Page Title)
+@receiver(post_save, sender=AITutorPage)
+@receiver(post_delete, sender=AITutorPage)
+def clear_ai_tutor_page_cache(sender, instance, **kwargs):
+    # This specifically deletes only the title cache
+    cache.delete('ai_tutor_page_title')
+    print("DEBUG: AI Tutor Page title cache cleared!")
+
+# 2. Tripwire for the individual AI Tools
+@receiver(post_save, sender=AITool)
+@receiver(post_delete, sender=AITool)
+def clear_ai_tool_cache(sender, instance, **kwargs):
+    # This surgically deletes ONLY the specific tool you just edited
+    # keeping all your other tools safely cached!
+    cache.delete(f'ai_tool_{instance.id}')
+    print(f"DEBUG: Cache cleared for AI Tool ID: {instance.id}")
+
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='uploads/')
     uploaded_at = models.DateTimeField(auto_now_add=True)

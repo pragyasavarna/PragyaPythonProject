@@ -7,52 +7,16 @@
 {% block content %}
 <div class="container" id="ai-tutor">
 
-    <h2 class="ai-title">AI Tutor – Core Learning Tools</h2>
+    <h2 class="ai-title">{{ page_title }}</h2>
 
     <div class="ai-grid">
-        <div class="ai-card">
-            <a href="/ai-tutor/animal-classifier/" class="ai-card-link">{% get_string 'animal_classifier_text' %}</a>
-        </div>
-        <div class="ai-card">
-            <a href="/ai-tutor/python-compiler/" class="ai-card-link">{% get_string 'python_compiler_text' %}</a>
-        </div>
-        <div class="ai-card">
-            <a href="/ai-tutor/ai-notes/" class="ai-card-link">AI Notes / Summary Generator</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/topic-explainer" class="ai-card-link">Topic Explanation / Ask Tutor</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/quiz-generator" class="ai-card-link">AI Quiz Generator (MCQ)</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/assignment-generator" class="ai-card-link">AI Assignment / Question Generator</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/flashcards" class="ai-card-link">AI Flashcard Generator</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/study-path" class="ai-card-link">AI Study Path Generator</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/topic-recommender" class="ai-card-link">AI Topic Recommender</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/doubt-solver" class="ai-card-link">AI Doubt Solver</a>
-        </div>
-
-        <div class="ai-card coming-soon">
-            <a href="/ai/text-simplifier" class="ai-card-link">AI Text Simplifier</a>
-        </div>
-
+        {% for tool in ai_tools %}
+            <div class="ai-card {{ tool.css_class }}">
+                <a href="{{ tool.url }}" class="ai-card-link">{{ tool.name }}</a>
+            </div>
+        {% endfor %}
     </div>
+
     <div id="comingSoonModal" class="coming-soon-modal">
         <div class="coming-soon-box">
             Coming Soon…

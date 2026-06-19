@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -131,6 +131,71 @@ def home_page(request):
     }
     
     return render(request, 'index.html', context)
+
+@never_cache
+def ai_tutor_page(request):
+    # ==========================================
+    # 1. PAGE TITLE CACHING
+    # ==========================================
+    cached_title = cache.get('ai_tutor_page_title')
+    page_id = cache.get('ai_tutor_page_id')
+    if not cached_title or not page_id:
+        page_data = AITutorPage.objects.first()
+        cached_title = page_data.page_title if page_data and page_data.page_title else "AI Tutor – Core Learning Tools"
+        page_id = page_data.id if page_data else None
+        cache.set('ai_tutor_page_title', cached_title, 86400)
+        cache.set('ai_tutor_page_id', page_id, 86400)
+
+    # ==========================================
+    # 2. INDIVIDUAL TOOL CACHING
+    # ==========================================
+    # Step A: Get a lightweight list of all current tool IDs from the database
+    if page_id:
+        # We filter using page_id, so we don't need the page_data object!
+        tool_ids = list(AITool.objects.filter(page_id=page_id).values_list('id', flat=True))
+    else:
+        tool_ids = []
+    
+    # Step B: Generate the cache keys we expect (e.g., ['ai_tool_1', 'ai_tool_2'])
+    cache_keys = [f'ai_tool_{tid}' for tid in tool_ids]
+    
+    # Step C: Ask the cache for all these keys at once (Very fast)
+    cached_tools_dict = cache.get_many(cache_keys)
+    
+    # Step D: Figure out which IDs were NOT in the cache
+    missing_ids = [
+        tid for tid in tool_ids 
+        if f'ai_tool_{tid}' not in cached_tools_dict
+    ]
+    
+    # Step E: Fetch ONLY the missing tools from the database
+    if missing_ids:
+        missing_tools = AITool.objects.filter(id__in=missing_ids)
+        
+        # Prepare them to be saved to the cache in bulk
+        tools_to_cache = {f'ai_tool_{tool.id}': tool for tool in missing_tools}
+        
+        # Save the missing ones to the cache for 24 hours
+        cache.set_many(tools_to_cache, 86400)
+        
+        # Merge the newly fetched tools into our main dictionary
+        cached_tools_dict.update(tools_to_cache)
+
+    # Step F: Reconstruct the final list
+    # Because dictionaries lose order, we must sort them back into their proper 
+    # display sequence using the 'order' field you set up in your models!
+    final_tools_list = list(cached_tools_dict.values())
+    final_tools_list.sort(key=lambda t: (t.order, t.id))
+
+    # ==========================================
+    # 3. RENDER TEMPLATE
+    # ==========================================
+    context = {
+        'page_title': cached_title,
+        'ai_tools': final_tools_list
+    }
+    
+    return render(request, 'ai-tutor.html', context)
 
 # ---------------------------------------------------------
 # VIEW 1: Dedicated view for the highly customized Coding folder
