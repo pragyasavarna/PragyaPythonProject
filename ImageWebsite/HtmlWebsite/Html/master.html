@@ -16,15 +16,59 @@
   </script>
   <base href="/">
   <title>{% block title %}{% endblock %}</title>
-  <meta name="description" content="{% block description %}Welcome to Cognilume, a platform showcasing projects in Artificial Intelligence, Machine Learning, and Web Development.{% endblock %}">
-  <meta name="keywords" content="{% block keywords %}Cognilume, AI, Machine Learning, Web Development, Projects, Portfolio{% endblock %}">
+  <meta name="author" content="Pragya Savarna, Ankit Gupta">
+  <meta name="description" content="{% block description %}Cognilume is an AI, Machine Learning, and Web Development platform created by Pragya Savarna and Ankit Gupta, showcasing intelligent projects and innovative applications.{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}Cognilume, Pragya Savarna, Ankit Gupta, Artificial Intelligence, AI, Machine Learning, Deep Learning, Django, Python, Web Development, Portfolio, AI Projects{% endblock %}">
   <meta property="og:title" content="Cognilume | Illuminating Vision Through Intelligence">
-  <meta property="og:description" content="Current semester projects and portfolios from the Cognilume platform.">
+  <meta property="og:site_name" content="Cognilume">
+  <meta property="og:description" content="Explore AI, Machine Learning, and Web Development projects created by Pragya Savarna and Ankit Gupta.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pragyasavarna.com/">
-  <meta property="og:image" content="https://www.pragyasavarna.com/static/Image/Logo_new.png">
+  <meta property="og:image" content="/Image/logo.png">
   <meta property="og:image:width" content="300">
   <meta property="og:image:height" content="300">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://www.pragyasavarna.com/#organization",
+      "name": "Cognilume",
+      "url": "https://www.pragyasavarna.com/",
+      "logo": "https://www.pragyasavarna.com/Image/logo.png",
+      "description": "Cognilume is an AI, Machine Learning, and Web Development platform founded by Pragya Savarna and Ankit Gupta.",
+      "email": "contact@pragyasavarna.com",
+      "telephone": "+91-9891040687",
+      "founder": [
+        {
+          "@type": "Person",
+          "name": "Pragya Savarna",
+          "url": "https://www.linkedin.com/in/pragya-savarna-030457226/"
+        },
+        {
+          "@type": "Person",
+          "name": "Ankit Gupta",
+          "url": "https://www.linkedin.com/in/ankit-gupta-869a6091/"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-9891040687",
+          "email": "contact@pragyasavarna.com",
+          "contactType": "Customer Support",
+          "availableLanguage": [
+            "English",
+            "Hindi"
+          ]
+        }
+      ],
+      "sameAs": [
+        "https://github.com/pragyasavarna/PragyaPythonProject",
+        "https://www.linkedin.com/in/pragya-savarna-030457226/",
+        "https://www.linkedin.com/in/ankit-gupta-869a6091/"
+      ]
+    }
+  </script>
   <!-- Default / Global CSS -->
   <link rel="stylesheet" href="../CSS/style.css">
   <link rel="stylesheet" href="../CSS/header.css">
@@ -34,6 +78,7 @@
   {% block extra_css %}
   <!-- Child templates will insert their CSS here -->
   {% endblock %}
+  <link rel="canonical" href="https://www.pragyasavarna.com/">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- <link rel="icon" href="/Image/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/Image/logo.svg"> -->
