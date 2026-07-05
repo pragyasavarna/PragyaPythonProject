@@ -18,7 +18,8 @@ admin.site.register(Feedback)
 admin.site.register(UploadedImage)
 
 # 1. Register BlogPost
-class BlogPostResource(resources.ModelResource):
+@admin.register(BlogPost)
+class BlogPostResource(ImportExportModelAdmin):
     # This specifically tells the importer how to parse the date string 
     # for BOTH importing and comparing against existing records.
     published_at = fields.Field(
