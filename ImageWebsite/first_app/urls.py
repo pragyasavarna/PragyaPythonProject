@@ -11,7 +11,7 @@ urlpatterns = [
    
     # 1. Route specifically for the Coding folder and all its sub-paths
     # We use a non-capturing group for the optional trailing path
-    re_path(r'^Interview(?:/(?P<path>.*))?$', views.coding_directory_view, name='interview'),
+    re_path(r'^Interview(?:/(?P<path>.*))?/$', views.coding_directory_view, name='interview'),
 
     # 2. Route for standard static assets (CSS, JS, Images, etc.)
     # Optional: serve root-level CSS/JS/Image if HTML uses /CSS/... directly
@@ -28,11 +28,9 @@ urlpatterns = [
     path("logout/", views.logout_page, name="logout"),
     path("forgot-password/", views.forgot_password, name="forgot_password"),
     path("reset-password/<uidb64>/<token>/", views.reset_password, name="reset_password"),
-    path('face_model/', lambda request: views.serve_html(request, 'face_recognition.html'), name='face-model'),
     path('feedback/', views.feedback_page, name='feedback'),
     path('blog/', views.blog_page, name='blog'),
     path('blog-<slug:slug>', views.blog_detail, name='blog_detail'),
-    path('srs/', lambda request: views.serve_html(request, 'srs.html'), name='srs'),
     path("process-text/", views.process_text, name="process_text"),
     path("save-execution/", views.save_execution, name="save_execution"),
     path('ai-tutor/animal-classifier/', views.upload_and_predict, name='animal-classifier'),
