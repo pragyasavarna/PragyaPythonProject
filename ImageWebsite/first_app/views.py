@@ -2,7 +2,7 @@ import os
 import json
 import numpy as np
 from PIL import Image
-from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
@@ -619,6 +619,16 @@ def serve_html(request, html_file='index.html'):  # default to index.html
     else:
         return HttpResponse(f"HTML file not found: {html_file}", status=404)
 
+def robots_txt(request):
+    path = os.path.join(
+        BASE_DIR,
+        "../ImageWebsite/HtmlWebsite/robots.txt"
+    )
+
+    return FileResponse(
+        open(path, "rb"),
+        content_type="text/plain",
+    )
 
 def predict_image_old(img_file):
     img = Image.open(img_file)
