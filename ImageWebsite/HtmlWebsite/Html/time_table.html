@@ -1,0 +1,73 @@
+{% extends "master.html" %}
+{% load string_utils %}
+
+{% block title %}{{ timetable.class_name }} Timetable | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/time_table.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="timetable-container">
+    <section class="timetable-section">
+        
+        <div class="timetable-header">
+            <h2>Class Timetable: <span class="highlight">{{ timetable.class_name }}</span></h2>
+            
+            <form method="GET" action="" id="class-selector-form">
+                <select name="class_id" id="class-select" class="class-dropdown">
+                    {% for cls in classes %}
+                        <option value="{{ cls.id }}" {% if cls.id == timetable.class_id %}selected{% endif %}>
+                            {{ cls.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="cognilume-table">
+                <thead>
+                    <tr>
+                        <th>Periods / Days</th>
+                        {% for day in timetable.days_headers %}
+                            <th>{{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in timetable.grid %}
+                        {% if row.is_lunch %}
+                            <tr class="lunch-row">
+                                <td class="time-col">
+                                    <strong>{{ row.period_name }}</strong><br>
+                                    <small>{{ row.time_range }}</small>
+                                </td>
+                                <td colspan="6" class="lunch-cell">L U N C H &nbsp; B R E A K</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td class="time-col">
+                                    <strong>{{ row.period_name }}</strong><br>
+                                    <small>{{ row.time_range }}</small>
+                                </td>
+                                {% for day_data in row.days %}
+                                    <td>
+                                        <span class="subject">{{ day_data.subject }}</span><br>
+                                        <span class="teacher">{{ day_data.teacher_display }}</span> 
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+</div>
+
+{% block extra_jss %}
+<script src="../JavaScript/time_table.js"></script>
+{% endblock %}
+{% endblock %}

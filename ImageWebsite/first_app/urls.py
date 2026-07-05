@@ -19,6 +19,8 @@ urlpatterns = [
             lambda request, folder, path: views.serve_static(request, folder, path)),
     path('', views.home_page, name="home"),
     path('ai-tutor/', views.ai_tutor_page, name="ai-tutor"),
+    path('timetable/', views.timetable_page, name="timetable"),
+    path('timetable/manage/', views.manage_timetable, name='manage_timetable'),
     path('about/', lambda request: views.serve_html(request, 'about_us.html'), name='about'),
     path("contact/", views.contact_page, name="contact"),
     path("login/", views.login_page, name="login"),

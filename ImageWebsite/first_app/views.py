@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -196,6 +196,301 @@ def ai_tutor_page(request):
     }
     
     return render(request, 'ai-tutor.html', context)
+
+@never_cache
+def timetable_page(request):
+    # ==========================================
+    # 1. CLASS & PERIOD CACHING
+    # ==========================================
+
+    # Cache all days (the X-Axis of our grid)
+    all_days = cache.get('all_days_data')
+    if not all_days:
+        all_days = list(DayOfWeek.objects.all().order_by('order'))
+        cache.set('all_days_data', all_days, 86400)
+    
+    days_headers = [day.name for day in all_days]
+
+    # Cache all classes for the dropdown menu
+    all_classes = cache.get('all_classes_data')
+    if not all_classes:
+        all_classes = list(ClassGroup.objects.all())
+        cache.set('all_classes_data', all_classes, 86400)
+
+    # Cache all periods (the Y-axis of our grid)
+    all_periods = cache.get('all_periods_data')
+    if not all_periods:
+        all_periods = list(PeriodTime.objects.all().order_by('start_time'))
+        cache.set('all_periods_data', all_periods, 86400)
+
+    # Determine which class is currently selected via URL param
+    class_id = request.GET.get('class_id')
+    active_class = None
+    
+    if class_id and all_classes:
+        # Fast lookup in the cached list
+        active_class = next((c for c in all_classes if str(c.id) == str(class_id)), None)
+    
+    # Fallback to the first class if none selected or invalid ID
+    if not active_class and all_classes:
+        active_class = all_classes[0]
+
+    active_class_id = active_class.id if active_class else None
+
+    # ==========================================
+    # 2. SAFE DICTIONARY INITIALIZATION
+    # ==========================================
+    # This guarantees the template never crashes, even if the database is completely empty.
+    validated_timetable = {
+        'class_name': '',
+        'class_id': active_class_id,
+        'days_headers': days_headers,
+        'grid': []
+    }
+
+    # Perform Backend Validation for the class header
+    if active_class:
+        if active_class.name:
+            validated_timetable['class_name'] = active_class.name
+
+    # ==========================================
+    # 3. INDIVIDUAL TIMETABLE ENTRY CACHING
+    # ==========================================
+    # Step A: Get a lightweight list of all current entry IDs for this specific class
+    if active_class_id:
+        entry_ids = list(TimetableEntry.objects.filter(class_group_id=active_class_id).values_list('id', flat=True))
+    else:
+        entry_ids = []
+
+    # Step B: Generate the cache keys we expect (e.g., ['tt_entry_1', 'tt_entry_2'])
+    cache_keys = [f'tt_entry_{eid}' for eid in entry_ids]
+
+    # Step C: Ask the cache for all these keys at once (Very fast)
+    cached_entries_dict = cache.get_many(cache_keys)
+
+    # Step D: Figure out which IDs were NOT in the cache
+    missing_ids = [
+        eid for eid in entry_ids 
+        if f'tt_entry_{eid}' not in cached_entries_dict
+    ]
+
+    # Step E: Fetch ONLY the missing entries from the database
+    if missing_ids:
+        # Use select_related to prevent N+1 queries when accessing the teacher/period later
+        missing_entries = TimetableEntry.objects.select_related('teacher', 'period', 'subject').prefetch_related('days').filter(id__in=missing_ids)
+        
+        # Prepare them to be saved to the cache in bulk
+        entries_to_cache = {f'tt_entry_{entry.id}': entry for entry in missing_entries}
+        
+        # Save the missing ones to the cache for 24 hours
+        cache.set_many(entries_to_cache, 86400)
+        
+        # Merge the newly fetched entries into our main dictionary
+        cached_entries_dict.update(entries_to_cache)
+
+    # Step F: Create a lookup map (O(1) complexity) to easily place entries into the HTML grid
+    final_entries_list = list(cached_entries_dict.values())
+    entry_map = {}
+    for e in final_entries_list:
+        for day_obj in e.days.all():
+            entry_map[(e.period_id, day_obj.name)] = e
+
+    # ==========================================
+    # 4. GRID CONSTRUCTION & FINAL VALIDATION
+    # ==========================================
+    timetable_grid = []
+    
+    for p in all_periods:
+        # Validate time formatting
+        start = p.start_time.strftime('%H:%M') if p.start_time else ''
+        end = p.end_time.strftime('%H:%M') if p.end_time else ''
+        
+        row_data = {
+            'period_name': p.name if p.name else '',
+            'time_range': f"{start} - {end}" if start and end else '',
+            'is_lunch': p.is_lunch,
+            'days': []
+        }
+        
+        if not p.is_lunch:
+            for day in validated_timetable['days_headers']:
+                entry = entry_map.get((p.id, day))
+                
+                # Safe defaults for missing lectures
+                teacher_name = ''
+                subject_name = ''
+                
+                # VALIDATION: Safely extract teacher and subject
+                if entry:
+                    if entry.teacher and entry.teacher.name:
+                        teacher_name = f"({entry.teacher.name})"
+                    if entry.subject and entry.subject.name:
+                        subject_name = entry.subject.name
+                    else:
+                        subject_name = 'Free Period'
+                        
+                row_data['days'].append({
+                    'day_name': day,
+                    'teacher': teacher_name,
+                    'subject': subject_name
+                })
+                
+        timetable_grid.append(row_data)
+
+    # Assign the finalized, validated grid to our safe dictionary
+    validated_timetable['grid'] = timetable_grid
+
+    # ==========================================
+    # 5. RENDER TEMPLATE
+    # ==========================================
+    context = {
+        'classes': all_classes,
+        'timetable': validated_timetable, # Send the fully validated dictionary, not raw objects
+    }
+    
+    return render(request, 'time_table.html', context)
+
+@never_cache
+def manage_timetable(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        try:
+            # --- DAY OF WEEK ---
+            if action == 'create_day':
+                DayOfWeek.objects.create(name=request.POST.get('name'), order=request.POST.get('order', 0))
+                messages.success(request, "Day added.")
+            elif action == 'delete_day':
+                DayOfWeek.objects.get(id=request.POST.get('id')).delete()
+                messages.success(request, "Day deleted.")
+
+            # --- SUBJECT ---
+            elif action == 'create_subject':
+                Subject.objects.create(name=request.POST.get('name'))
+                messages.success(request, "Subject added.")
+            elif action == 'delete_subject':
+                Subject.objects.get(id=request.POST.get('id')).delete()
+                messages.success(request, "Subject deleted.")
+
+            # --- CLASS GROUP ---
+            elif action == 'create_class':
+                ClassGroup.objects.create(name=request.POST.get('name'))
+                messages.success(request, "Class added.")
+            elif action == 'delete_class':
+                ClassGroup.objects.get(id=request.POST.get('id')).delete()
+                messages.success(request, "Class deleted.")
+
+            # --- PERIOD TIME ---
+            elif action == 'create_period':
+                PeriodTime.objects.create(
+                    name=request.POST.get('name'),
+                    start_time=request.POST.get('start_time'),
+                    end_time=request.POST.get('end_time'),
+                    is_lunch=request.POST.get('is_lunch') == 'on'
+                )
+                messages.success(request, "Period added.")
+            elif action == 'delete_period':
+                PeriodTime.objects.get(id=request.POST.get('id')).delete()
+                messages.success(request, "Period deleted.")
+
+            # --- TEACHER ---
+            elif action == 'create_teacher':
+                teacher = Teacher.objects.create(name=request.POST.get('name'))
+                teacher.subjects.set(request.POST.getlist('subjects'))
+                messages.success(request, "Teacher added.")
+            elif action == 'delete_teacher':
+                Teacher.objects.get(id=request.POST.get('id')).delete()
+                messages.success(request, "Teacher deleted.")
+
+            # --- TIMETABLE ENTRY ---
+            elif action == 'create_entry':
+                new_entry = TimetableEntry.objects.create(
+                    class_group_id=request.POST.get('class_group'),
+                    period_id=request.POST.get('period'),
+                    teacher_id=request.POST.get('teacher') or None,
+                    subject_id=request.POST.get('subject') or None
+                )
+                new_entry.days.set(request.POST.getlist('days'))
+                messages.success(request, "Timetable entry created.")
+            elif action == 'delete_entry':
+                entry_id = request.POST.get('id')
+                day_id = request.POST.get('day_id') # Capture the specific day
+                
+                entry = TimetableEntry.objects.get(id=entry_id)
+                
+                if day_id:
+                    # Remove only the specific day from this lecture
+                    day_to_remove = DayOfWeek.objects.get(id=day_id)
+                    entry.days.remove(day_to_remove)
+                    
+                    # If there are no days left, delete the orphaned entry completely
+                    if entry.days.count() == 0:
+                        entry.delete()
+                        messages.success(request, "Lecture entry completely removed.")
+                    else:
+                        messages.success(request, f"Lecture removed from {day_to_remove.name}.")
+                else:
+                    # Fallback just in case
+                    entry.delete()
+                    messages.success(request, "Timetable entry deleted.")
+
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+        cache.clear()
+        return redirect('manage_timetable')
+
+    # GET REQUEST: Fetch all data
+    all_days = DayOfWeek.objects.all().order_by('order')
+    all_periods = PeriodTime.objects.all().order_by('start_time')
+    all_classes = ClassGroup.objects.all().order_by('name')
+    teachers = Teacher.objects.prefetch_related('subjects').order_by('name')
+    entries = TimetableEntry.objects.select_related('class_group', 'period', 'teacher', 'subject').prefetch_related('days')
+    
+    # ---------------------------------------------------------------------
+    # NEW: Build the 2D Grid Structure for the Management Dashboard
+    # ---------------------------------------------------------------------
+    entry_map = {}
+    for entry in entries:
+        for day in entry.days.all():
+            # Map entry by (class_id, period_id, day_id)
+            entry_map[(entry.class_group_id, entry.period_id, day.id)] = entry
+
+    grouped_timetables = []
+    for cls in all_classes:
+        grid = []
+        for p in all_periods:
+            row_data = {'period': p, 'days': []}
+            if not p.is_lunch:
+                for d in all_days:
+                    row_data['days'].append({
+                        'day': d,
+                        'entry': entry_map.get((cls.id, p.id, d.id))
+                    })
+            grid.append(row_data)
+        
+        grouped_timetables.append({
+            'class_info': cls,
+            'grid': grid
+        })
+
+    # Teacher JSON for the dropdown
+    teacher_subjects_map = {}
+    for teacher in teachers:
+        teacher_subjects_map[teacher.id] = [
+            {'id': sub.id, 'name': sub.name} for sub in teacher.subjects.all()
+        ]
+
+    context = {
+        'days': all_days,
+        'subjects': Subject.objects.all().order_by('name'),
+        'classes': all_classes,
+        'periods': all_periods,
+        'teachers': teachers,
+        'grouped_timetables': grouped_timetables, # Pass the new 2D grid
+        'teacher_subjects_json': teacher_subjects_map
+    }
+    
+    return render(request, 'manage_timetable.html', context)
 
 # ---------------------------------------------------------
 # VIEW 1: Dedicated view for the highly customized Coding folder

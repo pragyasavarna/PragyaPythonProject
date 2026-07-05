@@ -1,0 +1,313 @@
+{% extends "master.html" %}
+{% load string_utils %}
+
+{% block title %}Manage Timetable Dashboard | Cognilume{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/manage_timetable.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="manage-timetable">
+    <h1 class="dashboard-title">Central Timetable Management</h1>
+
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="section-selector-container">
+        <label for="section-selector">Select Dashboard Section:</label>
+        <select id="section-selector" class="main-dropdown">
+            <option value="section-entries">Assign Timetable Lectures (Main)</option>
+            <option value="section-days">Manage Days</option>
+            <option value="section-subjects">Manage Subjects</option>
+            <option value="section-classes">Manage Classes</option>
+            <option value="section-teachers">Manage Teachers</option>
+            <option value="section-periods">Manage Periods</option>
+        </select>
+    </div>
+
+    <div id="section-days" class="manage-section hidden">
+        <div class="manage-card centered-card">
+            <h3>Days of Week</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_day">
+                <input type="text" name="name" placeholder="Day Name (e.g. Monday)" required>
+                <input type="number" name="order" placeholder="Sort Order (e.g. 1)" required>
+                <button type="submit" class="btn-submit">Add Day</button>
+            </form>
+            <ul class="item-list mt-1">
+                {% for day in days %}
+                <li>
+                    <span>{{ day.name }} ({{ day.order }})</span>
+                    <form method="POST" class="delete-form" onsubmit="return confirm('Delete this day?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_day">
+                        <input type="hidden" name="id" value="{{ day.id }}">
+                        <button type="submit" class="btn-delete">X</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="section-subjects" class="manage-section hidden">
+        <div class="manage-card centered-card">
+            <h3>Subjects</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_subject">
+                <input type="text" name="name" placeholder="Subject Name" required>
+                <button type="submit" class="btn-submit">Add Subject</button>
+            </form>
+            <ul class="item-list mt-1">
+                {% for subject in subjects %}
+                <li>
+                    <span>{{ subject.name }}</span>
+                    <form method="POST" class="delete-form" onsubmit="return confirm('Delete this subject?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_subject">
+                        <input type="hidden" name="id" value="{{ subject.id }}">
+                        <button type="submit" class="btn-delete">X</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="section-classes" class="manage-section hidden">
+        <div class="manage-card centered-card">
+            <h3>Class Groups</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_class">
+                <input type="text" name="name" placeholder="Class Name (e.g. IX A)" required>
+                <button type="submit" class="btn-submit">Add Class</button>
+            </form>
+            <ul class="item-list mt-1">
+                {% for cls in classes %}
+                <li>
+                    <span>{{ cls.name }}</span>
+                    <form method="POST" class="delete-form" onsubmit="return confirm('Delete this class?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_class">
+                        <input type="hidden" name="id" value="{{ cls.id }}">
+                        <button type="submit" class="btn-delete">X</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="section-teachers" class="manage-section hidden">
+        <div class="manage-card centered-card">
+            <h3>Teachers</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_teacher">
+                <input type="text" name="name" placeholder="Teacher Name" required>
+                <label>Select Subjects:</label>
+                <select name="subjects" multiple required class="multi-select">
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+                <small class="helper-text">Hold Ctrl/Cmd to select multiple</small>
+                <button type="submit" class="btn-submit">Add Teacher</button>
+            </form>
+            <table class="data-table mt-1">
+                <tr><th>Teacher</th><th>Subjects</th><th>Action</th></tr>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.name }}</td>
+                    <td>{% for s in teacher.subjects.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>
+                        <form method="POST" onsubmit="return confirm('Delete teacher?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete_teacher">
+                            <input type="hidden" name="id" value="{{ teacher.id }}">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div id="section-periods" class="manage-section hidden">
+        <div class="manage-card centered-card">
+            <h3>Periods</h3>
+            <form method="POST" class="period-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_period">
+                <input type="text" name="name" placeholder="Period Name (e.g. I, LUNCH)" required>
+                <div class="time-inputs">
+                    <input type="time" name="start_time" required>
+                    <span class="time-separator">to</span>
+                    <input type="time" name="end_time" required>
+                </div>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_lunch"> Is this a Lunch Break?
+                </label>
+                <button type="submit" class="btn-submit">Add Period</button>
+            </form>
+            <table class="data-table mt-1">
+                <tr><th>Name</th><th>Time</th><th>Action</th></tr>
+                {% for period in periods %}
+                <tr {% if period.is_lunch %}class="lunch-row"{% endif %}>
+                    <td>{{ period.name }} {% if period.is_lunch %}🍔{% endif %}</td>
+                    <td>{{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}</td>
+                    <td>
+                        <form method="POST" onsubmit="return confirm('Delete period?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete_period">
+                            <input type="hidden" name="id" value="{{ period.id }}">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div id="section-entries" class="manage-section hidden">
+        <div class="manage-card full-width">
+            <h3>Assign Timetable Lectures</h3>
+            <form method="POST" class="entry-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_entry">
+                
+                <div class="form-grid">
+                    <div>
+                        <label>Class</label>
+                        <select name="class_group" id="frontend-class-select" required>
+                            <option value="">Select...</option>
+                            {% for cls in classes %}
+                                <option value="{{ cls.id }}">{{ cls.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Period</label>
+                        <select name="period" required>
+                            <option value="">Select...</option>
+                            {% for period in periods %}
+                                <option value="{{ period.id }}">{{ period.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Teacher (Optional)</label>
+                        <select name="teacher" id="frontend-teacher-select">
+                            <option value="">Free Period</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Subject</label>
+                        <select name="subject" id="frontend-subject-select">
+                            <option value="">Select Teacher First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label class="days-label">Select Days</label>
+                <div class="checkbox-grid">
+                    {% for day in days %}
+                        <label><input type="checkbox" name="days" value="{{ day.id }}"> {{ day.name }}</label>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn-submit mt-1">Assign Lecture</button>
+            </form>
+
+            <hr class="divider">
+
+            <div class="entries-scroll-container">
+                <div id="no-class-selected-msg" class="alert empty-state-alert">
+                    Please select a Class from the dropdown above to view its timetable.
+                </div>
+
+                {% for table_data in grouped_timetables %}
+                    <div class="class-timetable-wrapper hidden" data-class-id="{{ table_data.class_info.id }}">
+                        
+                        <h4 class="class-group-header">Class Timetable: {{ table_data.class_info.name }}</h4>
+                        <table class="data-table grid-table">
+                            <thead>
+                                <tr>
+                                    <th>Periods / Days</th>
+                                    {% for day in days %}
+                                        <th>{{ day.name }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in table_data.grid %}
+                                    {% if row.period.is_lunch %}
+                                        <tr class="lunch-row">
+                                            <td class="period-col">
+                                                <strong>{{ row.period.name }}</strong><br>
+                                                <small>{{ row.period.start_time|time:"H:i" }} - {{ row.period.end_time|time:"H:i" }}</small>
+                                            </td>
+                                            <td colspan="{{ days|length }}" class="lunch-cell">L U N C H</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td class="period-col">
+                                                <strong>{{ row.period.name }}</strong><br>
+                                                <small>{{ row.period.start_time|time:"H:i" }} - {{ row.period.end_time|time:"H:i" }}</small>
+                                            </td>
+                                            {% for cell in row.days %}
+                                                <td class="grid-cell">
+                                                    {% if cell.entry %}
+                                                        <div class="cell-content">
+                                                            <span class="cell-subject">{{ cell.entry.subject.name|default:"Free" }}</span>
+                                                            {% if cell.entry.teacher %}
+                                                                <span class="cell-teacher">({{ cell.entry.teacher.name }})</span>
+                                                            {% endif %}
+                                                            
+                                                            <form method="POST" class="inline-delete" onsubmit="return confirm('Remove lecture from {{ cell.day.name }}?');">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="action" value="delete_entry">
+                                                                <input type="hidden" name="id" value="{{ cell.entry.id }}">
+                                                                <input type="hidden" name="day_id" value="{{ cell.day.id }}">
+                                                                <button type="submit" class="btn-micro-delete" title="Remove from {{ cell.day.name }}">✖</button>
+                                                            </form>
+                                                        </div>
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                {% empty %}
+                    <div class="alert empty-state-alert">No classes available.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_jss %}
+{{ teacher_subjects_json|json_script:"teacher-data" }}
+<script src="../JavaScript/manage_timetable.js"></script>
+{% endblock %}
+{% endblock %}

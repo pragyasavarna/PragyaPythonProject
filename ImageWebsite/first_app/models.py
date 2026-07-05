@@ -6,6 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
+from django.core.exceptions import ValidationError
 
 # 1. Create a strict storage class that deletes old files instead of renaming new ones
 class OverwriteStorage(FileSystemStorage):
@@ -225,3 +226,133 @@ class CodeExecution(models.Model):
         from django.utils.timezone import localtime
         ist_time = localtime(self.executed_at)
         return f"{user_display} - {ist_time.strftime('%b %d, %Y %I:%M %p')}"
+
+class Subject(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    
+    class Meta:
+        db_table = 'subject_table'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class Teacher(models.Model):
+    name = models.CharField(max_length=100)
+    # A teacher can teach many subjects, and a subject can be taught by many teachers
+    subjects = models.ManyToManyField(Subject, related_name='teachers')
+
+    class Meta:
+        db_table = 'teacher_table'
+
+    def __str__(self):
+        return self.name
+
+class ClassGroup(models.Model):
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'class_table'
+
+    def __str__(self):
+        return self.name
+
+class PeriodTime(models.Model):
+    period_number = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length=50)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_lunch = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['start_time']
+
+    def __str__(self):
+        return f"{self.name} ({self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')})"
+
+class DayOfWeek(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    order = models.IntegerField(default=0, help_text="Use this to sort days (e.g., Monday=1, Tuesday=2)")
+
+    class Meta:
+        db_table = 'day_of_week_table'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.name
+
+class TimetableEntry(models.Model):
+    class_group = models.ForeignKey(ClassGroup, on_delete=models.CASCADE, related_name='schedule')
+    days = models.ManyToManyField(DayOfWeek, related_name='timetable_entries')
+    period = models.ForeignKey(PeriodTime, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
+    def __str__(self):
+        return f"{self.class_group.name} - {self.period.name}"
+
+# ==========================================
+# 1. Tripwire for Class Groups (Dropdown Menu)
+# ==========================================
+@receiver(post_save, sender=ClassGroup)
+@receiver(post_delete, sender=ClassGroup)
+def clear_class_group_cache(sender, instance, **kwargs):
+    # Clears the cached list of classes used in the header dropdown
+    cache.delete('all_classes_data')
+    print(f"DEBUG: 'all_classes_data' cache cleared due to ClassGroup update!")
+
+# ==========================================
+# 2. Tripwire for Periods (The Y-Axis Grid)
+# ==========================================
+@receiver(post_save, sender=PeriodTime)
+@receiver(post_delete, sender=PeriodTime)
+def clear_period_time_cache(sender, instance, **kwargs):
+    # Clears the structural layout of the timetable grid
+    cache.delete('all_periods_data')
+    print(f"DEBUG: 'all_periods_data' cache cleared due to PeriodTime update!")
+
+# ==========================================
+# 3. Tripwire for Individual Timetable Entries
+# ==========================================
+@receiver(post_save, sender=TimetableEntry)
+@receiver(post_delete, sender=TimetableEntry)
+def clear_timetable_entry_cache(sender, instance, **kwargs):
+    # Surgically deletes ONLY the specific day/period lecture you just edited
+    cache.delete(f'tt_entry_{instance.id}')
+    print(f"DEBUG: Cache cleared for TimetableEntry ID: {instance.id}")
+
+# ==========================================
+# 4. Tripwire for Teacher Updates (Cascading Cache Clear)
+# ==========================================
+@receiver(post_save, sender=Teacher)
+@receiver(post_delete, sender=Teacher)
+def clear_teacher_cascade_cache(sender, instance, **kwargs):
+    # If you change a Teacher's name or subject, this finds EVERY lecture 
+    # they are assigned to and surgically clears those specific entry caches.
+    affected_entries = TimetableEntry.objects.filter(teacher=instance)
+    
+    # Generate the exact cache keys that need deleting
+    keys_to_delete = [f'tt_entry_{entry.id}' for entry in affected_entries]
+    
+    # Delete them all at once (bulk delete is faster)
+    cache.delete_many(keys_to_delete)
+    print(f"DEBUG: Cleared {len(keys_to_delete)} TimetableEntry caches due to Teacher ID: {instance.id} update.")
+
+# ==========================================
+# 5. Tripwire for Subject Updates
+# ==========================================
+@receiver(post_save, sender=Subject)
+@receiver(post_delete, sender=Subject)
+def clear_subject_cascade_cache(sender, instance, **kwargs):
+    affected_entries = TimetableEntry.objects.filter(subject=instance)
+    keys_to_delete = [f'tt_entry_{entry.id}' for entry in affected_entries]
+    if keys_to_delete:
+        cache.delete_many(keys_to_delete)
+        print(f"DEBUG: Cleared {len(keys_to_delete)} caches due to Subject: {instance.name} update.")
+        # ==========================================
+# 6. Tripwire for DayOfWeek Updates
+# ==========================================
+@receiver(post_save, sender=DayOfWeek)
+@receiver(post_delete, sender=DayOfWeek)
+def clear_days_cache(sender, instance, **kwargs):
+    cache.delete('all_days_data')
+    print("DEBUG: 'all_days_data' cache cleared due to DayOfWeek update!")

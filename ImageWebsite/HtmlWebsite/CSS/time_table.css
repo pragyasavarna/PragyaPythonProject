@@ -1,0 +1,106 @@
+.timetable-section {
+    padding: 3rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+.timetable-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.timetable-header h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.highlight {
+    color: #00e5ff;
+    /* Cyan accent */
+}
+
+.class-dropdown {
+    background: #0b1120;
+    color: #ffffff;
+    border: 1px solid #00e5ff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.class-dropdown:focus {
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    background: #0f172a;
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cognilume-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.cognilume-table th,
+.cognilume-table td {
+    border: 1px solid #1e293b;
+    padding: 1.2rem 0.8rem;
+}
+
+.cognilume-table th {
+    background: #162032;
+    color: #00e5ff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.time-col {
+    background: #162032;
+    white-space: nowrap;
+    color: #94a3b8;
+}
+
+.time-col strong {
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.subject {
+    font-weight: 600;
+    color: #e2e8f0;
+    display: block;
+}
+
+.teacher {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.free-period {
+    color: #475569;
+}
+
+.lunch-row {
+    background: rgba(0, 229, 255, 0.05);
+}
+
+.lunch-cell {
+    letter-spacing: 15px;
+    font-weight: bold;
+    color: #00e5ff;
+    font-size: 1.2rem;
+    opacity: 0.8;
+}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -68,6 +68,57 @@ class AITutorPageAdmin(ImportExportModelAdmin):
 class AIToolAdmin(ImportExportModelAdmin):
     list_display = ('name', 'url', 'is_coming_soon', 'order')
     list_editable = ('is_coming_soon', 'order')
+
+@admin.register(Subject)
+class SubjectAdmin(ImportExportModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+@admin.register(Teacher)
+class TeacherAdmin(ImportExportModelAdmin):
+    # 'get_subjects' is a custom method to display the ManyToMany relationship in the list view
+    list_display = ('name', 'get_subjects')
+    search_fields = ('name',)
+    filter_horizontal = ('subjects',) 
+
+    def get_subjects(self, obj):
+        return ", ".join([s.name for s in obj.subjects.all()])
+    get_subjects.short_description = 'Assigned Subjects'
+
+class TimetableEntryInline(admin.TabularInline):
+    model = TimetableEntry
+    extra = 1
+    autocomplete_fields = ['teacher', 'period', 'subject'] # Added subject here
+
+@admin.register(ClassGroup)
+class ClassGroupAdmin(ImportExportModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    inlines = [TimetableEntryInline]
+
+@admin.register(PeriodTime)
+class PeriodTimeAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'period_number', 'start_time', 'end_time', 'is_lunch')
+    list_editable = ('start_time', 'end_time', 'is_lunch')
+    ordering = ('start_time',)
+    search_fields = ('name',)
+
+@admin.register(DayOfWeek)
+class DayOfWeekAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'order')
+    list_editable = ('order',)
+    ordering = ('order',)
+
+@admin.register(TimetableEntry)
+class TimetableEntryAdmin(ImportExportModelAdmin):
+    list_display = ('class_group', 'get_days', 'period', 'teacher', 'subject')
+    list_editable = ('teacher', 'subject')
+    list_filter = ('class_group', 'period', 'teacher', 'subject')
+    filter_horizontal = ('days',)
+
+    def get_days(self, obj):
+        return ", ".join([d.name for d in obj.days.all()])
+    get_days.short_description = 'Days'
 
 class CustomUserAdmin(UserAdmin):
     model = UserAccount
