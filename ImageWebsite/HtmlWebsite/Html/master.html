@@ -20,6 +20,8 @@
   <meta name="description" content="{% block description %}Cognilume is an AI, Machine Learning, and Web Development platform created by Pragya Savarna and Ankit Gupta, showcasing intelligent projects and innovative applications.{% endblock %}">
   <meta name="keywords" content="{% block keywords %}Cognilume, Pragya Savarna, Ankit Gupta, Artificial Intelligence, AI, Machine Learning, Deep Learning, Django, Python, Web Development, Portfolio, AI Projects{% endblock %}">
   <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <meta property="og:title" content="Cognilume | Illuminating Vision Through Intelligence">
   <meta property="og:site_name" content="Cognilume">
   <meta property="og:description" content="Explore AI, Machine Learning, and Web Development projects created by Pragya Savarna and Ankit Gupta.">
@@ -79,7 +81,6 @@
   {% block extra_css %}
   <!-- Child templates will insert their CSS here -->
   {% endblock %}
-  <link rel="canonical" href="https://www.pragyasavarna.com/">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/Image/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/Image/logo.svg">
