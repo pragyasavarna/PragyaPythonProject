@@ -22,14 +22,15 @@
   <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
   <!-- Canonical URL -->
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-  <meta property="og:title" content="Cognilume | Illuminating Vision Through Intelligence">
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% block og_title %}Cognilume | Illuminating Vision Through Intelligence{% endblock %}">
   <meta property="og:site_name" content="Cognilume">
-  <meta property="og:description" content="Explore AI, Machine Learning, and Web Development projects created by Pragya Savarna and Ankit Gupta.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.pragyasavarna.com/">
-  <meta property="og:image" content="https://www.pragyasavarna.com/Image/logo.jpeg">
-  <meta property="og:image:width" content="300">
-  <meta property="og:image:height" content="300">
+  <meta property="og:description" content="{% block og_description %}Explore AI, Machine Learning, and Web Development projects created by Pragya Savarna and Ankit Gupta.{% endblock %}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}https://www.pragyasavarna.com/Image/logo.jpeg{% endblock %}">
+  <meta property="og:image:width" content="{% block og_image_width %}300{% endblock %}">
+  <meta property="og:image:height" content="{% block og_image_height %}300{% endblock %}">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
