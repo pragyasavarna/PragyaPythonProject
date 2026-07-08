@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -67,6 +67,11 @@ class ServiceAdmin(ImportExportModelAdmin):
 class TechnologyAdmin(ImportExportModelAdmin):
     list_display = ('name', 'order')
 
+@admin.register(SocialSharePlatform)
+class SocialSharePlatformAdmin(ImportExportModelAdmin):
+    list_display = ('title', 'css_class', 'order')
+    list_editable = ('order',)
+    
 # This tells Django to display the tools as a list inside the Page view
 class AIToolInline(admin.TabularInline):
     model = AITool

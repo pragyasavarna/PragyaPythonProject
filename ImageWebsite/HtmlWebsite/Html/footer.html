@@ -1,0 +1,15 @@
+<div class="cognilume-footer">
+    <div class="footer-container">
+        <div class="footer-copyright">
+            &copy; <span id="dynamic-year">2026</span> Cognilume. All Rights Reserved.
+        </div>
+        
+        <div class="footer-socials">
+            {% for platform in footer %}
+                <a class="share-btn {{ platform.css_class }}" href="{{ platform.share_url_base }}" target="_blank" aria-label="{{ platform.title }}">
+                    {{ platform.svg_code|safe }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

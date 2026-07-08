@@ -103,9 +103,10 @@
 
   <!-- Common Footer -->
   <footer>
-    {% get_string 'footer_text' %}
+    {% include 'footer.html' %}
   </footer>
   <script src="../JavaScript/script.js"></script>
+  <script src="../JavaScript/footer.js"></script>
   {% block extra_js %}
   <!-- Child templates will insert their CSS here -->
   {% endblock %}

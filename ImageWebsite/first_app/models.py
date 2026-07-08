@@ -94,6 +94,21 @@ class Technology(models.Model):
     def __str__(self):
         return self.name
 
+class SocialSharePlatform(models.Model):
+    title = models.CharField(max_length=50, help_text="e.g., Twitter, Facebook, Truth Social")
+    css_class = models.CharField(max_length=50, help_text="e.g., twitter, facebook, truth, bsky")
+    share_url_base = models.CharField(max_length=500, help_text="Base URL (e.g., https://twitter.com/intent/tweet?text=Check+this+out!&url=)")
+    svg_code = models.TextField(help_text="Paste the entire <svg> tag here")
+    order = models.PositiveIntegerField(default=0, help_text="Order in which the icons appear")
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Share Platform"
+        verbose_name_plural = "Share Platforms"
+
+    def __str__(self):
+        return self.title
+
 # 1. Tripwire for the Home Page text/images
 @receiver(post_save, sender=HomePage)
 @receiver(post_delete, sender=HomePage)
@@ -111,6 +126,11 @@ def clear_service_cache(sender, **kwargs):
 @receiver(post_delete, sender=Technology)
 def clear_technology_cache(sender, **kwargs):
     cache.clear()
+
+@receiver(post_save, sender=SocialSharePlatform)
+@receiver(post_delete, sender=SocialSharePlatform)
+def clear_share_platforms_cache(sender, **kwargs):
+    cache.delete('footer_data')
 
 class AITutorPage(models.Model):
     page_title = models.CharField(max_length=255, default="AI Tutor – Core Learning Tools")

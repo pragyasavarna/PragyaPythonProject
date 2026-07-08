@@ -162,3 +162,4 @@ cython_debug/
 .vscode/
 ImageWebsite/AIModel/Dataset/*
 ImageWebsite/AIModel/Model/artifacts/notes/model.safetensors
+ImageWebsite/first_app/migrations/*

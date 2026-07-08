@@ -8,8 +8,98 @@ footer {
   background: linear-gradient(120deg, var(--navy-1), var(--navy-2), var(--purple));
   border-top: 1px solid rgba(0, 200, 255, 0.2);
   box-shadow: 0 -5px 25px rgba(0, 200, 255, 0.1);
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--text-light);
   letter-spacing: 1px;
-  text-shadow: 0 0 6px rgba(0, s200, 255, 0.4);
+  text-shadow: 0 0 6px rgba(0, 200, 255, 0.4);
+}
+
+/* =========================================
+   LAYOUT FOR YOUR PROVIDED HTML
+   ========================================= */
+.cognilume-footer {
+  width: 100%;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  /* Perfect spacing between copyright and icons */
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.footer-copyright {
+  margin: 0;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+  /* Spacing between the icons */
+  align-items: center;
+}
+
+/* =========================================
+   NEW DYNAMIC SVG BUTTON STYLES
+   ========================================= */
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  /* SVGs require drop-shadow instead of text-shadow for glowing effects */
+  filter: drop-shadow(0 0 4px rgba(0, 200, 255, 0.4));
+}
+
+/* This targets the raw <svg> tags injected from your database */
+.share-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-light);
+  /* Sets the base color to your theme's light text */
+  transition: all 0.3s ease;
+}
+
+/* Brightens and lifts the icon slightly when hovered */
+.share-btn:hover {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.8));
+}
+
+.share-btn:hover svg {
+  fill: #00d4ff;
+  /* Changes the actual SVG color to neon cyan on hover */
+}
+
+/* ===== MOBILE ADJUSTMENT ===== */
+@media (max-width: 768px) {
+
+  /* Gives the whole footer slightly more height so it doesn't look cramped */
+  footer {
+    padding: 15px 0;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 5px;
+    /* Increased from 8px to separate the text from the icons */
+  }
+
+  .footer-socials {
+    gap: 25px;
+    /* Spreads the icons out horizontally so they are easy to tap */
+  }
+
+  /* Bumps up the icon size slightly for mobile thumbs */
+  .share-btn svg {
+    width: 22px;
+    height: 22px;
+  }
 }

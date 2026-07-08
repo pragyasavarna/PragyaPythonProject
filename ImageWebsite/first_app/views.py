@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -67,6 +67,23 @@ STATIC_FOLDERS = {
     'Artifacts': os.path.join(BASE_DIR, 'AIModel', 'Model', 'artifacts'),
     'Interview': os.path.join(BASE_DIR, 'Interview'),
 }
+
+def get_footer_data():
+    # Attempt to fetch the list of platforms from the cache
+    validated_footer = cache.get('footer_data')
+    
+    if not validated_footer:
+        # If the cache is empty, fetch all active platforms from the database
+        # They will automatically be sorted by the 'order' field you set in the model
+        platforms = SocialSharePlatform.objects.all()
+        
+        # Convert the queryset to a list so it can be easily iterated over in the template
+        validated_footer = list(platforms)
+        
+        # Save the list to the cache for 24 hours (86400 seconds)
+        cache.set('footer_data', validated_footer, 86400)
+
+    return validated_footer
 
 @never_cache
 def home_page(request):
@@ -150,6 +167,7 @@ def home_page(request):
         'services': all_services,
         'technologies': validated_technologies,
         'home': validated_home, # Send the validated dictionary instead of the raw database object
+        'footer': get_footer_data(),
     }
     
     return render(request, 'index.html', context)
