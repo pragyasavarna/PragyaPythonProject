@@ -44,6 +44,25 @@
       {% endfor %}
     </div>
   </section>
+  <section class="tech-stack-section">
+    <div class="tech-section-header">
+      <span class="tech-section-label type-text">TECHNOLOGY STACK</span>
+      <h2 class="type-text">Built With Modern Technologies</h2>
+    </div>
+    
+    <div class="tech-grid">
+      {% for tech in technologies %}
+      <div class="tech-card">
+        {% if tech.logo %}
+        <img src="{{ tech.logo.url }}" alt="{{ tech.name }}" class="tech-logo">
+        {% endif %}
+        <p class="tech-name type-text">{{ tech.name }}</p>
+      </div>
+      {% empty %}
+        <p class="empty-services-msg type-text">Technologies coming soon...</p>
+      {% endfor %}
+    </div>
+  </section>
 </div>
 
 {% block extra_jss %}

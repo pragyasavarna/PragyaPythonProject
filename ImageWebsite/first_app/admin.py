@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -45,15 +45,27 @@ class ServiceInline(admin.TabularInline):
         models.URLField:  {'widget': TextInput(attrs={'size': '20'})},
     }
 
+class TechnologyInline(admin.TabularInline):
+    model = Technology
+    extra = 1  # Shows one blank row by default for easy adding
+    ordering = ('order',)  # Keeps your sorting logic intact inside the grid
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})}, # size controls width
+    }
+
 # 2. Attach the inline to your existing Home Page Admin
 @admin.register(HomePage)
 class HomePageAdmin(ImportExportModelAdmin):
     list_display = ('__str__', 'title')
-    inlines = [ServiceInline]
+    inlines = [ServiceInline, TechnologyInline]
 
 @admin.register(Service)
 class ServiceAdmin(ImportExportModelAdmin):
     list_display = ('title', 'icon', 'order')
+
+@admin.register(Technology)
+class TechnologyAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'order')
 
 # This tells Django to display the tools as a list inside the Page view
 class AIToolInline(admin.TabularInline):

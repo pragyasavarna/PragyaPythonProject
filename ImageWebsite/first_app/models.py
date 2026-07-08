@@ -73,6 +73,27 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
+class Technology(models.Model):
+    # Added the ForeignKey to match the Service model structure
+    home_page = models.ForeignKey('HomePage', on_delete=models.CASCADE, related_name='technologies', null=True)
+    
+    name = models.CharField(max_length=50) # e.g., 'Python', 'React'
+    logo = models.ImageField(
+        storage=custom_image_storage,
+        upload_to='Home/Technology',
+        blank=True, 
+        null=True, 
+        help_text="Upload your logo image here"
+    )
+    order = models.IntegerField(default=0, help_text="Order in which they appear")
+
+    class Meta:
+        ordering = ['order']
+        verbose_name_plural = "Technologies"
+
+    def __str__(self):
+        return self.name
+
 # 1. Tripwire for the Home Page text/images
 @receiver(post_save, sender=HomePage)
 @receiver(post_delete, sender=HomePage)
@@ -83,6 +104,12 @@ def clear_homepage_cache(sender, **kwargs):
 @receiver(post_save, sender=Service)
 @receiver(post_delete, sender=Service)
 def clear_service_cache(sender, **kwargs):
+    cache.clear()
+
+# 3. Tripwire for the Technology stack
+@receiver(post_save, sender=Technology)
+@receiver(post_delete, sender=Technology)
+def clear_technology_cache(sender, **kwargs):
     cache.clear()
 
 class AITutorPage(models.Model):

@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -72,8 +72,10 @@ STATIC_FOLDERS = {
 def home_page(request):
     validated_home = cache.get('home_page_data')
     all_services = cache.get('services_data')
-    if not validated_home or not all_services:
+    validated_technologies = cache.get('tech_data')
+    if not validated_home or not all_services or not validated_technologies:
         all_services = list(Service.objects.all())
+        all_technologies = list(Technology.objects.all())
         home_record = HomePage.objects.first()
         # 1. Initialize a perfectly safe dictionary. 
         # This guarantees the template never crashes, even if the database is completely empty.
@@ -122,11 +124,31 @@ def home_page(request):
             
             if home_record.services_heading_highlight:
                 validated_home['services_heading_highlight'] = home_record.services_heading_highlight
+        
+        validated_technologies = []
+        for tech in all_technologies:
+            safe_tech = {
+                'name': '',
+                'logo': None,
+                'order': 0 
+            }
+            if tech:
+                if tech.name:
+                    safe_tech['name'] = tech.name
+                if tech.logo:
+                    safe_tech['logo'] = tech.logo
+                if tech.order is not None:
+                    safe_tech['order'] = tech.order
+                    
+            validated_technologies.append(safe_tech)
+
         # 3. Save this finalized, safe data into the cache for 24 hours (86400 seconds)
         cache.set('home_page_data', validated_home, 86400)
         cache.set('services_data', all_services, 86400)
+        cache.set('tech_data', validated_technologies, 86400) 
     context = {
         'services': all_services,
+        'technologies': validated_technologies,
         'home': validated_home, # Send the validated dictionary instead of the raw database object
     }
     

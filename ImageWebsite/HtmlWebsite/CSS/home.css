@@ -114,7 +114,7 @@
    WHAT WE DO SECTION
    ========================================= */
 .what-we-do-section {
-    margin: 0 auto 30px;
+    margin: 0 auto 15px;
     /* Centers the whole section */
     text-align: center;
 }
@@ -269,6 +269,95 @@
     font-size: 1rem;
 }
 
+/* =========================================
+   TECHNOLOGY STACK SECTION
+   ========================================= */
+.tech-stack-section {
+    margin: 0 auto;
+    text-align: center;
+    max-width: 1200px;
+    width: 80%;
+}
+
+.tech-section-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.tech-section-label {
+    color: #00d4ff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.tech-stack-section h2 {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* The dark bounded box from the design */
+.tech-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #030613;
+    /* Deep dark background */
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 14px;
+    padding: 15px 10px;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+/* Glowing top edge for the tech box */
+.tech-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), transparent);
+}
+
+.tech-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    min-width: 80px;
+}
+
+.tech-card:hover {
+    transform: translateY(-5px);
+}
+
+.tech-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.tech-name {
+    font-size: 0.75rem;
+    color: var(--white);
+    font-weight: 500;
+}
+
 /* ===== MOBILE VIEW STYLES ===== */
 @media (max-width: 768px) {
     .cognilume-hero {
@@ -381,5 +470,34 @@
 
     .learn-more {
         font-size: 0.7rem;
+    }
+
+    .tech-stack-section {
+        width: 100%;
+        padding: 0 10px;
+        margin-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    .tech-grid {
+        width: 100%;
+        padding: 20px 15px;
+        gap: 20px 15px;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+    .tech-logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    .tech-card {
+        min-width: 65px;
+        margin: 0;
+    }
+
+    .tech-stack-section h2 {
+        font-size: 1.1rem;
     }
 }
