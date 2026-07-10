@@ -1,10 +1,26 @@
 /* ===========================
-   🔹 CLASSIFIER SECTION
+   🔹 CLASSIFIER CONTAINER
 =========================== */
-.classifier-section h2 {
-  text-align: center;
+
+#ai-tutor-animal-classifier {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
 }
 
+#ai-tutor-animal-classifier h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--cyan, #00d2ff);
+  letter-spacing: 1.5px;
+}
+
+/* ===========================
+   🔹 PLOTS & CHARTS
+=========================== */
 .plot-container {
   text-align: center;
   margin: 30px auto;
@@ -22,10 +38,11 @@
 
 .chart-box {
   flex: 1 1 45%;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, #0b111e, #131b2f);
+  border: 1px solid rgba(0, 210, 255, 0.15);
   padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 
@@ -33,32 +50,48 @@
   width: 100%;
   max-height: 250px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 /* ===========================
-   🔹 UPLOAD FORM
+   🔹 UPLOAD FORM CARD
 =========================== */
 .upload-section {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 20px;
   width: 100%;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  padding: 25px 0;
+  /* Added a subtle gradient background for depth */
+  background: linear-gradient(145deg, #0b111e 0%, #151e32 100%);
+  border: 1px solid rgba(0, 210, 255, 0.15);
+  border-radius: 20px;
+  /* Slightly rounder edges */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  padding: 20px;
   text-align: center;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  border-color: rgba(0, 210, 255, 0.6);
+  box-shadow: 0 15px 35px rgba(0, 210, 255, 0.15);
+}
+
+.card h3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 25px;
 }
 
 .upload-form {
@@ -67,86 +100,108 @@
   align-items: center;
 }
 
+/* Modernized File Input Dropzone */
 .upload-form input[type="file"] {
-  margin: 10px 0;
-  padding: 12px;
-  border: 2px dashed var(--cyan);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  /* Increased padding creates a dropzone look */
+  border: 2px dashed rgba(0, 210, 255, 0.4);
+  border-radius: 12px;
+  background: rgba(0, 210, 255, 0.02);
   cursor: pointer;
   width: 100%;
-  max-width: 280px;
-  color: var(--text-light);
+  max-width: 320px;
+  color: #a0aec0;
+  /* Subdued text color for "No file chosen" */
+  font-size: 14px;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.upload-form button {
-  margin-top: 15px;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 25px;
-  background: var(--cyan);
-  color: black;
-  font-size: 16px;
-  font-weight: bold;
+.upload-form input[type="file"]:hover {
+  background: rgba(0, 210, 255, 0.08);
+  border-color: var(--cyan, #00d2ff);
+}
+
+/* Magic Trick: Styling the ugly default 'Choose File' button */
+.upload-form input[type="file"]::file-selector-button {
+  background: rgba(0, 210, 255, 0.1);
+  border: 1px solid var(--cyan, #00d2ff);
+  color: var(--cyan, #00d2ff);
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-right: 15px;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.upload-form input[type="file"]::file-selector-button:hover {
+  background: var(--cyan, #00d2ff);
+  color: #0b111e;
+  /* Dark text on hover for contrast */
+}
+
+/* Modern Gradient Button */
+.upload-form button {
+  margin-top: 20px;
+  padding: 14px 35px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00d2ff 0%, #0096c7 100%);
+  color: #0b111e;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25);
+  transition: all 0.3s ease;
 }
 
 .upload-form button:hover {
-  background: #00a3cc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(0, 210, 255, 0.5);
+  background: linear-gradient(135deg, #1ae0ff 0%, #00a8e0 100%);
 }
 
 .prediction {
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--cyan);
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--cyan, #00d2ff);
+  text-transform: capitalize;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+  letter-spacing: 1px;
 }
 
 .preview {
-  margin-top: 15px;
+  margin-top: 20px;
   width: fit-content;
-  /* container adjusts to image width */
   max-width: 100%;
-  /* prevents overflow on small screens */
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  /* keeps image corners rounded */
   margin-left: auto;
-  /* center it */
   margin-right: auto;
 }
 
 .preview img {
-  width: auto;
-  max-width: 200px;
-  /* limit width */
-  max-height: 200px;
-  /* limit height */
+  width: 250px;
+  height: 200px;
   object-fit: cover;
-  /* crop nicely instead of stretching */
-  border-radius: 10px;
+  border-radius: 12px;
   display: block;
   margin: 0 auto;
-}
-
-.card h3 {
-  display: flex;
-  /* Enables flexbox */
-  justify-content: center;
-  /* Forces content to center horizontally */
-  align-items: center;
-  /* Vertically aligns icon with text */
-  gap: 10px;
-  /* Adds space between the camera icon and text */
-  width: 100%;
-  /* Ensures it takes full width */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* ===========================
    🔹 RESPONSIVE DESIGN
 =========================== */
 @media (max-width: 768px) {
+  #ai-tutor-animal-classifier {
+    padding: 30px 15px;
+    min-height: 60vh;
+  }
+
   .charts {
     flex-direction: column;
     align-items: center;
@@ -157,18 +212,28 @@
     max-width: 90%;
   }
 
-  header h1 {
+  #ai-tutor-animal-classifier h2 {
     font-size: 1.4rem;
   }
 
-  .projects {
-    grid-template-columns: 1fr;
+  .card {
+    padding: 30px 20px;
   }
 
   .card h3 {
     text-align: center !important;
-    /* Overrides global 'justify' */
     justify-content: center !important;
-    /* Ensures flex centering stays */
+    font-size: 1.2rem;
   }
+
+  .upload-form input[type="file"] {
+    font-size: 12px;
+  }
+
+  .nudge-up {
+    display: inline-block;
+    transform: translateY(-3px);
+    /* You can change this to -2px or -4px if needed */
+  }
+
 }

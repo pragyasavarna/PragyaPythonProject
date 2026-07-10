@@ -3,28 +3,16 @@
 {% block title %}Project | {% get_string 'app_name' %}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/project.css">
-<link rel="stylesheet" href="../CSS/ai.css">
 {% endblock %}
 {% block content %}
 
 <!-- ===== CAT VS DOG CLASSIFIER SECTION ===== -->
-<section class="section classifier-section" id="classifier">
+<div class="container" id="ai-tutor-animal-classifier">
   <h2>{% get_string 'animal_classifier_text' %}</h2>
-  <!-- <h2>🎤 Mobile Microphone</h2>
-  <section class="voice-section">
-    <button id="record_btn">Start Speaking</button>
-
-    <div id="output" class="voice-output">
-      Waiting...
-    </div>
-
-  </section> -->
-
-
   <!-- Upload form -->
   <div class="upload-section">
     <div class="card">
-      <h3 class="title">📷 {% get_string 'upload_image_text' %}</h3>
+      <h3 class="title"><span class="nudge-up">📷</span> {% get_string 'upload_image_text' %}</h3>
       <form method="post" enctype="multipart/form-data" class="upload-form">
         <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required>
         <div class="preview" id="preview"></div>
@@ -36,9 +24,6 @@
     </div>
   </div>
 
-</section>
-{% block extra_jss %}
-<script src="../JavaScript/voice.js"></script>
-{% endblock %}
+</div>
 
 {% endblock %}

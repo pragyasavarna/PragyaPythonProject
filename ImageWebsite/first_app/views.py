@@ -696,7 +696,7 @@ def upload_and_predict(request):
     print("COOKIES:", request.COOKIES)
     print("POST csrf:", request.POST.get('csrfmiddlewaretoken'))
     # Path to your HTML file
-    html_path = os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Html/', "project.html")
+    html_path = os.path.join(BASE_DIR, '../ImageWebsite/HtmlWebsite/Html/', "animal_classifier.html")
     if not os.path.exists(html_path):
         return HttpResponse("HTML file not found", status=404)
     context = {}  # Variables for the template
@@ -704,13 +704,14 @@ def upload_and_predict(request):
     if request.method == "POST" and request.FILES.get("image"):
         img_file = request.FILES["image"]
         prediction = predict_image(img_file)
-        context["result"] = f"Prediction: {prediction}"
-    else:
-        context["result"] = ""
+        
+        # Save to session and redirect instead of rendering directly
+        request.session['prediction_result'] = f"Prediction: {prediction}"
+        return redirect(request.path)
 
-    # The path here should be relative to your Django TEMPLATES settings
-    # e.g., 'project.html' should be inside a templates directory
-    return render(request, "project.html", context)
+    # Fetch the result from the session and clear it using .pop()
+    context["result"] = request.session.pop('prediction_result', "")
+    return render(request, "animal_classifier.html", context)
 
 
 
