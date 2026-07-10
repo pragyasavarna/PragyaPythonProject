@@ -85,6 +85,10 @@ def get_footer_data():
 
     return validated_footer
 
+def global_footer(request):
+    # This automatically passes your cached footer list to every page
+    return {'footer': get_footer_data()}
+    
 @never_cache
 def home_page(request):
     validated_home = cache.get('home_page_data')
@@ -167,7 +171,6 @@ def home_page(request):
         'services': all_services,
         'technologies': validated_technologies,
         'home': validated_home, # Send the validated dictionary instead of the raw database object
-        'footer': get_footer_data(),
     }
     
     return render(request, 'index.html', context)
