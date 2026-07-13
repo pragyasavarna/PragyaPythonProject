@@ -2,7 +2,7 @@
 
 **Website:** https://www.pragyasavarna.com/
 
-**Developed by:** Pragya Savarna and Ankit Gupta
+**Developed by:** Cognilume
 
 **Setup Instructions:** Please refer to [setup_instructions.md](setup_instructions.md) for installation steps and project commands.
 

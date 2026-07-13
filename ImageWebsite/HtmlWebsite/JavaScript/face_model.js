@@ -1,40 +1,40 @@
 Dropzone.autoDiscover = false;
 let players = [];
-function person_names(){
+function person_names() {
     fetch('/AIModel/artifacts/class_dictionary.json')
-      .then(response => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-      })
-      .then(data => {
-      players = Object.keys(data);
-      console.log("Players loaded:", players);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            players = Object.keys(data);
+            console.log("Players loaded:", players);
 
-      // You can now build your dynamic table here
-      const tableBody = document.getElementById("scoreTableBody");
-      // 🧹 Clear the table first to prevent duplicates
-      tableBody.innerHTML = "";
-      players.forEach(name => {
-        const row = document.createElement("tr");
+            // You can now build your dynamic table here
+            const tableBody = document.getElementById("scoreTableBody");
+            // 🧹 Clear the table first to prevent duplicates
+            tableBody.innerHTML = "";
+            players.forEach(name => {
+                const row = document.createElement("tr");
 
-        const nameCell = document.createElement("td");
-        nameCell.textContent = name;
+                const nameCell = document.createElement("td");
+                nameCell.textContent = name;
 
-        const scoreCell = document.createElement("td");
-        scoreCell.id = `score_${name}`;
-        scoreCell.textContent = `score_${name}`;
+                const scoreCell = document.createElement("td");
+                scoreCell.id = `score_${name}`;
+                scoreCell.textContent = `score_${name}`;
 
-        row.appendChild(nameCell);
-        row.appendChild(scoreCell);
+                row.appendChild(nameCell);
+                row.appendChild(scoreCell);
 
-        tableBody.appendChild(row);
-      });
-      })
-      .catch(error => {
-      console.error("Failed to load player data:", error);
-      });
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("Failed to load player data:", error);
+        });
 }
 function init() {
     let dz = new Dropzone("#dropzone", {
@@ -44,20 +44,20 @@ function init() {
         dictDefaultMessage: "Some Message",
         autoProcessQueue: false
     });
-    
-    dz.on("addedfile", function() {
-        if (dz.files[1]!=null) {
-            dz.removeFile(dz.files[0]);        
+
+    dz.on("addedfile", function () {
+        if (dz.files[1] != null) {
+            dz.removeFile(dz.files[0]);
         }
     });
     dz.on("complete", function (file) {
         let imageData = file.dataURL;
-        
+
         var url = "/classify_image";
 
         $.post(url, {
             image_data: file.dataURL
-        },function(data, status) {
+        }, function (data, status) {
             /* 
             Below is a sample response if you have two faces in an image lets say virat and roger together.
             Most of the time if there is one person in the image you will get only one element in below array
@@ -86,7 +86,6 @@ function init() {
                 }
             ]
             */
-            console.log("Ankit");
             console.log(data);
             /*let players = ["Dad", "Tushar", "Rambir", "Ajay", "Pankaj", "Nandini", "Harsh", "Anju", "Harshit", "Deepak", "Prashant", "Vijender"];
             const tableBody = document.getElementById("scoreTableBody");
@@ -105,20 +104,20 @@ function init() {
 
               tableBody.appendChild(row);
             });*/
-            
 
-            if (!data || data.length==0) {
+
+            if (!data || data.length == 0) {
                 $("#resultHolder").hide();
-                $("#divClassTable").hide();                
+                $("#divClassTable").hide();
                 $("#error").show();
                 return;
             }
-                        
+
             let match = null;
             let bestScore = -1;
-            for (let i=0;i<data.length;++i) {
+            for (let i = 0; i < data.length; ++i) {
                 let maxScoreForThisClass = Math.max(...data[i].class_probability);
-                if(maxScoreForThisClass>bestScore) {
+                if (maxScoreForThisClass > bestScore) {
                     match = data[i];
                     bestScore = maxScoreForThisClass;
                 }
@@ -129,24 +128,24 @@ function init() {
                 $("#divClassTable").show();
                 $("#resultHolder").html($(`[data-player="${match.class}"`).html());
                 let classDictionary = match.class_dictionary;
-                for(let personName in classDictionary) {
+                for (let personName in classDictionary) {
                     let index = classDictionary[personName];
                     let proabilityScore = match.class_probability[index];
                     let elementName = "#score_" + personName;
                     $(elementName).html(proabilityScore);
                 }
             }
-            dz.removeFile(file);            
+            dz.removeFile(file);
         });
     });
 
     $("#submitBtn").on('click', function (e) {
-        dz.processQueue();		
+        dz.processQueue();
     });
 }
 
-$(document).ready(function() {
-    console.log( "ready!" );
+$(document).ready(function () {
+    console.log("ready!");
     $("#error").hide();
     $("#resultHolder").hide();
     $("#divClassTable").hide();
