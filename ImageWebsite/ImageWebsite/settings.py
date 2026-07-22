@@ -187,9 +187,33 @@ STATICFILES_DIRS = [
 ]
 GEOIP_PATH = os.path.join(BASE_DIR, "GeoIP")
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# ==============================================================================
+# --- SECURITY & SESSION SETTINGS (Session Hijacking Prevention) ---
+# ==============================================================================
+
+# 1. Enforce HTTPS-only cookies (Only applied in Production so local dev still works)
+IS_PRODUCTION = CURRENT_MODE == "production"
+
+SESSION_COOKIE_SECURE = IS_PRODUCTION
+CSRF_COOKIE_SECURE = IS_PRODUCTION
+
+# 2. XSS & CSRF Protection
+SESSION_COOKIE_HTTPONLY = True      # Prevents JS from reading the cookie
+SESSION_COOKIE_SAMESITE = 'Lax'     # Mitigates Cross-Site Request Forgery
+
+# 3. Session Timeouts
+SESSION_COOKIE_AGE = 1800           # Session expires after 30 minutes (1800 seconds)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Force expiry on browser close
+
+# 4. HTTP Strict Transport Security (HSTS) - Only applied in Production
+if IS_PRODUCTION:
+    SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
