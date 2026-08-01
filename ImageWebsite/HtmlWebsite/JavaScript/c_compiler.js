@@ -4,6 +4,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputArea = document.getElementById('c-output');
 
     // ==========================================
+    // MODAL WARNING LOGIC (Theme Matched)
+    // ==========================================
+    const modal = document.getElementById("comingSoonModal");
+    const modalText = document.getElementById("modalMessageText");
+
+    function showCustomModal(message) {
+        modalText.innerText = message;
+        modal.classList.add("show");
+
+        setTimeout(() => {
+            modal.classList.remove("show");
+        }, 2000); // Auto-close after 2 seconds
+    }
+
+    // Click anywhere on backdrop to close early
+    modal.addEventListener("click", () => {
+        modal.classList.remove("show");
+    });
+
+    // ==========================================
+    // DISABLE COPY, CUT, AND PASTE
+    // ==========================================
+
+    codeEditor.addEventListener('copy', function (e) {
+        e.preventDefault();
+        codeEditor.blur(); // Hides the mobile keyboard
+        showCustomModal("No copying allowed! Focus on building your own logic. 🧠✨");
+    });
+
+    codeEditor.addEventListener('cut', function (e) {
+        e.preventDefault();
+        codeEditor.blur();
+        showCustomModal("No cutting corners! Use backspace to edit your code. ✂️🚫");
+    });
+
+    codeEditor.addEventListener('paste', function (e) {
+        e.preventDefault();
+        codeEditor.blur();
+        showCustomModal("No shortcuts! Typing the code manually builds muscle memory. 💻🔥");
+    });
+
+    // ==========================================
     // AUTO-INDENTATION LOGIC FOR C COMPILER
     // ==========================================
     codeEditor.addEventListener("keydown", function (e) {
@@ -109,4 +151,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return cookieValue;
     }
+
 });
