@@ -36,6 +36,7 @@ urlpatterns = [
     path('ai-tutor/animal-classifier/', views.upload_and_predict, name='animal-classifier'),
     path('ai-tutor/python-compiler/', lambda request: views.serve_html(request, 'python_compiler.html'), name='python-compiler'),
     path("ai-tutor/ai-notes/", lambda request: views.serve_html(request, 'ai_notes.html'), name='ai-notes'),
+    path('ai-tutor/c-compiler/', views.c_compiler_view, name='c_compiler'),
     path("summarize-text/", views.summarize_text, name="summarize_text"),
     path("robots.txt", views.robots_txt, name="robots"),
 ]

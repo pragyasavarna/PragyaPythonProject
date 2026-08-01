@@ -11,6 +11,10 @@
     <string name="blog_text">Blog</string>
     <string name="project_text">Projects</string>
     <string name="python_compiler_text">Python Compiler</string>
+    <string name="c_compiler_text">C Compiler</string>
+    <string name="write_c_code_text">Write C Code</string>
+    <string name="output_text">Output</string>
+    <string name="run_code_text">Run Code</string>
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="logout_text">Logout</string>

@@ -1,0 +1,43 @@
+{% extends "master.html" %}
+{% load string_utils %}
+
+{% block title %}Project | {% get_string 'c_compiler_text' %}{% endblock %}
+{% block description %}Write, compile, and run C programs online with the Cognilume C Compiler. Practice C programming, test code instantly, and improve your coding skills with a fast and responsive online compiler.{% endblock %}
+{% block keywords %}C Compiler, Online C Compiler, Run C Code Online, Compile C Program, C Programming, GCC Compiler, Online Code Editor, Learn C, Practice C Programming, Cognilume C Compiler{% endblock %}
+{% block og_title %}Online C Compiler | Cognilume{% endblock %}
+{% block og_description %}Write, compile, and execute C programs instantly with the Cognilume Online C Compiler. Perfect for students, beginners, interview preparation, and coding practice.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/c_compiler.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="c-compiler">
+    <p class="info-text">
+        If you face any problem while running your programs, please visit the contact page or send an email to 
+        <a href="mailto:contact@pragyasavarna.com">contact@pragyasavarna.com</a>
+    </p>
+
+    <div class="row">
+        <!-- Code Editor -->
+        <div class="col-md-6">
+            <h4 class="section-title">{% get_string 'write_c_code_text' %}:</h4>
+            <textarea id="c-code-editor" class="form-control code-area" rows="15" spellcheck="false" placeholder="#include <stdio.h>&#10;&#10;int main() {&#10;    printf(&quot;Hello, Cognilume!\\n&quot;);&#10;    return 0;&#10;}"></textarea>
+        </div>
+
+        <!-- Output -->
+        <div class="col-md-6">
+            <h4 class="section-title">{% get_string 'output_text' %}:</h4>
+            <textarea id="c-output" class="output-area" readonly></textarea>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="run-c-btn" class="btn run-btn px-5 py-2">▶ {% get_string 'run_code_text' %}</button>
+    </div>
+</div>
+{% block extra_jss %}
+<script src="../JavaScript/c_compiler.js"></script>
+{% endblock %}
+{% endblock %}

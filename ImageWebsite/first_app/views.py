@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -713,8 +713,6 @@ def upload_and_predict(request):
     context["result"] = request.session.pop('prediction_result', "")
     return render(request, "animal_classifier.html", context)
 
-
-
 def contact_page(request):
     success = False
 
@@ -907,6 +905,53 @@ def process_text(request):
         "reply": reply
     })
 
+@csrf_exempt
+def c_compiler_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '')
+            ip = get_client_ip(request)
+            location = get_location_from_ip(ip)
+            # Safety check to prevent compiling empty code
+            if not code.strip():
+                return JsonResponse({
+                    "status": "error", 
+                    "output": "Error: Please write some C code before running."
+                })
+
+            # 1. Access the file using your exact path structure
+            document_root = STATIC_FOLDERS['AIModel'] 
+            full_path = os.path.join(document_root, 'C_Compiler_Backend.py')
+
+            if not os.path.exists(full_path):
+                return JsonResponse({"status": "error", "output": "Backend compiler file not found."})
+
+            # 2. Dynamically load and execute the python file from that path
+            spec = importlib.util.spec_from_file_location("C_Compiler_Backend", full_path)
+            c_backend = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(c_backend)
+
+            # 3. Run the function from the dynamically loaded file
+            result = c_backend.execute_c_code(code)
+
+            # Save the run to the database
+            CodeExecution_C.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                code=code,
+                output=result.get('output', ''),
+                ip_address=ip,
+                city=location.get("city") if location else None,
+                state=location.get("region") if location else None,
+                country=location.get("country") if location else None,
+            )
+
+            return JsonResponse(result)
+        except Exception as e:
+            return JsonResponse({"status": "error", "output": str(e)})
+
+    return render(request, 'c_compiler.html')
+    
 @csrf_exempt
 def save_execution(request):
     if request.method == "POST":

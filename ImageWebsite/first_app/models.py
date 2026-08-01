@@ -266,6 +266,33 @@ class CodeExecution(models.Model):
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
+    
+    class Meta:
+        # Keeps the name exactly the same everywhere
+        verbose_name = "Code Execution Python Output" 
+        verbose_name_plural = "Code Execution Python Output"
+    
+    def __str__(self):
+        user_display = self.user.name if self.user else "Unknown"
+        # show IST on header
+        from django.utils.timezone import localtime
+        ist_time = localtime(self.executed_at)
+        return f"{user_display} - {ist_time.strftime('%b %d, %Y %I:%M %p')}"
+
+class CodeExecution_C(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    code = models.TextField()
+    output = models.TextField()
+    executed_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        # Keeps the name exactly the same everywhere
+        verbose_name = "Code Execution C Output" 
+        verbose_name_plural = "Code Execution C Output"
 
     def __str__(self):
         user_display = self.user.name if self.user else "Unknown"
