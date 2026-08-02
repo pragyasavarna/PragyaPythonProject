@@ -24,25 +24,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // DISABLE COPY, CUT, AND PASTE
+    // BULLETPROOF ANTI-PASTE (Desktop & Mobile)
     // ==========================================
 
-    codeEditor.addEventListener('copy', function (e) {
-        e.preventDefault();
-        codeEditor.blur(); // Hides the mobile keyboard
-        showCustomModal("No copying allowed! Focus on building your own logic. 🧠✨");
-    });
-
-    codeEditor.addEventListener('cut', function (e) {
+    function blockAction(e, message) {
         e.preventDefault();
         codeEditor.blur();
-        showCustomModal("No cutting corners! Use backspace to edit your code. ✂️🚫");
+        showCustomModal(message);
+    }
+
+    // 1. Block Standard Desktop Actions
+    codeEditor.addEventListener('copy', (e) => blockAction(e, "No copying allowed! Focus on building your own logic. 🧠✨"));
+    codeEditor.addEventListener('cut', (e) => blockAction(e, "No cutting corners! Use backspace to edit your code. ✂️🚫"));
+    codeEditor.addEventListener('paste', (e) => blockAction(e, "No shortcuts! Typing the code manually builds muscle memory. 💻🔥"));
+
+    // 2. Block Mobile Keyboard Injections (Gboard, SwiftKey, etc.)
+    codeEditor.addEventListener('beforeinput', function (e) {
+        if (e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop') {
+            blockAction(e, "No shortcuts! Typing the code manually builds muscle memory. 💻🔥");
+        }
+        // If a mobile keyboard injects a string with new lines, or longer than 15 characters, block it.
+        else if (e.inputType === 'insertText' && e.data) {
+            if (e.data.includes('\n') || e.data.length > 15) {
+                blockAction(e, "No shortcuts! Typing the code manually builds muscle memory. 💻🔥");
+            }
+        }
     });
 
-    codeEditor.addEventListener('paste', function (e) {
-        e.preventDefault();
-        codeEditor.blur();
-        showCustomModal("No shortcuts! Typing the code manually builds muscle memory. 💻🔥");
+    // 3. Ultimate Fallback: The Rollback Mechanism
+    // If a keyboard somehow bypasses the above, we detect the sudden jump in text and reverse it.
+    let previousValue = codeEditor.value;
+
+    // Keep track of the code state during normal typing and auto-indenting
+    codeEditor.addEventListener('keyup', () => previousValue = codeEditor.value);
+    codeEditor.addEventListener('keydown', () => setTimeout(() => previousValue = codeEditor.value, 10));
+
+    codeEditor.addEventListener('input', function (e) {
+        // Allow users to safely use Undo/Redo without triggering the warning
+        if (e.inputType === 'historyUndo' || e.inputType === 'historyRedo') {
+            previousValue = codeEditor.value;
+            return;
+        }
+
+        // If the text suddenly grows by more than 15 characters instantly, it is a paste.
+        if (codeEditor.value.length - previousValue.length > 15) {
+            codeEditor.value = previousValue; // Roll the text back to exactly what it was before the paste
+            codeEditor.blur(); // Hide the keyboard
+            showCustomModal("No shortcuts! Typing the code manually builds muscle memory. 💻🔥");
+        } else {
+            previousValue = codeEditor.value; // Update tracker for normal typing
+        }
     });
 
     // ==========================================
