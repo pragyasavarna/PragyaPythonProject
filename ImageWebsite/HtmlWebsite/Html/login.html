@@ -1,5 +1,11 @@
 {% extends "master.html" %}
-{% block title %}Login | Cognilume{% endblock %}
+{% load string_utils %}
+{% block title %}{% get_string 'login_text' %} | {% get_string 'app_name' %}{% endblock %}
+{% block description %}Log in to your Cognilume account to access your AI Tutor, interview preparation tools, and custom coding resources. Welcome back to a smarter tomorrow.{% endblock %}
+{% block keywords %}Cognilume login, sign in Cognilume, AI education account, coding practice login, interview preparation login, tech platform sign in{% endblock %}
+{% block og_title %}Login | Cognilume{% endblock %}
+{% block og_description %}Log in to your Cognilume account to access your AI Tutor, interview preparation tools, and custom coding resources.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
 {% block robots %}noindex,nofollow{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/auth.css">
@@ -24,8 +30,8 @@
             <label>Password</label>
             <input type="password" name="password" required placeholder="Enter your password">
         </div>
-        <p class="switch-link" style="margin-top: 5px;">
-            <a href="/forgot-password/" style="color: var(--cyan);">Forgot Password?</a>
+        <p class="switch-link">
+            <a href="/forgot-password/">Forgot Password?</a>
         </p>
         <button type="submit" class="btn-submit">Login</button>
         {% if error %}

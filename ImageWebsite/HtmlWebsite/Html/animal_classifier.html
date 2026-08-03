@@ -1,6 +1,11 @@
 {% extends "master.html" %}
 {% load string_utils %}
-{% block title %}Project | {% get_string 'app_name' %}{% endblock %}
+{% block title %}{% get_string 'animal_classifier_text' %} | {% get_string 'app_name' %}{% endblock %}
+{% block description %}Upload an image and instantly identify the animal with the Cognilume AI Animal Classifier. Experience the power of machine learning and computer vision with our fast, accurate image recognition tool.{% endblock %}
+{% block keywords %}Animal Classifier, AI Animal Identifier, Image Classification, AI Tutor, Machine Learning, Cognilume AI, Predict Animal, Image Recognition, Deep Learning, Online AI Tool{% endblock %}
+{% block og_title %}AI Animal Classifier | Cognilume{% endblock %}
+{% block og_description %}Upload an image to identify animals instantly with the Cognilume AI-powered Animal Classifier. A perfect tool to explore machine learning and computer vision in action.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/project.css">
 {% endblock %}

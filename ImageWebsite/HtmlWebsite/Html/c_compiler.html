@@ -1,7 +1,7 @@
 {% extends "master.html" %}
 {% load string_utils %}
 
-{% block title %}Project | {% get_string 'c_compiler_text' %}{% endblock %}
+{% block title %}{% get_string 'c_compiler_text' %} | {% get_string 'app_name' %}{% endblock %}
 {% block description %}Write, compile, and run C programs online with the Cognilume C Compiler. Practice C programming, test code instantly, and improve your coding skills with a fast and responsive online compiler.{% endblock %}
 {% block keywords %}C Compiler, Online C Compiler, Run C Code Online, Compile C Program, C Programming, GCC Compiler, Online Code Editor, Learn C, Practice C Programming, Cognilume C Compiler{% endblock %}
 {% block og_title %}Online C Compiler | Cognilume{% endblock %}
