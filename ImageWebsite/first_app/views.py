@@ -2,6 +2,9 @@ import os
 import json
 import numpy as np
 from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.db import transaction
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
@@ -734,21 +737,59 @@ def contact_page(request):
 
     return render(request, "contact.html", {"success": success})
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.files.base import ContentFile
+from django.db import transaction # ADD THIS IMPORT
+from io import BytesIO
+from PIL import Image
+from .models import UserAccount
+
 def register_page(request):
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
+        dob = request.POST.get("dob")
+        phone = request.POST.get("phone")
+        
+        profile_upload = request.FILES.get("profile")
 
         if UserAccount.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect("register")
 
-        user = UserAccount.objects.create_user(
-            email=email,
-            name=name,
-            password=password
-        )
+        try:
+            # transaction.atomic() ensures "All or Nothing". 
+            # If anything inside this block fails, the database rolls back entirely.
+            with transaction.atomic():
+                
+                # 1. Process the image in memory FIRST (No database connection yet)
+                final_profile = None
+                if profile_upload:
+                    img = Image.open(profile_upload).convert("RGBA")
+                    buffer = BytesIO()
+                    img.save(buffer, format="PNG")
+                    # The name 'temp.png' here will be overridden by your user_profile_path
+                    final_profile = ContentFile(buffer.getvalue(), name="temp.png")
+
+                # 2. Pass EVERYTHING at once to create_user!
+                UserAccount.objects.create_user(
+                    email=email,
+                    name=name,
+                    password=password,
+                    dob=dob,
+                    phone=phone,
+                    profile=final_profile # Now we can pass it safely!
+                )
+
+        except Exception as e:
+            # If the image was corrupted or the database failed, we catch it here.
+            # NO user was created.
+            messages.error(request, "An error occurred during registration. Please try again.")
+            return redirect("register")
+
+        # If we reach here, the atomic transaction was a 100% success.
         messages.success(request, "Account created successfully!")
         return redirect("login")
 

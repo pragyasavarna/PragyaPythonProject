@@ -140,23 +140,22 @@ class TimetableEntryAdmin(ImportExportModelAdmin):
 
 class CustomUserAdmin(UserAdmin):
     model = UserAccount
-    list_display = ('email', 'name', 'is_staff', 'is_superuser')
+    list_display = ('email', 'name', 'profile', 'dob', 'phone', 'is_staff', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser')
+    search_fields = ('email', 'name', 'phone')
+    ordering = ('email',)
 
     fieldsets = (
-        (None, {'fields': ('email', 'name', 'password')}),
+        (None, {'fields': ('email', 'name', 'profile', 'dob', 'phone', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'password1', 'password2', 'is_staff', 'is_superuser')}
+            'fields': ('email', 'name', 'profile', 'dob', 'phone', 'password1', 'password2', 'is_staff', 'is_superuser')}
         ),
     )
-
-    search_fields = ('email',)
-    ordering = ('email',)
 
 
 admin.site.register(UserAccount, CustomUserAdmin)

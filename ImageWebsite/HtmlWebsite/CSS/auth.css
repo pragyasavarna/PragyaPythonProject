@@ -106,6 +106,19 @@
   font-size: 0.85rem;
 }
 
+/* ---------- Messages Container ---------- */
+.messages-container {
+  margin-bottom: 15px;
+}
+
+/* ---------- Success Message ---------- */
+.success-msg {
+  color: #00e676;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
 /* ---------- Switch Link ---------- */
 .switch-link {
   text-align: center;

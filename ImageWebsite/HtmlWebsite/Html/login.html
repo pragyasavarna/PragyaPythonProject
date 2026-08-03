@@ -20,6 +20,13 @@
   </section>
 
   <section class="auth-body">
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <p class="{{ message.tags }}-msg">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
     <form method="POST" class="auth-form">
         {% csrf_token %}
         <div class="form-group">

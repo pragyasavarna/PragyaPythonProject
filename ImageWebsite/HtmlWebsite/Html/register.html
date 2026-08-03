@@ -20,7 +20,15 @@
   </section>
 
   <section class="auth-body">
-    <form method="POST" class="auth-form" autocomplete="off">
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <!-- This dynamically creates class="success-msg" or class="error-msg" -->
+          <p class="{{ message.tags }}-msg">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <form method="POST" class="auth-form" autocomplete="off" enctype="multipart/form-data">
       {% csrf_token %}
 
       <div class="form-group">

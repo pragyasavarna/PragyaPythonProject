@@ -1,4 +1,5 @@
 import os
+import hashlib
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.conf import settings
@@ -206,12 +207,14 @@ class Feedback(models.Model):
         return f"{self.name} - {self.issue_type} - {self.subject}"
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email, name, password=None):
+    # Added dob, phone, and profile as explicit parameters
+    def create_user(self, email, name, password=None, dob=None, phone=None, profile=None):
         if not email:
             raise ValueError("Users must have an email")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name)
+        # Pass the new parameters into self.model
+        user = self.model(email=email, name=name, dob=dob, phone=phone, profile=profile)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -223,10 +226,24 @@ class UserAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+def user_profile_path(instance, filename):
+    # Convert email to lowercase and generate a unique MD5 hash
+    email_string = instance.email.strip().lower().encode('utf-8')
+    email_hash = hashlib.md5(email_string).hexdigest()
+    return f'Profiles/user_{email_hash}.png'
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    profile = models.ImageField(
+        storage=custom_image_storage,
+        upload_to=user_profile_path,
+        blank=True, 
+        null=True, 
+        help_text="Upload your profile image here"
+    )
+    dob = models.DateField(blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
