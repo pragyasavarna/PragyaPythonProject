@@ -8,6 +8,7 @@
 
 #c-compiler .row {
     display: flex;
+    margin-top: 40px;
     justify-content: space-between;
     gap: 20px;
     box-sizing: border-box;
@@ -173,22 +174,136 @@
     transform: scale(1);
 }
 
+/* ==========================================
+   EDITOR HEADER & ACTION BUTTONS
+   ========================================== */
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    min-height: 32px;
+}
+
+.editor-header .section-title {
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+/* New wrapper to space out the buttons perfectly */
+.editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn {
+    background: rgba(0, 229, 255, 0.03);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    color: #00e5ff;
+    border-radius: 5px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    margin-left: 0;
+    position: relative;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover:not(.locked) {
+    background: rgba(0, 229, 255, 0.15);
+    border-color: rgba(0, 229, 255, 0.6);
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Locked State for Logged-Out Users */
+.action-btn.locked {
+    color: rgba(0, 229, 255, 0.3);
+    border-color: rgba(0, 229, 255, 0.1);
+    background: transparent;
+    cursor: not-allowed;
+}
+
+/* Sleek Hover Tooltip for Locked Buttons */
+.action-btn.locked:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 135%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Centers the tooltip perfectly above the button */
+    background: #030816;
+    /* Matches your code area background */
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    /* Subtle cyan border instead of red */
+    color: #00e5ff;
+    /* Matches your neon cyan theme */
+    padding: 6px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.15);
+    pointer-events: none;
+}
+
 @media (max-width: 768px) {
     #c-compiler {
         width: 90%;
-        padding: 0 12px;
+        /* Gives slightly more room on mobile edges */
+        padding: 0 10px;
         margin-top: 10px !important;
     }
 
     #c-compiler .row {
         flex-direction: column;
-        gap: 20px;
+        margin-top: 20px;
+        gap: 15px;
+        /* Slightly tighter gap between editor and output */
     }
 
     #c-compiler .col-md-6 {
         max-width: 100%;
         flex: 100%;
     }
+
+    /* ==========================================
+       MOBILE HEADER & BUTTON FIX
+       ========================================== */
+    .editor-header {
+        flex-direction: column;
+        /* Stacks title above the buttons */
+        align-items: flex-start;
+        /* Aligns everything to the left */
+        gap: 10px;
+        /* Space between title and buttons */
+        height: auto;
+        min-height: auto;
+    }
+
+    .editor-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin-top: 5px;
+        gap: 6px;
+    }
+
+    .action-btn {
+        padding: 5px 10px;
+        /* Slightly taller for mobile touch targets */
+        font-size: 11px;
+    }
+
+    /* ========================================== */
 
     #c-compiler .info-text {
         font-size: 13px;
@@ -205,22 +320,32 @@
         height: 150px;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 10px;
         font-size: 13px;
         padding: 10px;
     }
 
     .run-btn {
-        padding: 10px 30px;
+        width: 100%;
+        /* Makes the Run button stretch across the screen for easy tapping */
+        padding: 12px 20px;
         font-size: 16px;
         border-radius: 12px;
     }
 
     .coming-soon-box {
-        width: 80%;
+        width: 85%;
         max-width: 350px;
         padding: 15px 20px;
-        font-size: 14px;
+        font-size: 13px;
         text-align: center;
         border-radius: 12px;
+    }
+
+    /* Center the locked tooltip on mobile so it doesn't overflow off-screen */
+    .action-btn.locked:hover::after {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 140%;
     }
 }

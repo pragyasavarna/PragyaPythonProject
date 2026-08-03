@@ -21,14 +21,30 @@
 
     <div class="row">
         <!-- Code Editor -->
+        <!-- Code Editor -->
         <div class="col-md-6">
-            <h4 class="section-title">{% get_string 'write_c_code_text' %}:</h4>
+            <div class="editor-header">
+                <h4 class="section-title mb-0">{% get_string 'write_c_code_text' %}:</h4>
+                <div class="editor-actions">
+                    <button class="action-btn" id="btn-undo" title="Undo (Ctrl+Z)">↩ Undo</button>
+                    <button class="action-btn" id="btn-redo" title="Redo (Ctrl+Y)">↪ Redo</button>
+                    {% if user.is_authenticated %}
+                        <button class="action-btn" id="btn-save">💾 Save</button>
+                        <button class="action-btn" id="btn-load">📂 Load</button>
+                    {% else %}
+                        <button class="action-btn locked" data-tooltip="Please Login to Save & Load">💾 Save</button>
+                        <button class="action-btn locked" data-tooltip="Please Login to Save & Load">📂 Load</button>
+                    {% endif %}
+                </div>
+            </div>
             <textarea id="c-code-editor" class="form-control code-area" rows="15" spellcheck="false" placeholder="#include <stdio.h>&#10;&#10;int main() {&#10;    printf(&quot;Hello, Cognilume!\\n&quot;);&#10;    return 0;&#10;}"></textarea>
         </div>
 
         <!-- Output -->
         <div class="col-md-6">
-            <h4 class="section-title">{% get_string 'output_text' %}:</h4>
+            <div class="editor-header">
+                <h4 class="section-title mb-0">{% get_string 'output_text' %}:</h4>
+            </div>
             <textarea id="c-output" class="output-area" readonly></textarea>
         </div>
     </div>

@@ -29,7 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function blockAction(e, message) {
         e.preventDefault();
-        codeEditor.blur();
+        // Hide keyboard on mobile, keep focus on desktop
+        if (window.innerWidth <= 768) {
+            codeEditor.blur();
+        } else {
+            // codeEditor.focus();
+        }
         showCustomModal(message);
     }
 
@@ -75,6 +80,139 @@ document.addEventListener('DOMContentLoaded', () => {
             previousValue = codeEditor.value; // Update tracker for normal typing
         }
     });
+    // ==========================================
+    // SAVE & LOAD LOGIC
+    // ==========================================
+    const saveBtn = document.getElementById('btn-save');
+    const loadBtn = document.getElementById('btn-load');
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            if (saveBtn.classList.contains('locked')) {
+                showCustomModal("Please login to save your code! 🔒");
+                return;
+            }
+
+            const originalText = saveBtn.innerText;
+            saveBtn.innerText = "Saving...";
+            try {
+                const response = await fetch('/ai-tutor/save-code/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ code: codeEditor.value })
+                });
+
+                if (response.ok) {
+                    showCustomModal("Code saved successfully! 💾✨");
+                } else {
+                    showCustomModal("Error saving code. ❌");
+                }
+            } catch (error) {
+                showCustomModal("Network error connecting to server. ❌");
+            } finally {
+                saveBtn.innerText = originalText;
+            }
+        });
+    }
+
+    if (loadBtn) {
+        loadBtn.addEventListener('click', async () => {
+            if (loadBtn.classList.contains('locked')) {
+                showCustomModal("Please login to load your code! 🔒");
+                return;
+            }
+
+            const originalText = loadBtn.innerText;
+            loadBtn.innerText = "Loading...";
+            try {
+                const response = await fetch('/ai-tutor/load-code/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.code) {
+                        codeEditor.value = data.code;
+                        previousValue = codeEditor.value; // CRITICAL: Updates anti-paste tracker so it doesn't trigger a warning
+                        showCustomModal("Saved code loaded! 📂✨");
+                    } else {
+                        showCustomModal("No saved code found. 📝");
+                    }
+                } else {
+                    showCustomModal("Error loading code. ❌");
+                }
+            } catch (error) {
+                showCustomModal("Network error connecting to server. ❌");
+            } finally {
+                loadBtn.innerText = originalText;
+            }
+        });
+    }
+
+    // ==========================================
+    // CUSTOM JAVASCRIPT UNDO / REDO (Modern Approach)
+    // ==========================================
+    const undoBtn = document.getElementById('btn-undo');
+    const redoBtn = document.getElementById('btn-redo');
+
+    // Create a custom history stack to store the code states
+    let codeHistory = [codeEditor.value];
+    let historyStep = 0;
+    let historyTimeout;
+
+    // Save the editor state whenever the user types (with a slight delay to group keystrokes)
+    codeEditor.addEventListener('input', (e) => {
+        // Skip saving if the browser is handling native Ctrl+Z / Ctrl+Y
+        if (e.inputType === 'historyUndo' || e.inputType === 'historyRedo') return;
+
+        clearTimeout(historyTimeout);
+        historyTimeout = setTimeout(() => {
+            if (codeHistory[historyStep] !== codeEditor.value) {
+                // If they typed something new, erase any "Redo" futures
+                codeHistory = codeHistory.slice(0, historyStep + 1);
+                codeHistory.push(codeEditor.value);
+
+                // Keep memory clean by only saving the last 50 actions
+                if (codeHistory.length > 50) {
+                    codeHistory.shift();
+                } else {
+                    historyStep++;
+                }
+            }
+        }, 400); // Wait 400ms after they stop typing to save the snapshot
+    });
+
+    if (undoBtn) {
+        undoBtn.addEventListener('click', () => {
+            if (historyStep > 0) {
+                historyStep--;
+                codeEditor.value = codeHistory[historyStep];
+                previousValue = codeEditor.value; // CRITICAL: Syncs with your Anti-Paste rule
+                // Hide keyboard on mobile, keep focus on desktop
+                if (window.innerWidth <= 768) {
+                    codeEditor.blur();
+                } else {
+                    codeEditor.focus();
+                }
+            }
+        });
+    }
+
+    if (redoBtn) {
+        redoBtn.addEventListener('click', () => {
+            if (historyStep < codeHistory.length - 1) {
+                historyStep++;
+                codeEditor.value = codeHistory[historyStep];
+                previousValue = codeEditor.value; // CRITICAL: Syncs with your Anti-Paste rule
+                // Hide keyboard on mobile, keep focus on desktop
+                if (window.innerWidth <= 768) {
+                    codeEditor.blur();
+                } else {
+                    codeEditor.focus();
+                }
+            }
+        });
+    }
 
     // ==========================================
     // AUTO-INDENTATION LOGIC FOR C COMPILER

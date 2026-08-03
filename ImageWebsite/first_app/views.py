@@ -5,6 +5,7 @@ from PIL import Image
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
 from django.views.static import serve
@@ -18,7 +19,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C,UserSavedCCode
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -951,7 +952,39 @@ def c_compiler_view(request):
             return JsonResponse({"status": "error", "output": str(e)})
 
     return render(request, 'c_compiler.html')
-    
+
+@login_required
+def save_code(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code_content = data.get('code', '')
+            
+            # Update existing code or create a new entry if it doesn't exist
+            saved_code, created = UserSavedCCode.objects.get_or_create(user=request.user)
+            saved_code.code = code_content
+            saved_code.save()
+            
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+            
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@login_required
+def load_code(request):
+    if request.method == 'GET':
+        try:
+            saved_code = UserSavedCCode.objects.get(user=request.user)
+            return JsonResponse({'code': saved_code.code})
+        except UserSavedCCode.DoesNotExist:
+            # If the user hasn't saved anything yet, return an empty string
+            return JsonResponse({'code': ''}) 
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+            
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 @csrf_exempt
 def save_execution(request):
     if request.method == "POST":

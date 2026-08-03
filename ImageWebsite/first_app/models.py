@@ -301,6 +301,14 @@ class CodeExecution_C(models.Model):
         ist_time = localtime(self.executed_at)
         return f"{user_display} - {ist_time.strftime('%b %d, %Y %I:%M %p')}"
 
+class UserSavedCCode(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='saved_c_code')
+    code = models.TextField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.name}'s C Code"
+
 class Subject(models.Model):
     name = models.CharField(max_length=100, unique=True)
     
