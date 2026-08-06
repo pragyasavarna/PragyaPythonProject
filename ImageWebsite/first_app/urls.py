@@ -41,4 +41,5 @@ urlpatterns = [
     path('ai-tutor/load-code/', views.load_code, name='load_code'),
     path("summarize-text/", views.summarize_text, name="summarize_text"),
     path("robots.txt", views.robots_txt, name="robots"),
+    path("ads.txt", views.ads_txt, name="ads"),
 ]

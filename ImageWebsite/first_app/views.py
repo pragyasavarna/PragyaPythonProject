@@ -677,6 +677,17 @@ def robots_txt(request):
         content_type="text/plain",
     )
 
+def ads_txt(request):
+    path = os.path.join(
+        BASE_DIR,
+        "../ImageWebsite/HtmlWebsite/ads.txt"
+    )
+
+    return FileResponse(
+        open(path, "rb"),
+        content_type="text/plain",
+    )
+
 def predict_image_old(img_file):
     img = Image.open(img_file)
     img = img.resize((200, 200))  # adjust size as per training
