@@ -11,6 +11,7 @@ keybert
 nltk
 
 # --- System & Utilities (Works on both) ---
+django-recaptcha
 psutil
 pyttsx3
 numpy

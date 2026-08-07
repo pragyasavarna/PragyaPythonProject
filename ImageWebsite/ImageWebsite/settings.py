@@ -26,6 +26,9 @@ if CURRENT_MODE == "local":
     DB_PASS = os.environ.get("LOCAL_DB_PASSWORD")
     DB_HOST = os.environ.get("LOCAL_DB_HOST")
     DB_PORT = os.environ.get("LOCAL_DB_PORT")
+    RECAPTCHA_PUBLIC_KEY = os.environ.get("LOCAL_RECAPTCHA_PUBLIC_KEY")
+    RECAPTCHA_PRIVATE_KEY = os.environ.get("LOCAL_RECAPTCHA_PRIVATE_KEY")
+
 
 elif CURRENT_MODE == "production":
     if SHOW_LOGS:
@@ -39,6 +42,9 @@ elif CURRENT_MODE == "production":
     DB_PASS = os.environ.get("PROD_DB_PASSWORD")
     DB_HOST = os.environ.get("PROD_DB_HOST")
     DB_PORT = os.environ.get("PROD_DB_PORT")
+    RECAPTCHA_PUBLIC_KEY = os.environ.get("PROD_RECAPTCHA_PUBLIC_KEY")
+    RECAPTCHA_PRIVATE_KEY = os.environ.get("PROD_RECAPTCHA_PRIVATE_KEY")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,7 +106,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "savarnapragya181751@gmail.com"
 
 WSGI_APPLICATION = "ImageWebsite.wsgi.application"
-
 
 # --- 5. DATABASE CONFIGURATION ---
 

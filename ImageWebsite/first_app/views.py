@@ -31,6 +31,8 @@ import nbformat
 from nbconvert import HTMLExporter
 from django.core.cache import cache
 from django.views.decorators.cache import never_cache
+import urllib.request
+import urllib.parse
 
 # Load your trained model once
 import tensorflow as tf
@@ -729,32 +731,61 @@ def upload_and_predict(request):
     return render(request, "animal_classifier.html", context)
 
 def contact_page(request):
-    success = False
-
     if request.method == "POST":
+        # 1. The Honeypot Check (Instant rejection, no API call)
+        if request.POST.get("website_url"):
+            messages.error(request, "✖ Invalid submission detected.")
+            return redirect('/contact/')
+        # Get the user's IP address (handles local and Nginx proxy IPs)
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+        
+        cache_key = f"contact_limit_{ip}"
+        
+        # Check if this IP submitted recently
+        if cache.get(cache_key):
+            messages.error(request, "✖ You are submitting too fast. Please wait for 2 minutes.")
+            return redirect('/contact/')
         name = request.POST.get("name")
         email = request.POST.get("email")
         subject = request.POST.get("subject")
         message = request.POST.get("message")
 
-        ContactMessage.objects.create(
-            name=name,
-            email=email,
-            subject=subject,
-            message=message
-        )
+        # Grab the token from the frontend
+        recaptcha_response = request.POST.get('g-recaptcha-response')
 
-        success = True
-
-    return render(request, "contact.html", {"success": success})
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.core.files.base import ContentFile
-from django.db import transaction # ADD THIS IMPORT
-from io import BytesIO
-from PIL import Image
-from .models import UserAccount
+        if not recaptcha_response:
+            messages.error(request, "✖ Please check the 'I am not a robot' box.")
+        else:
+            # Verify with Google
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode('utf-8')
+            req = urllib.request.Request(url, data=data)
+            try:
+                response = urllib.request.urlopen(req)
+                result = json.loads(response.read().decode())
+                
+                if result.get('success'):
+                    # Token is valid, save to DB
+                    ContactMessage.objects.create(
+                        name=name,
+                        email=email,
+                        subject=subject,
+                        message=message
+                    )
+                    messages.success(request, "✔ Message sent successfully!")
+                    # Set the cache for this IP (prevents re-submit for 60 seconds)
+                    cache.set(cache_key, True, 120)
+                else:
+                    messages.error(request, "✖ Invalid reCAPTCHA. Please try again.")
+            except Exception:
+                messages.error(request, "✖ reCAPTCHA verification failed. Please try again later.")
+        return redirect('/contact/')
+    return render(request, "contact.html", {"recaptcha_site_key": settings.RECAPTCHA_PUBLIC_KEY})
 
 def register_page(request):
     if request.method == "POST":
@@ -1066,8 +1097,6 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
-import requests
 
 def get_location_from_ip(ip):
     try:
