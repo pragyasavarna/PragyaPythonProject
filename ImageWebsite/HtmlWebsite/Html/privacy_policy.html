@@ -1,0 +1,37 @@
+{% extends "master.html" %}
+{% load string_utils %}
+
+{% block title %}{% get_string 'privacy_policy_text' %} | {% get_string 'app_name' %}{% endblock %}
+{% block description %}Read the Privacy Policy of Cognilume. Learn how we collect, use, and protect your personal information and data.{% endblock %}
+{% block keywords %}Privacy Policy, Data Protection, Privacy, Terms, Cognilume Privacy{% endblock %}
+{% block og_title %}Privacy Policy | Cognilume{% endblock %}
+{% block og_description %}Understand how Cognilume handles your data. Read our complete privacy policy here.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/privacy_policy.css">
+{% endblock %}
+
+{% block content %}
+<div class = "privacy-policy">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="editor-header mt-4">
+                <h2 class="section-title mb-0">Privacy Policy</h2>
+            </div>
+            
+            <div class="privacy-content-box">
+                {% if policy %}
+                    <div class="policy-body">
+                        {{ policy.content|safe }}
+                    </div>
+                {% else %}
+                    <p class="info-text text-center mt-5">
+                        Our privacy policy is currently being updated. Please check back soon.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

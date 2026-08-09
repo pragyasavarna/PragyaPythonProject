@@ -455,3 +455,15 @@ def clear_subject_cascade_cache(sender, instance, **kwargs):
 def clear_days_cache(sender, instance, **kwargs):
     cache.delete('all_days_data')
     print("DEBUG: 'all_days_data' cache cleared due to DayOfWeek update!")
+
+class PrivacyPolicy(models.Model):
+    title = models.CharField(max_length=200, default="Privacy Policy")
+    content = models.TextField(help_text="Add HTML content for the privacy policy here.")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Privacy Policy"
+        verbose_name_plural = "Privacy Policies"
+
+    def __str__(self):
+        return self.title

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -251,3 +251,7 @@ class UserSavedCCodeAdmin(admin.ModelAdmin):
     list_display = ('user', 'updated_at')
     search_fields = ('user__username', 'user__email')
     readonly_fields = ('updated_at',)
+
+@admin.register(PrivacyPolicy)
+class PrivacyPolicyAdmin(ImportExportModelAdmin):
+    list_display = ('title', 'updated_at')

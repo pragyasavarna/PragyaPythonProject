@@ -42,4 +42,5 @@ urlpatterns = [
     path("summarize-text/", views.summarize_text, name="summarize_text"),
     path("robots.txt", views.robots_txt, name="robots"),
     path("ads.txt", views.ads_txt, name="ads"),
+    path('privacy/', views.privacy_policy_view, name='privacy_policy'),
 ]

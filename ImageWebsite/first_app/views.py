@@ -22,7 +22,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C,UserSavedCCode
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C,UserSavedCCode,PrivacyPolicy
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -1159,3 +1159,12 @@ def stream_summary(request):
         event_stream(),
         content_type="text/event-stream"
     )
+
+def privacy_policy_view(request):
+    # Fetch the first privacy policy object, or None if it doesn't exist yet
+    policy = PrivacyPolicy.objects.first()
+    
+    context = {
+        'policy': policy
+    }
+    return render(request, 'privacy_policy.html', context)
