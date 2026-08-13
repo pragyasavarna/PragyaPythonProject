@@ -69,9 +69,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     "import_export",
-    'django_otp',
-    'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_static',
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "django_otp.plugins.otp_static",
+    "django_otp.plugins.otp_email",
     "first_app"
 ]
 
@@ -107,8 +108,14 @@ TEMPLATES = [
         },
     },
 ]
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "savarnapragya181751@gmail.com"
+
+# --- SECURE EMAIL CONFIGURATION ---
+EMAIL_BACKEND = 'first_app.email_backend.LoggingEmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 WSGI_APPLICATION = "ImageWebsite.wsgi.application"
 

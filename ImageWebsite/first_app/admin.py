@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -277,5 +277,18 @@ class CustomStaticDeviceAdmin(StaticDeviceAdmin):
         self.message_user(request, "Successfully generated 5 random tokens for selected devices.")
         
     generate_random_tokens.short_description = "Generate 5 random static tokens"
+
+@admin.register(OutgoingEmailLog)
+class OutgoingEmailLogAdmin(ImportExportModelAdmin):
+    list_display = ('recipient', 'sent_at')
+    list_filter = ('sent_at',)
+    search_fields = ('recipient',)
+    
+    # Make it read-only for security
+    def has_add_permission(self, request):
+        return False
+        
+    def has_change_permission(self, request, obj=None):
+        return False
 
 apply_custom_admin_structure()

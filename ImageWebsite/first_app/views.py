@@ -860,40 +860,73 @@ def logout_page(request):
     return redirect("/")
 
 def forgot_password(request):
-    message = None
-    error = None
-
     if request.method == "POST":
-        email = request.POST.get("email")
+        # 1. Get IP address and set cache key
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+        cache_key = f"forgot_password_limit_{ip}"
+        # 2. Check if this IP submitted recently
+        if cache.get(cache_key):
+            messages.error(request, "✖ You are submitting too fast. Please wait for 3 minutes.")
+            return redirect('/forgot-password/')
+        else:
+            email = request.POST.get("email")
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            if not recaptcha_response:
+                messages.error(request, "✖ Please check the 'I am not a robot' box.")
+            else:
+                # 3. Verify with Google using urllib
+                url = 'https://www.google.com/recaptcha/api/siteverify'
+                values = {
+                    'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                    'response': recaptcha_response
+                }
+                data = urllib.parse.urlencode(values).encode('utf-8')
+                req = urllib.request.Request(url, data=data)
+                try:
+                    response = urllib.request.urlopen(req)
+                    result = json.loads(response.read().decode())
+                    
+                    if result.get('success'):
+                        try:
+                            user = UserAccount.objects.get(email=email)
+                            # Create password reset token
+                            uid = urlsafe_base64_encode(force_bytes(user.pk))
+                            token = default_token_generator.make_token(user)
 
-        try:
-            user = UserAccount.objects.get(email=email)
+                            reset_link = request.build_absolute_uri(
+                                f"/reset-password/{uid}/{token}/"
+                            )
 
-            # Create password reset token
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
+                            # Send email
+                            # 1. Access the file (assuming Email_utils.py is in the same folder as views.py)
+                            document_root = STATIC_FOLDERS['AIModel']
+                            full_path = os.path.join(document_root, 'Email_Utils.py')
 
-            reset_link = request.build_absolute_uri(
-                f"/reset-password/{uid}/{token}/"
-            )
+                            if not os.path.exists(full_path):
+                                messages.error(request, "✖ Email utility file not found.")
+                                return redirect('/forgot-password/')
 
-            # Send email
-            send_mail(
-                subject="Password Reset - Cognilume",
-                message=f"Click the link to reset your password:\n\n{reset_link}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-            )
+                            # 2. Dynamically load and execute the python file from that path
+                            spec = importlib.util.spec_from_file_location("Email_Utils", full_path)
+                            email_utils = importlib.util.module_from_spec(spec)
+                            spec.loader.exec_module(email_utils)
+                            
+                            # 3. Call the email sending function from the loaded file
+                            email_utils.send_password_reset_email(email, reset_link)
 
-            message = "A reset link has been sent to your email."
-
-        except UserAccount.DoesNotExist:
-            error = "No account found with this email."
-
-    return render(request, "forgot_password.html", {
-        "message": message,
-        "error": error,
-    })
+                            messages.success(request, "✔ A reset link has been sent to your email.")
+                            # 4. Set the cache timer on successful submission (180 seconds)
+                            cache.set(cache_key, True, 180)
+                        except UserAccount.DoesNotExist:
+                            messages.error(request, "✖ No account found with this email.")
+                    else:
+                        messages.error(request, "✖ Invalid reCAPTCHA. Please try again.")
+                        
+                except Exception:
+                    messages.error(request, "✖ reCAPTCHA verification failed. Please try again later.")
+        return redirect('/forgot-password/')
+    return render(request, "forgot_password.html", {"recaptcha_site_key": settings.RECAPTCHA_PUBLIC_KEY})
 
 def reset_password(request, uidb64, token):
     error = None

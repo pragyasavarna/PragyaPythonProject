@@ -39,6 +39,8 @@ def custom_get_app_list(request, app_label=None):
             code_group['models'].append(model)
         elif model['object_name'] in time_table_models:
             time_group['models'].append(model)
+        elif model['object_name'] == 'OutgoingEmailLog':
+            email_log_model = model
         else:
             other_group['models'].append(model)
 
@@ -49,13 +51,17 @@ def custom_get_app_list(request, app_label=None):
     
     otp_models = []
     # Extract models from both OTP apps
-    for label in ['otp_static', 'otp_totp']:
+    for label in ['otp_static', 'otp_totp', 'otp_email']:
         app_data = next((app for app in app_list if app['app_label'].lower() == label), None)
         if app_data:
             otp_models.extend(app_data['models'])
     
+    # Push the intercepted Email Log model into the Two-Factor list
+    if email_log_model:
+        otp_models.append(email_log_model)
+        
     # Remove the original separated OTP apps from the main list
-    app_list = [app for app in app_list if app['app_label'].lower() not in ['otp_static', 'otp_totp']]
+    app_list = [app for app in app_list if app['app_label'].lower() not in ['otp_static', 'otp_totp', 'otp_email']]
     
     # Create a new combined group and add it to the list
     if otp_models:

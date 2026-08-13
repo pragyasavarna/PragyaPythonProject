@@ -8,6 +8,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 
 # 1. Create a strict storage class that deletes old files instead of renaming new ones
 class OverwriteStorage(FileSystemStorage):
@@ -467,3 +468,14 @@ class PrivacyPolicy(models.Model):
 
     def __str__(self):
         return self.title
+
+class OutgoingEmailLog(models.Model):
+    recipient = models.EmailField()
+    sent_at = models.DateTimeField(default=now)
+    
+    class Meta:
+        verbose_name = "Email Log"
+        verbose_name_plural = "Email Logs"
+        
+    def __str__(self):
+        return f"Email to {self.recipient} at {self.sent_at.strftime('%H:%M')}"
