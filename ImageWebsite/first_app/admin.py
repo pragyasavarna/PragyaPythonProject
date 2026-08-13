@@ -10,6 +10,9 @@ from django.forms import Textarea, TextInput
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields
 from import_export.widgets import DateWidget
+from .admin_grouping import apply_custom_admin_structure
+from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+from django_otp.plugins.otp_static.admin import StaticDeviceAdmin
 
 User = get_user_model()
 
@@ -255,3 +258,24 @@ class UserSavedCCodeAdmin(admin.ModelAdmin):
 @admin.register(PrivacyPolicy)
 class PrivacyPolicyAdmin(ImportExportModelAdmin):
     list_display = ('title', 'updated_at')
+
+# 1. Unregister the default StaticDevice admin
+admin.site.unregister(StaticDevice)
+
+# 2. Re-register it with our brand new custom action
+@admin.register(StaticDevice)
+class CustomStaticDeviceAdmin(StaticDeviceAdmin):
+    actions = ['generate_random_tokens']
+
+    def generate_random_tokens(self, request, queryset):
+        for device in queryset:
+            # Generates 5 completely random, secure tokens per device
+            for _ in range(5):
+                token = StaticToken.random_token()
+                StaticToken.objects.create(device=device, token=token)
+                
+        self.message_user(request, "Successfully generated 5 random tokens for selected devices.")
+        
+    generate_random_tokens.short_description = "Generate 5 random static tokens"
+
+apply_custom_admin_structure()

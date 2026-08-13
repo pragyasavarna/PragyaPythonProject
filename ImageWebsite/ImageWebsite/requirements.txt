@@ -26,6 +26,7 @@ psycopg2-binary
 django-import-export
 nbformat
 nbconvert
+django-otp[qrcode]
 
 # --- GeoIP (MaxMind) ---
 geoip2

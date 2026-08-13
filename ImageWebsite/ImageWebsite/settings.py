@@ -45,6 +45,7 @@ elif CURRENT_MODE == "production":
     RECAPTCHA_PUBLIC_KEY = os.environ.get("PROD_RECAPTCHA_PUBLIC_KEY")
     RECAPTCHA_PRIVATE_KEY = os.environ.get("PROD_RECAPTCHA_PRIVATE_KEY")
 
+ADMIN_URL = os.getenv('ADMIN_URL_PATH', 'admin/')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,6 +69,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     "import_export",
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
     "first_app"
 ]
 
@@ -79,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 ROOT_URLCONF = "ImageWebsite.urls"
