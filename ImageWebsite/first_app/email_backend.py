@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from .models import OutgoingEmailLog
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,8 @@ class SendGridEmailBackend(BaseEmailBackend):
         try:
             response = self.client.send(mail)
             if response.status_code in [200, 201, 202]:
+                for recipient in message.to:
+                    OutgoingEmailLog.objects.create(recipient=recipient)
                 return True
             logger.error(f"SendGrid API returned status {response.status_code}: {response.body}")
             return False
