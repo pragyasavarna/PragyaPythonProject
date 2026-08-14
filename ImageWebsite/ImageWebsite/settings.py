@@ -110,12 +110,9 @@ TEMPLATES = [
 ]
 
 # --- SECURE EMAIL CONFIGURATION ---
-EMAIL_BACKEND = 'first_app.email_backend.LoggingEmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'first_app.email_backend.SendGridEmailBackend'
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 WSGI_APPLICATION = "ImageWebsite.wsgi.application"
 

@@ -27,6 +27,7 @@ django-import-export
 nbformat
 nbconvert
 django-otp[qrcode]
+sendgrid
 
 # --- GeoIP (MaxMind) ---
 geoip2
