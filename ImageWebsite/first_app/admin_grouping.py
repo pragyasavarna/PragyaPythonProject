@@ -4,12 +4,12 @@ from django.conf import settings
 
 # 1. Configuration Map: (Group Name, Set of Model Object Names)
 GROUPS_CONFIG = {
+    'blogging': ('Blogging', {'BlogPost', 'BlogPageImage'}),
+    'contact_feedback': ('Contact & Feedback', {'ContactMessage', 'Feedback'}),
     'code_output': ('Code Output', {'CodeExecution', 'CodeExecution_C', 'UserSavedCCode'}),
     'time_table': ('Time Table', {'ClassGroup', 'DayOfWeek', 'PeriodTime', 'Subject', 'Teacher', 'TimetableEntry'}),
     'ai_tutor': ('AI Tutor', {'AITutorPage', 'AITool'}),
-    'contact_feedback': ('Contact & Feedback', {'ContactMessage', 'Feedback'}),
     'homepage_management': ('Homepage Management', {'HomePage', 'Service', 'Technology', 'SocialSharePlatform'}),
-    'blogging': ('Blogging', {'BlogPost'}),
     'legal_pages': ('Legal Pages', {'PrivacyPolicy'}),
     'accounts': ('Accounts', {'UserAccount'}),
 }

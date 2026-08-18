@@ -275,6 +275,27 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
+class BlogPageImage(models.Model):    
+    # Image Configuration
+    blog_image = models.ImageField(
+        storage=custom_image_storage,
+        upload_to='Blog/',
+        blank=True, 
+        null=True, 
+        help_text="Upload your blog image here"
+    )
+    # New field to store the full absolute URL
+    image_full_url = models.URLField(
+        blank=True, 
+        null=True, 
+        help_text="This will automatically generate the full URL when you save."
+    )
+    class Meta:
+        verbose_name_plural = "Blog Page Image" 
+
+    def __str__(self):
+        return "Blog Page Image"
+
 class CodeExecution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     code = models.TextField()

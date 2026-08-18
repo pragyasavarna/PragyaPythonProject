@@ -1,0 +1,68 @@
+<!-- templates/admin/image_inserter.html -->
+<div style="background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #00e5ff; display: inline-block; color: #fff; width: 100%; max-width: 600px;">
+    <h4 style="color: #00e5ff; margin-top: 0; margin-bottom: 15px;">🖼️ Insert Image into Content</h4>
+    
+    <div style="margin-bottom: 10px;">
+        <label style="font-weight: 600;">1. Select Image:</label><br>
+        <select id="tool_img_url" style="width: 80%; padding: 6px; border-radius: 4px; background: #fff; color: #000;">
+            {% for img in images %}
+                <option value="{{ img.url }}">{{ img.name }} (ID: {{ img.id }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div style="margin-bottom: 10px; display: flex; gap: 15px;">
+        <div>
+            <label style="font-weight: 600;">Width:</label><br>
+            <input type="text" id="tool_img_width" value="250px" style="width: 100px; padding: 6px; border-radius: 4px;"> 
+        </div>
+        <div>
+            <label style="font-weight: 600;">Height:</label><br>
+            <input type="text" id="tool_img_height" value="auto" style="width: 100px; padding: 6px; border-radius: 4px;">
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: 600;">Description (Alt Text):</label><br>
+        <input type="text" id="tool_img_alt" value="Image description" style="width: 80%; padding: 6px; border-radius: 4px;">
+    </div>
+    
+    <button type="button" onclick="insertImageNow(event)" style="background: #00e5ff; color: #000; padding: 8px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s;">
+        + Insert HTML at Cursor
+    </button>
+</div>
+
+<script>
+    function insertImageNow(event) {
+        var url = document.getElementById('tool_img_url').value;
+        var width = document.getElementById('tool_img_width').value;
+        var height = document.getElementById('tool_img_height').value;
+        var alt = document.getElementById('tool_img_alt').value;
+        
+        var imgTag = '\n<img src="' + url + '" alt="' + alt + '" style="width: ' + width + '; height: ' + height + ';">\n';
+        
+        var contentBox = document.getElementById('id_content');
+        if (contentBox) {
+            var startPos = contentBox.selectionStart;
+            var endPos = contentBox.selectionEnd;
+            contentBox.value = contentBox.value.substring(0, startPos) + imgTag + contentBox.value.substring(endPos, contentBox.value.length);
+            
+            contentBox.selectionStart = contentBox.selectionEnd = startPos + imgTag.length;
+            contentBox.focus();
+            
+            var btn = event.target;
+            var oldText = btn.innerText;
+            var oldBg = btn.style.background;
+            btn.innerText = "✔ Inserted!";
+            btn.style.background = "#4CAF50";
+            btn.style.color = "#fff";
+            setTimeout(function() {
+                btn.innerText = oldText;
+                btn.style.background = oldBg;
+                btn.style.color = "#000";
+            }, 1500);
+        } else {
+            alert('Could not find the Content text box!');
+        }
+    }
+</script>

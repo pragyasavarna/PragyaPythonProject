@@ -1,7 +1,13 @@
 {% extends "master.html" %}
-{% block title %}Blog | Cognilume{% endblock %}
-{% block description %}Read the latest articles and tutorials on Deep Learning, CNN Architectures, Django Deployment, and AWS Cloud Integration at Cognilume.{% endblock %}
-{% block keywords %}CNN, Deep Learning, Artificial Intelligence, Django, Digital Ocean, AWS, Cloud Computing, Web Development, Tutorials{% endblock %}
+{% load string_utils %}
+
+{% block title %}{% get_string 'blog_text' %} | {% get_string 'app_name' %}{% endblock %}
+{% block description %}Explore Cognilume's latest articles, tutorials, and insights on Artificial Intelligence, Machine Learning, Web Development, Django, Cloud Computing, and modern technology.{% endblock %}
+{% block keywords %}Cognilume Blog, AI Articles, Artificial Intelligence, Machine Learning, Deep Learning, Web Development, Django Tutorials, Cloud Computing, Programming Tutorials, Technology Articles{% endblock %}
+{% block og_title %}Cognilume Blog | AI, Technology & Programming{% endblock %}
+{% block og_description %}Discover practical articles, tutorials, and insights on AI, Machine Learning, Web Development, Django, Cloud Computing, programming, and emerging technologies.{% endblock %}
+{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/blog.css">
 {% endblock %}

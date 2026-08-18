@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost,BlogPageImage, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -13,6 +13,11 @@ from import_export.widgets import DateWidget
 from .admin_grouping import apply_custom_admin_structure
 from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
 from django_otp.plugins.otp_static.admin import StaticDeviceAdmin
+from django.core.files.base import ContentFile
+from django.utils.html import mark_safe
+from io import BytesIO
+from PIL import Image
+import os
 
 User = get_user_model()
 
@@ -35,7 +40,118 @@ class BlogPostResource(ImportExportModelAdmin):
         model = BlogPost
         # Optional: This tells it to use the 'slug' to check if a post already exists, 
         # rather than needing an ID.
-        import_id_fields = ('slug',) 
+        import_id_fields = ('slug',)
+    # Add the tool to readonly fields
+    readonly_fields = ('image_inserter',)
+    
+    # Optional: Define the order of fields so the tool sits right above 'content'
+    fields = (
+        'title', 
+        'slug', 
+        'category', 
+        'category_css_class', 
+        'image_inserter', # 🟢 The custom image tool
+        'content', 
+        'published_at', 
+        'link'
+    )
+
+    # The custom Image Inserter Interface
+    def image_inserter(self, obj):
+        import os
+        from django.utils.html import mark_safe
+        from django.template import Template, Context
+        from .models import BlogPageImage
+        
+        # 1. Fetch all saved images from the database
+        images = BlogPageImage.objects.exclude(
+            image_full_url__isnull=True
+        ).exclude(
+            image_full_url__exact=''
+        )
+        
+        if not images.exists():
+            return mark_safe("<strong style='color: red;'>No images found. Please upload images in the 'Blog Page Image' tab first.</strong>")
+        
+        # 2. Prepare the data list to pass to the HTML file
+        image_data = []
+        for img in images:
+            file_name = img.blog_image.name.split('/')[-1] if img.blog_image else "Image"
+            image_data.append({
+                'url': img.image_full_url,
+                'name': file_name,
+                'id': img.pk
+            })
+        
+        # 3. Dynamically locate your HTML file in 'AIModel/Model/image_inserter.html'
+        # This goes from first_app -> up to ImageWebsite -> down to AIModel/Model
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(current_dir) 
+        html_path = os.path.join(project_root, 'AIModel', 'Model','Html','image_inserter.html')
+        
+        # 4. Read and render the file
+        try:
+            with open(html_path, 'r', encoding='utf-8') as file:
+                raw_html = file.read()
+                
+            # Process the {% for %} loops using Django's engine
+            template = Template(raw_html)
+            context = Context({'images': image_data})
+            
+            return mark_safe(template.render(context))
+            
+        except FileNotFoundError:
+            return mark_safe(f"<strong style='color: red;'>Error: Could not find HTML file at {html_path}</strong>")
+    
+    image_inserter.short_description = 'Media Manager' 
+
+@admin.register(BlogPageImage)
+class BlogPageImageAdmin(ImportExportModelAdmin):
+    # 1. Change 'image_url_display' to the new database field 'image_full_url'
+    list_display = ('__str__', 'image_preview', 'image_full_url')
+    
+    # 2. Make the new database field read-only in the form
+    readonly_fields = ('image_preview', 'image_full_url')
+
+    # Custom field to show a mini preview of the image
+    def image_preview(self, obj):
+        if obj.blog_image:
+            return mark_safe(f'<img src="{obj.blog_image.url}" style="max-height: 100px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" />')
+        return "No Image Uploaded"
+    image_preview.short_description = 'Preview'
+
+    # (The old image_url_display function has been completely removed)
+
+    # 3. Intercept the save to convert the image to PNG AND save the full URL
+    def save_model(self, request, obj, form, change):
+        # Check if a new image was uploaded
+        if 'blog_image' in form.changed_data and obj.blog_image:
+            uploaded_file = form.cleaned_data.get('blog_image')
+            
+            if uploaded_file:
+                # Open the image in memory and convert to RGBA (supports transparency)
+                img = Image.open(uploaded_file).convert("RGBA")
+                buffer = BytesIO()
+                
+                # Save into the buffer strictly as a PNG
+                img.save(buffer, format="PNG")
+                
+                # Strip the old extension and force .png
+                original_name = os.path.splitext(uploaded_file.name)[0]
+                new_filename = f"{original_name}.png"
+                
+                # Save the new PNG file to the model field (save=False prevents double DB hits)
+                obj.blog_image.save(new_filename, ContentFile(buffer.getvalue()), save=False)
+        
+        # 🟢 NEW: Generate and save the absolute URL directly to the database
+        if obj.blog_image:
+            # request.build_absolute_uri dynamically grabs the current domain (local or live)
+            obj.image_full_url = request.build_absolute_uri(obj.blog_image.url)
+        else:
+            obj.image_full_url = ""
+                
+        # Commit the object to the database
+        super().save_model(request, obj, form, change)
 
 # 1. Create the nested "Inline" table for Services
 class ServiceInline(admin.TabularInline):
