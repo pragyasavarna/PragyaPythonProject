@@ -33,15 +33,15 @@
           <span>{{ blog.published_at|date:"M d, Y" }}</span>
         </div>
 
-        <span class="blog-category {{ blog.category_css_class }}">
+        <a href="/blog/{{ blog.category|slugify }}/" class="blog-category {{ blog.category_css_class }}" style="text-decoration: none;">
           {{ blog.category }}
-        </span>
+        </a>
       </div>
 
       <h3>{{ blog.title }}</h3>
 
       <p>
-        {{ blog.content }}
+        {{ blog.content|striptags }}
       </p>
 
       <a href="blog-{{ blog.slug }}/" class="read-more-btn">

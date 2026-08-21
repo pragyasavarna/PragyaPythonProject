@@ -976,10 +976,16 @@ def feedback_page(request):
 
     return render(request, "feedback.html", {"success": success})
 
-def blog_page(request):
+def blog_page(request, category_slug=None):
     # Fetch all blogs, ordered by newest date first
     blogs_list = BlogPost.objects.all().order_by('-published_at')
     
+    # If a category was clicked, filter the blogs
+    if category_slug:
+        # Convert slug 'government-jobs' back to 'government jobs' for searching
+        category_name = category_slug.replace('-', ' ')
+        blogs_list = blogs_list.filter(category__iexact=category_name)
+        
     # Set up Pagination: Show 6 blogs per page (adjust this number as you like)
     paginator = Paginator(blogs_list, 6) 
     
