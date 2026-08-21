@@ -25,7 +25,7 @@
         </div>
 
         <div class="detail-body-text">
-            {{ blog.content|safe|linebreaks }}
+            {{ blog.content|safe}}
         </div>
 
         <div class="detail-footer">
@@ -35,5 +35,23 @@
         </div>
 
     </article>
+<!-- Floating Scroll Buttons -->
+<div class="floating-scroll-btns">
+    <button id="btnScrollTop" class="scroll-btn" title="Scroll to Top">
+        <!-- Up Arrow SVG -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+    <button id="btnScrollBottom" class="scroll-btn" title="Scroll to Bottom">
+        <!-- Down Arrow SVG -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+    </button>
 </div>
+</div>
+{% block extra_jss %}
+<script src="../JavaScript/blog_detail.js"></script>
+{% endblock %}
 {% endblock %}
