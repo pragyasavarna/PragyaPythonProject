@@ -32,10 +32,11 @@
           <i class="far fa-calendar-alt"></i>
           <span>{{ blog.published_at|date:"M d, Y" }}</span>
         </div>
-
-        <a href="/blog/{{ blog.category|slugify }}/" class="blog-category {{ blog.category_css_class }}" style="text-decoration: none;">
-          {{ blog.category }}
-        </a>
+        {% if blog.category %}
+<a href="/blog/{{ blog.category.slug }}/" class="blog-category {{ blog.category.css_class }}" style="text-decoration: none;">
+    {{ blog.category.name }}
+</a>
+{% endif %}
       </div>
 
       <h3>{{ blog.title }}</h3>
@@ -44,7 +45,7 @@
         {{ blog.content|striptags }}
       </p>
 
-      <a href="blog-{{ blog.slug }}/" class="read-more-btn">
+      <a href="/blog-{{ blog.slug }}/" class="read-more-btn">
         Read Article <i class="fas fa-arrow-right"></i>
       </a>
     </article>

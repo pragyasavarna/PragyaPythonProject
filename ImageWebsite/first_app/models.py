@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
+from django.utils.text import slugify
 
 # 1. Create a strict storage class that deletes old files instead of renaming new ones
 class OverwriteStorage(FileSystemStorage):
@@ -258,16 +259,44 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-class BlogPost(models.Model):
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=200, null=True, blank=True, help_text="URL-friendly name (e.g. my-first-post)")
-    category = models.CharField(max_length=100, help_text="e.g. Deep Learning, Web Dev")
-    # This field lets you apply the 'tech-web' class for the Cyan color
-    category_css_class = models.CharField(
+class BlogCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True, help_text="e.g. Deep Learning, Web Dev")
+    slug = models.SlugField(max_length=100, unique=True, blank=True, help_text="URL-friendly name. Auto-fills, but you can change it.")
+    css_class = models.CharField(
         max_length=50, 
         blank=True, 
         help_text="Leave empty for Pink. Type 'tech-web' for Cyan."
     )
+
+    class Meta:
+        verbose_name_plural = "Blog Categories"
+    
+    # ADD THIS: This catches the duplicate before the database crashes
+    def clean(self):
+        # Temporarily generate the slug to check it
+        temp_slug = self.slug
+        if not temp_slug:
+            temp_slug = slugify(self.name)
+            
+        # Check if this slug already belongs to another category
+        if BlogCategory.objects.filter(slug=temp_slug).exclude(pk=self.pk).exists():
+            raise ValidationError({
+                'slug': f"The URL '{temp_slug}' is already taken by another category. Please type a unique one."
+            })
+
+    # Automatically generates a slug if you leave the box empty
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.name
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, max_length=200, null=True, blank=True, help_text="URL-friendly name (e.g. my-first-post)")
+    category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField()
     published_at = models.DateField()
     link = models.URLField(blank=True, null=True, help_text="Link to full article (optional)")

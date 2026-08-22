@@ -13,9 +13,11 @@
 
         <div class="detail-header">
             <div class="detail-meta">
-                <a href="/blog/{{ blog.category|slugify }}/" class="blog-category {{ blog.category_css_class }}" style="text-decoration: none;">
-                    {{ blog.category }}
-                </a>
+                {% if blog.category %}
+<a href="/blog/{{ blog.category.slug }}/" class="blog-category {{ blog.category.css_class }}" style="text-decoration: none;">
+    {{ blog.category.name }}
+</a>
+{% endif %}
                 <span class="detail-date">
                     <i class="far fa-calendar-alt"></i> {{ blog.published_at|date:"M d, Y" }}
                 </span>

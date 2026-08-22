@@ -982,10 +982,8 @@ def blog_page(request, category_slug=None):
     
     # If a category was clicked, filter the blogs
     if category_slug:
-        # Convert slug 'government-jobs' back to 'government jobs' for searching
-        category_name = category_slug.replace('-', ' ')
-        blogs_list = blogs_list.filter(category__iexact=category_name)
-        
+        blogs_list = blogs_list.filter(category__slug=category_slug)
+    
     # Set up Pagination: Show 6 blogs per page (adjust this number as you like)
     paginator = Paginator(blogs_list, 6) 
     

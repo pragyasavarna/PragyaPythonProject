@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost,BlogPageImage, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost,BlogCategory, BlogPageImage, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -25,9 +25,17 @@ admin.site.register(ContactMessage)
 admin.site.register(Feedback)
 admin.site.register(UploadedImage)
 
+@admin.register(BlogCategory)
+class BlogCategoryAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'slug', 'css_class')
+    fields = ('name', 'slug', 'css_class') 
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
 # 1. Register BlogPost
 @admin.register(BlogPost)
 class BlogPostResource(ImportExportModelAdmin):
+    list_display = ('title', 'published_at', 'category')
+    list_filter = ('category',)
     # This specifically tells the importer how to parse the date string 
     # for BOTH importing and comparing against existing records.
     published_at = fields.Field(
@@ -48,9 +56,8 @@ class BlogPostResource(ImportExportModelAdmin):
     fields = (
         'title', 
         'slug', 
-        'category', 
-        'category_css_class', 
-        'image_inserter', # 🟢 The custom image tool
+        'category',
+        'image_inserter',
         'content', 
         'published_at', 
         'link'

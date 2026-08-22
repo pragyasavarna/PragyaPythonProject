@@ -4,7 +4,7 @@ from django.conf import settings
 
 # 1. Configuration Map: (Group Name, Set of Model Object Names)
 GROUPS_CONFIG = {
-    'blogging': ('Blogging', {'BlogPost', 'BlogPageImage'}),
+    'blogging': ('Blogging', {'BlogPost', 'BlogPageImage', 'BlogCategory'}),
     'contact_feedback': ('Contact & Feedback', {'ContactMessage', 'Feedback'}),
     'code_output': ('Code Output', {'CodeExecution', 'CodeExecution_C', 'UserSavedCCode'}),
     'time_table': ('Time Table', {'ClassGroup', 'DayOfWeek', 'PeriodTime', 'Subject', 'Teacher', 'TimetableEntry'}),
