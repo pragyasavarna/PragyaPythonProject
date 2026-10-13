@@ -1,12 +1,12 @@
 {% extends "master.html" %}
 {% load string_utils %}
 
-{% block title %}{% get_string 'blog_text' %} | {% get_string 'app_name' %}{% endblock %}
-{% block description %}Explore Cognilume's latest articles, tutorials, and insights on Artificial Intelligence, Machine Learning, Web Development, Django, Cloud Computing, and modern technology.{% endblock %}
-{% block keywords %}Cognilume Blog, AI Articles, Artificial Intelligence, Machine Learning, Deep Learning, Web Development, Django Tutorials, Cloud Computing, Programming Tutorials, Technology Articles{% endblock %}
-{% block og_title %}Cognilume Blog | AI, Technology & Programming{% endblock %}
-{% block og_description %}Discover practical articles, tutorials, and insights on AI, Machine Learning, Web Development, Django, Cloud Computing, programming, and emerging technologies.{% endblock %}
-{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}
+{% block title %}{{ seo.title }}{% endblock %}
+{% block description %}{{ seo.description }}{% endblock %}
+{% block keywords %}{{ seo.keywords }}{% endblock %}
+{% block og_title %}{{ seo.og_title }}{% endblock %}
+{% block og_description %}{{ seo.og_description }}{% endblock %}
+{% block og_url %}{{ seo.og_url }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="../CSS/blog.css">

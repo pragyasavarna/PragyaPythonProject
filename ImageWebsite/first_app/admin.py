@@ -28,9 +28,18 @@ admin.site.register(UploadedImage)
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(ImportExportModelAdmin):
     list_display = ('name', 'slug', 'css_class')
-    fields = ('name', 'slug', 'css_class') 
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
+    fieldsets = (
+        ('Main Information', {
+            'fields': ('name', 'slug', 'css_class')
+        }),
+        ('SEO & Social Meta Tags', {
+            'fields': ('meta_title', 'meta_description', 'meta_keywords', 'og_title', 'og_description'),
+            'classes': ('collapse',),
+        }),
+    )
+
 # 1. Register BlogPost
 @admin.register(BlogPost)
 class BlogPostResource(ImportExportModelAdmin):

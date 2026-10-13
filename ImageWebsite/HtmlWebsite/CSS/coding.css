@@ -84,6 +84,56 @@
 
 .list-item.file {
     color: #e0e0e0;
+    justify-content: space-between;
+    padding-right: 15px;
+}
+
+.file-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-grow: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+.download-form {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.download-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+/* Grabs the file path from the HTML and applies the grey color */
+.download-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: #00d2ff;
+    -webkit-mask: var(--icon-url) no-repeat center / contain;
+    mask: var(--icon-url) no-repeat center / contain;
+    transition: background-color 0.2s ease;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    /* Slight lift effect */
+}
+
+.download-btn:active {
+    transform: translateY(1px);
+    /* Press down effect on click */
 }
 
 .list-item.parent-dir {

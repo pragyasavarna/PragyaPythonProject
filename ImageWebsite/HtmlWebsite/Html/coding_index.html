@@ -35,10 +35,20 @@
         {% endfor %}
 
         {% for file in files %}
-            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file.real_name }}" class="list-item file">
-                <span class="icon">📄</span>
-                <span class="file-text">{{ file.display_name }}</span>
-            </a>
+            <div class="list-item file">
+                <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file.real_name }}" class="list-item file">
+                    <span class="icon">📄</span>
+                    <span class="file-text">{{ file.display_name }}</span>
+                </a>
+                <form method="POST" action="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ file.real_name }}" class="download-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="download">
+                    <button type="submit" class="download-btn" title="Download {{ file.display_name }}">
+                        <!-- File path is now in HTML using a variable -->
+                        <span class="download-icon" style="--icon-url: url('../Image/download_icon.svg');"></span>
+                    </button>
+                </form>
+            </div>
         {% endfor %}
     </div>
 

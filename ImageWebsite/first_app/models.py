@@ -267,7 +267,12 @@ class BlogCategory(models.Model):
         blank=True, 
         help_text="Leave empty for Pink. Type 'tech-web' for Cyan."
     )
-
+    # SEO Metadata Fields
+    meta_title = models.CharField(max_length=200, blank=True, help_text="Overrides default page title")
+    meta_description = models.TextField(blank=True, help_text="Overrides default meta description")
+    meta_keywords = models.TextField(blank=True, help_text="Overrides default meta keywords")
+    og_title = models.CharField(max_length=200, blank=True, help_text="Overrides default OpenGraph title")
+    og_description = models.TextField(blank=True, help_text="Overrides default OpenGraph description")
     class Meta:
         verbose_name_plural = "Blog Categories"
     

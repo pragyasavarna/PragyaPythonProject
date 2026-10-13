@@ -22,7 +22,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
-from .models import UserAccount, ContactMessage, Feedback, BlogPost, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C,UserSavedCCode,PrivacyPolicy
+from .models import UserAccount, ContactMessage, Feedback, BlogPost, BlogCategory, CodeExecution,Service,HomePage,AITutorPage, AITool, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform,CodeExecution_C,UserSavedCCode,PrivacyPolicy
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import importlib.util
@@ -548,7 +548,9 @@ def coding_directory_view(request, path=""):
     # 1. Admin Protection
     # if not (request.user.is_authenticated and request.user.is_staff):
     #     return HttpResponse("Permission Denied: Admin access required.", status=403)
-
+    is_download_request = (request.method == 'POST' and request.POST.get('action') == 'download')
+    if is_download_request:
+        path = path.rstrip('/')
     document_root = os.path.join(BASE_DIR, 'Interview')
     full_path = os.path.join(document_root, path)
 
@@ -558,6 +560,10 @@ def coding_directory_view(request, path=""):
 
     if not os.path.exists(full_path):
         return HttpResponse("Not Found", status=404)
+
+    if is_download_request:
+        if os.path.isfile(full_path):
+            return FileResponse(open(full_path, 'rb'), as_attachment=True, filename=os.path.basename(full_path))
 
     # 2. Handle Jupyter Notebooks
     if full_path.endswith('.ipynb'):
@@ -979,10 +985,29 @@ def feedback_page(request):
 def blog_page(request, category_slug=None):
     # Fetch all blogs, ordered by newest date first
     blogs_list = BlogPost.objects.all().order_by('-published_at')
-    
+    # Define the default SEO fallback strings in the backend
+    seo_data = {
+        'title': "Blog | Cognilume", 
+        'description': "Explore Cognilume's latest articles, tutorials, and insights on Artificial Intelligence, Machine Learning, Web Development, Django, Cloud Computing, and modern technology.",
+        'keywords': "Cognilume Blog, AI Articles, Artificial Intelligence, Machine Learning, Deep Learning, Web Development, Django Tutorials, Cloud Computing, Programming Tutorials, Technology Articles",
+        'og_title': "Cognilume Blog | AI, Technology & Programming",
+        'og_description': "Discover practical articles, tutorials, and insights on AI, Machine Learning, Web Development, Django, Cloud Computing, programming, and emerging technologies.",
+        'og_url': request.build_absolute_uri() # Automatically generates the full current URL
+    }
     # If a category was clicked, filter the blogs
     if category_slug:
+        current_category = get_object_or_404(BlogCategory, slug=category_slug)
         blogs_list = blogs_list.filter(category__slug=category_slug)
+        if current_category.meta_title:
+            seo_data['title'] = current_category.meta_title
+        if current_category.meta_description:
+            seo_data['description'] = current_category.meta_description
+        if current_category.meta_keywords:
+            seo_data['keywords'] = current_category.meta_keywords
+        if current_category.og_title:
+            seo_data['og_title'] = current_category.og_title
+        if current_category.og_description:
+            seo_data['og_description'] = current_category.og_description
     
     # Set up Pagination: Show 6 blogs per page (adjust this number as you like)
     paginator = Paginator(blogs_list, 6) 
@@ -994,7 +1019,8 @@ def blog_page(request, category_slug=None):
     page_obj = paginator.get_page(page_number)
     
     context = {
-        'page_obj': page_obj 
+        'page_obj': page_obj,
+        'seo': seo_data
     }
     return render(request, "blog.html", context)
 
