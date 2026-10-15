@@ -1,5 +1,12 @@
 #include <stdio.h>
 
+// A prime number is a whole number greater than 1 that has only two factors: 1 and itself
+// A factor is a whole number that divides another number evenly, leaving no remainder.
+// 1 * 100 = 100
+// 2 * 50 = 100
+// 4 * 25 = 100
+// 5 * 20 = 100
+// 10 * 10 = 100
 int main() {
     int num;
     int isPrime = 1; // We start by assuming the number is prime (1 = true)
