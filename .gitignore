@@ -80,6 +80,8 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.virtual_documents/
+anaconda_projects/
 
 # IPython
 profile_default/
@@ -162,6 +164,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 .vscode/
+
 ImageWebsite/AIModel/Dataset/*
 ImageWebsite/AIModel/Model/artifacts/notes/model.safetensors
 ImageWebsite/first_app/migrations/*
