@@ -544,14 +544,14 @@ def manage_timetable(request):
 # ---------------------------------------------------------
 # VIEW 1: Dedicated view for the highly customized Coding folder
 # ---------------------------------------------------------
-def coding_directory_view(request, path=""):
+def coding_directory_view(request, path="", base_folder="Interview"):
     # 1. Admin Protection
     # if not (request.user.is_authenticated and request.user.is_staff):
     #     return HttpResponse("Permission Denied: Admin access required.", status=403)
     is_download_request = (request.method == 'POST' and request.POST.get('action') == 'download')
     if is_download_request:
         path = path.rstrip('/')
-    document_root = os.path.join(BASE_DIR, 'Interview')
+    document_root = os.path.join(BASE_DIR, base_folder)
     full_path = os.path.join(document_root, path)
 
     # Prevent directory traversal attacks (e.g., trying to access ../../etc/passwd)
@@ -585,7 +585,7 @@ def coding_directory_view(request, path=""):
             
             # If inside a subfolder (like Strings), go to /Interview/Strings/
             # If already in the root, go to /Interview/
-            back_url = f"/Interview/{parent_dir}/" if parent_dir else "/Interview/"
+            back_url = f"/{base_folder}/{parent_dir}/" if parent_dir else f"/{base_folder}/"
             # --- CHANGED: Clean the file name for display ---
             raw_name = os.path.basename(full_path)
             clean_name = os.path.splitext(raw_name)[0].replace('_', ' ').replace('-', ' ').title()
@@ -605,8 +605,8 @@ def coding_directory_view(request, path=""):
             formatted_topic = clean_path.replace('_', ' ').replace('-', ' ').replace('/', ' - ').title()
             page_title = f"📂 {formatted_topic}"
         else:
-            # If the user is at the root /Interview/ directory, display the main title
-            page_title = "📚 Interview Preparation Modules"
+            display_name = base_folder.replace('-', ' ').title()
+            page_title = f"📚 {display_name}"
         
         directories = []
         files = []
@@ -636,7 +636,7 @@ def coding_directory_view(request, path=""):
             'parent_path': parent_path,
             'directories': directories,
             'files': files,
-            'base_folder': 'Interview',
+            'base_folder': base_folder,
             'page_title': page_title,
         }
         return render(request, 'coding_index.html', context)

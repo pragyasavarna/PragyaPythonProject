@@ -437,19 +437,30 @@ class InterviewFileAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def file_explorer_view(self, request, *args, **kwargs):
-        doc_root = os.path.join(settings.BASE_DIR, 'Interview')
-        current_path = request.GET.get('path', '')
+        doc_root = settings.BASE_DIR
+        current_path = request.GET.get('path', '').strip('/')
+        
+        # 1. Define the allowed root folders
+        allowed_bases = ['Interview', 'study-notes']
+
+        # 2. Security: Ensure path starts with one of the allowed bases
+        if current_path:
+            base_folder = current_path.split('/')[0]
+            if base_folder not in allowed_bases:
+                current_path = ''
+                
         full_path = os.path.abspath(os.path.join(doc_root, current_path))
 
-        # Security: Prevent directory traversal outside the Interview folder
-        if not full_path.startswith(os.path.abspath(doc_root)):
-            current_path = ''
-            full_path = doc_root
-            
-        os.makedirs(full_path, exist_ok=True)
+        # Ensure both folders actually exist on the computer
+        for base in allowed_bases:
+            os.makedirs(os.path.join(doc_root, base), exist_ok=True)
 
         # --- HANDLE BUTTON CLICKS ---
         if request.method == 'POST':
+            # Prevent uploading/deleting directly in the main project folder
+            if not current_path:
+                return redirect(request.path)
+                
             action = request.POST.get('action')
             if action == 'new_folder':
                 os.makedirs(os.path.join(full_path, request.POST.get('folder_name')), exist_ok=True)
@@ -467,14 +478,18 @@ class InterviewFileAdmin(admin.ModelAdmin):
         # --- READ DIRECTORY CONTENTS ---
         items = []
         if current_path:
-            parent_path = os.path.dirname(current_path.strip('/'))
+            parent_path = os.path.dirname(current_path).replace('\\', '/')
             items.append({'name': '📁 .. (Go Back)', 'is_dir': True, 'path': parent_path, 'is_back': True})
 
-        for item in sorted(os.listdir(full_path)):
+        # 3. If at the root level, ONLY show the allowed folders (Hide manage.py, etc)
+        dir_list = allowed_bases if not current_path else sorted(os.listdir(full_path))
+
+        for item in dir_list:
             if item.startswith('.'): 
                 continue
             is_dir = os.path.isdir(os.path.join(full_path, item))
-            item_path = os.path.join(current_path, item).strip('/').replace('\\', '/')
+            item_path = f"{current_path}/{item}".strip('/').replace('\\', '/')
+            
             items.append({
                 'name': f"📁 {item}" if is_dir else f"📄 {item}", 
                 'is_dir': is_dir, 
@@ -488,6 +503,9 @@ class InterviewFileAdmin(admin.ModelAdmin):
         template_path = os.path.join(settings.BASE_DIR, 'AIModel', 'Model', 'Html', 'admin_file_explorer.html')
         with open(template_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
+
+        # 4. Dynamically fix the hardcoded "Interview" title in your HTML on the fly!
+        html_content = html_content.replace('Index of /Interview/{{ current_path }}', 'Index of /{{ current_path }}')
 
         context = RequestContext(request, {'items': items, 'current_path': current_path})
         return HttpResponse(Template(html_content).render(context))

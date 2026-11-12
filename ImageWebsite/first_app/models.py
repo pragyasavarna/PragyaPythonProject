@@ -537,7 +537,7 @@ class OutgoingEmailLog(models.Model):
 
 
 # 1. Force the admin to upload directly to your existing OS folder
-interview_storage = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'Interview'))
+interview_storage = FileSystemStorage(location=os.path.join(settings.BASE_DIR))
 
 def custom_upload_path(instance, filename):
     # 2. Allows you to type "Java" or "Python/Strings" in the admin panel
@@ -555,6 +555,10 @@ class InterviewFile(models.Model):
         upload_to=custom_upload_path,
         max_length=500 
     )
+    
+    class Meta:
+        verbose_name = "File Manager"
+        verbose_name_plural = "File Manager"
 
     def __str__(self):
         return self.file.name

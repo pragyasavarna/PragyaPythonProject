@@ -22,6 +22,7 @@
     <string name="register_text">Register</string>
     <string name="logout_text">Logout</string>
     <string name="coding_text">Interview Preparation</string>
+    <string name="study_notes_text">Study Notes</string>
     <string name="animal_classifier_text">Animal Classifier</string>
     <string name="training_results_text">Training Results</string>
     <string name="model_loss_text">Model Loss</string>

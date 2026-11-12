@@ -15,8 +15,7 @@ try:
 
     folder_path = os.path.join(
         BASE_DIR,
-        'Interview',
-        'programming-languages-aktu'
+        'study-notes'
     )
 
     if not os.path.isdir(folder_path):
@@ -25,7 +24,7 @@ try:
     for root, dirs, files in os.walk(folder_path, topdown=False):
 
         for name in files + dirs:
-            new_name = name.lower()
+            new_name = name.replace("_", "-").lower()
 
             if name == new_name:
                 continue
