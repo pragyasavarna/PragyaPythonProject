@@ -485,7 +485,7 @@ class InterviewFileAdmin(admin.ModelAdmin):
         items.sort(key=lambda x: (not x.get('is_back', False), not x['is_dir'], x['name']))
 
         # --- LOAD EXTERNAL HTML FILE ---
-        template_path = r"E:\Code\PragyaPythonProject\ImageWebsite\AIModel\Model\Html\admin_file_explorer.html"
+        template_path = os.path.join(settings.BASE_DIR, 'AIModel', 'Model', 'Html', 'admin_file_explorer.html')
         with open(template_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
 
