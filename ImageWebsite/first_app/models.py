@@ -534,3 +534,33 @@ class OutgoingEmailLog(models.Model):
         
     def __str__(self):
         return f"Email to {self.recipient} at {self.sent_at.strftime('%H:%M')}"
+
+
+# 1. Force the admin to upload directly to your existing OS folder
+interview_storage = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'Interview'))
+
+def custom_upload_path(instance, filename):
+    # 2. Allows you to type "Java" or "Python/Strings" in the admin panel
+    folder = instance.folder_path.strip('/') if instance.folder_path else ''
+    return os.path.join(folder, filename)
+
+class InterviewFile(models.Model):
+    folder_path = models.CharField(
+        max_length=255, 
+        blank=True, 
+        help_text="Leave blank for root, or type a folder path like 'Java' or 'Python/Strings'"
+    )
+    file = models.FileField(
+        storage=interview_storage, 
+        upload_to=custom_upload_path,
+        max_length=500 
+    )
+
+    def __str__(self):
+        return self.file.name
+
+# 3. Automatically delete the physical file from the OS when deleted in Admin
+@receiver(post_delete, sender=InterviewFile)
+def delete_physical_file(sender, instance, **kwargs):
+    if instance.file and os.path.isfile(instance.file.path):
+        os.remove(instance.file.path)

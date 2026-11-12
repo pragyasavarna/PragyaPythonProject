@@ -1,7 +1,6 @@
-from django.contrib import admin
-
 # Register your models here.
-from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost,BlogCategory, BlogPageImage, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog
+from .models import ContactMessage, UserAccount, UploadedImage, Feedback, BlogPost,BlogCategory, BlogPageImage, CodeExecution,Service,HomePage,AITool, AITutorPage, Subject, Teacher, DayOfWeek, ClassGroup, PeriodTime, TimetableEntry, Technology, SocialSharePlatform, CodeExecution_C, UserSavedCCode, PrivacyPolicy, OutgoingEmailLog, InterviewFile
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
@@ -15,6 +14,10 @@ from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
 from django_otp.plugins.otp_static.admin import StaticDeviceAdmin
 from django.core.files.base import ContentFile
 from django.utils.html import mark_safe
+from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.template import RequestContext, Template
+from django.urls import path
 from io import BytesIO
 from PIL import Image
 import os
@@ -422,5 +425,71 @@ class OutgoingEmailLogAdmin(ImportExportModelAdmin):
         
     def has_change_permission(self, request, obj=None):
         return False
+
+@admin.register(InterviewFile)
+class InterviewFileAdmin(admin.ModelAdmin):
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('', self.admin_site.admin_view(self.file_explorer_view), name='first_app_interviewfile_changelist'),
+        ]
+        return custom_urls + urls
+
+    def file_explorer_view(self, request, *args, **kwargs):
+        doc_root = os.path.join(settings.BASE_DIR, 'Interview')
+        current_path = request.GET.get('path', '')
+        full_path = os.path.abspath(os.path.join(doc_root, current_path))
+
+        # Security: Prevent directory traversal outside the Interview folder
+        if not full_path.startswith(os.path.abspath(doc_root)):
+            current_path = ''
+            full_path = doc_root
+            
+        os.makedirs(full_path, exist_ok=True)
+
+        # --- HANDLE BUTTON CLICKS ---
+        if request.method == 'POST':
+            action = request.POST.get('action')
+            if action == 'new_folder':
+                os.makedirs(os.path.join(full_path, request.POST.get('folder_name')), exist_ok=True)
+            elif action == 'upload' and request.FILES.get('file'):
+                uploaded_file = request.FILES['file']
+                with open(os.path.join(full_path, uploaded_file.name), 'wb+') as f:
+                    for chunk in uploaded_file.chunks():
+                        f.write(chunk)
+            elif action == 'delete':
+                target = os.path.join(full_path, request.POST.get('target'))
+                if os.path.exists(target):
+                    shutil.rmtree(target) if os.path.isdir(target) else os.remove(target)
+            return redirect(request.path + f"?path={current_path}")
+
+        # --- READ DIRECTORY CONTENTS ---
+        items = []
+        if current_path:
+            parent_path = os.path.dirname(current_path.strip('/'))
+            items.append({'name': '📁 .. (Go Back)', 'is_dir': True, 'path': parent_path, 'is_back': True})
+
+        for item in sorted(os.listdir(full_path)):
+            if item.startswith('.'): 
+                continue
+            is_dir = os.path.isdir(os.path.join(full_path, item))
+            item_path = os.path.join(current_path, item).strip('/').replace('\\', '/')
+            items.append({
+                'name': f"📁 {item}" if is_dir else f"📄 {item}", 
+                'is_dir': is_dir, 
+                'path': item_path, 
+                'raw_name': item
+            })
+
+        items.sort(key=lambda x: (not x.get('is_back', False), not x['is_dir'], x['name']))
+
+        # --- LOAD EXTERNAL HTML FILE ---
+        template_path = r"E:\Code\PragyaPythonProject\ImageWebsite\AIModel\Model\Html\admin_file_explorer.html"
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+
+        context = RequestContext(request, {'items': items, 'current_path': current_path})
+        return HttpResponse(Template(html_content).render(context))
 
 apply_custom_admin_structure()
