@@ -588,7 +588,7 @@ def coding_directory_view(request, path=""):
             back_url = f"/Interview/{parent_dir}/" if parent_dir else "/Interview/"
             # --- CHANGED: Clean the file name for display ---
             raw_name = os.path.basename(full_path)
-            clean_name = os.path.splitext(raw_name)[0].replace('_', ' ')
+            clean_name = os.path.splitext(raw_name)[0].replace('_', ' ').replace('-', ' ').title()
 
             context = {
                 'file_name': clean_name,
@@ -602,8 +602,8 @@ def coding_directory_view(request, path=""):
         clean_path = path.strip('/')
         parent_path = os.path.dirname(clean_path) if clean_path else None
         if clean_path:
-            formatted_topic = clean_path.replace('_', ' ').replace('/', ' - ').title()
-            page_title = f"📂 {formatted_topic} Interview Questions"
+            formatted_topic = clean_path.replace('_', ' ').replace('-', ' ').replace('/', ' - ').title()
+            page_title = f"📂 {formatted_topic}"
         else:
             # If the user is at the root /Interview/ directory, display the main title
             page_title = "📚 Interview Preparation Modules"
@@ -617,9 +617,13 @@ def coding_directory_view(request, path=""):
                     continue
                 item_path = os.path.join(full_path, item)
                 if os.path.isdir(item_path):
-                    directories.append(item)
+                    clean_dir_name = item.replace('_', ' ').replace('-', ' ').title()
+                    directories.append({
+                        'real_name': item,
+                        'display_name': clean_dir_name
+                    })
                 else:
-                    clean_name = os.path.splitext(item)[0].replace('_', ' ')
+                    clean_name = os.path.splitext(item)[0].replace('_', ' ').replace('-', ' ').title()
                     files.append({
                         'real_name': item,
                         'display_name': clean_name

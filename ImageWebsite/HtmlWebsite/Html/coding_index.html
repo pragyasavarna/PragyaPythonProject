@@ -24,9 +24,9 @@
         {% endif %}
 
         {% for dir in directories %}
-            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ dir }}/" class="list-item folder">
+            <a href="/{{ base_folder }}/{% if current_path %}{{ current_path }}/{% endif %}{{ dir.real_name }}/" class="list-item folder">
                 <span class="icon">📁</span>
-                <span class="file-text">{{ dir }}</span>
+                <span class="file-text">{{ dir.display_name }}</span>
             </a>
         {% empty %}
             {% if not files %}
