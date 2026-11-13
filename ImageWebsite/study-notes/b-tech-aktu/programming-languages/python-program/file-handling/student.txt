@@ -1,3 +1,4 @@
-Name: Ankit, Marks: 85
-Name: Rahul, Marks: 90
-Name: Aman, Marks: 75
+Name: Ankit Gupta
+Course: B.Tech
+Subject: Python
+Year: First Year
