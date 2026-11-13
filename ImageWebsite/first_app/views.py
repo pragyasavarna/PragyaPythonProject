@@ -593,7 +593,8 @@ def coding_directory_view(request, path="", base_folder="Interview"):
             context = {
                 'file_name': clean_name,
                 'current_path': path,
-                'back_url': back_url # <-- Passing the exact URL to the template
+                'back_url': back_url,
+                'base_folder': base_folder
             }
             return render(request, 'notebook_view.html', context)
     
