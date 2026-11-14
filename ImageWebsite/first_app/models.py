@@ -266,7 +266,12 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     @property
     def has_profile_image(self):
         if self.profile and self.profile.name:
-            return self.profile.storage.exists(self.profile.name)
+            try:
+                # Safely attempt to check the storage backend
+                return self.profile.storage.exists(self.profile.name)
+            except Exception:
+                # If the server storage throws an error (e.g., missing permissions or AWS crash), don't crash the site.
+                return False
         return False
 
 class BlogCategory(models.Model):
