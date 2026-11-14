@@ -62,8 +62,9 @@
 .auth-form input:-webkit-autofill:hover,
 .auth-form input:-webkit-autofill:focus,
 .auth-form input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #111827 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #111827 inset !important;
   -webkit-text-fill-color: white !important;
+  transition: none !important;
 }
 
 .auth-form input:focus {
@@ -198,6 +199,64 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .g-recaptcha {
   display: flex;
   justify-content: center;
+}
+
+/* ---------- Password Visibility Toggle ---------- */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Ensure text doesn't overlap the icon */
+.password-wrapper input {
+  padding-right: 45px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: transform 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+  transform: scale(1.1);
+  /* Slight pop effect on hover */
+}
+
+/* Load the SVG and color it */
+.eye-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+
+  /* 1. Set your exact default gray color here */
+  background-color: var(--cyan, #00c8ff);
+
+  /* 2. Load your local SVG file to act as the shape */
+  -webkit-mask-image: url('/Image/visibility_on.svg');
+  mask-image: url('/Image/visibility_on.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  transition: background-color 0.3s ease;
+}
+
+.toggle-password-btn:hover .eye-icon {
+  background-color: var(--cyan, #00c8ff);
+  transform: scale(1.05);
 }
 
 /* ---------- Responsive ---------- */

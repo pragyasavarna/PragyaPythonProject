@@ -2,87 +2,84 @@
 {% load string_utils %}
 {% block title %}About Us | {% get_string 'app_name' %}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="../CSS/about.css">
+{% endblock %}
+
 {% block content %}
+<div class="about-container">
 
-<div class="container" id="about">
-
-  <!-- ===== ABOUT SECTION ===== -->
-  <section class="section">
-    <h2>{% get_string 'about_cognilume_text' %}</h2>
-    <p>
-      {% get_string 'about_introduction_text' %}
-    </p>
-    <p>
-      {% get_string 'about_introduction_text1' %}
-    </p>
+  <!-- ===== INTRO SECTION ===== -->
+  <section class="about-section">
+    <h1 class="main-title">About <span>Cognilume</span></h1>
+    <div class="intro-text-clean">
+      <p>
+        Cognilume is an AI-driven innovation hub focused on building practical, real-world applications using Machine Learning, Deep Learning, and modern web technologies. Our mission is to empower students, researchers, and developers by providing cutting-edge solutions and hands-on projects that blend intelligent systems with user-friendly interfaces.
+      </p>
+      <p>
+        From advanced image recognition models to cloud-based AI deployments, Cognilume strives to make artificial intelligence accessible, scalable, and impactful.
+      </p>
+    </div>
   </section>
 
-  <!-- ===== OUR MISSION ===== -->
-  <section class="section">
-    <h2>Our Mission</h2>
-    <ul>
-      <li>To simplify complex AI concepts through real-world applications.</li>
-      <li>To build intelligent systems that enhance human decision-making.</li>
-      <li>To create scalable AI solutions suitable for academic, industrial, and enterprise use.</li>
-      <li>To encourage innovation through deep research and practical implementation.</li>
-    </ul>
+  <!-- ===== TWO COLUMN: MISSION & WHY US ===== -->
+  <section class="about-section two-col-grid">
+    <div class="info-card">
+      <h2>Our Mission</h2>
+      <ul class="cyan-list">
+        <li>To simplify complex AI concepts through real-world applications.</li>
+        <li>To build intelligent systems that enhance human decision-making.</li>
+        <li>To create scalable AI solutions suitable for academic, industrial, and enterprise use.</li>
+        <li>To encourage innovation through deep research and practical implementation.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h2>Why Choose Cognilume?</h2>
+      <ul class="cyan-list">
+        <li>Hands-on AI Projects with real-world relevance.</li>
+        <li>Industry-level model design & deployment practices.</li>
+        <li>User-friendly and professionally crafted web interfaces.</li>
+        <li>Commitment to innovation, research, and continuous improvement.</li>
+      </ul>
+    </div>
   </section>
 
-  <!-- ===== WHAT WE DO ===== -->
-  <section class="section">
-    <h2>What We Do</h2>
-    <div class="projects">
-      <div class="project-card">
+  <!-- ===== THREE COLUMN: WHAT WE DO ===== -->
+  <section class="about-section">
+    <h2 class="section-title">What We Do</h2>
+    <div class="three-col-grid">
+      <div class="info-card">
         <h3>AI Research & Development</h3>
-        <p>
-          We develop ML and DL models including CNNs, RNNs, and custom neural architectures for
-          vision, classification, detection, and prediction tasks.
-        </p>
+        <p>We develop ML and DL models including CNNs, RNNs, and custom neural architectures for vision, classification, detection, and prediction tasks.</p>
       </div>
 
-      <div class="project-card">
+      <div class="info-card">
         <h3>Web-Based AI Solutions</h3>
-        <p>
-          Our team integrates machine learning models into full-stack web applications using Django,
-          ensuring seamless interaction between users and AI systems.
-        </p>
+        <p>Our team integrates machine learning models into full-stack web applications using Django, ensuring seamless interaction between users and AI systems.</p>
       </div>
 
-      <div class="project-card">
+      <div class="info-card">
         <h3>Cloud Deployment</h3>
-        <p>
-          We prepare AI models for cloud platforms like AWS for high-speed computation, scalability,
-          and real-time processing capabilities.
-        </p>
+        <p>We prepare AI models for cloud platforms like AWS for high-speed computation, scalability, and real-time processing capabilities.</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== WHY CHOOSE US ===== -->
-  <section class="section">
-    <h2>Why Choose Cognilume?</h2>
-    <ul>
-      <li>Hands-on AI Projects with real-world relevance.</li>
-      <li>Industry-level model design & deployment practices.</li>
-      <li>User-friendly and professionally crafted web interfaces.</li>
-      <li>Commitment to innovation, research, and continuous improvement.</li>
-    </ul>
-  </section>
-
   <!-- ===== OUR TEAM ===== -->
-  <section class="section">
-    <h2>Our Team</h2>
-    <p>
-      Cognilume is powered by passionate developers, AI enthusiasts, researchers, and
-      technology learners who believe in transforming ideas into intelligent solutions.
-      Together, we push the boundaries of innovation and creativity.
-    </p>
+  <section class="about-section">
+    <h2 class="section-title">Our Team</h2>
+    <div class="info-card team-card">
+      <p>
+        Cognilume is powered by passionate developers, AI enthusiasts, researchers, and technology learners who believe in transforming ideas into intelligent solutions. Together, we push the boundaries of innovation and creativity.
+      </p>
+    </div>
   </section>
 
   <!-- ===== TECHNOLOGIES ===== -->
-  <section class="section">
-    <h2>Technologies We Work With</h2>
-    <div class="tech">
+  <section class="about-section">
+    <h2 class="section-title">Technologies We Work With</h2>
+    <div class="tech-container">
       <span>Python</span>
       <span>TensorFlow</span>
       <span>Deep Learning</span>
@@ -97,5 +94,4 @@
   </section>
 
 </div>
-
 {% endblock %}

@@ -43,6 +43,10 @@ class HomePage(models.Model):
     # Secondary Button (Try AI Tutor)
     secondary_btn_text = models.CharField(max_length=50, default="Try AI Tutor free")
     secondary_btn_link = models.CharField(max_length=200, default="/ai-tutor/")
+
+    # Study Notes Button
+    study_notes_btn_text = models.CharField(max_length=50, default="Explore Study Notes")
+    study_notes_btn_link = models.CharField(max_length=200, default="/study-notes/")
     
     # Image Configuration
     hero_image = models.ImageField(
@@ -258,6 +262,12 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    @property
+    def has_profile_image(self):
+        if self.profile and self.profile.name:
+            return self.profile.storage.exists(self.profile.name)
+        return False
 
 class BlogCategory(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="e.g. Deep Learning, Web Dev")

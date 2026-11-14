@@ -113,6 +113,8 @@ def home_page(request):
             'primary_btn_link': '',
             'secondary_btn_text': '',
             'secondary_btn_link': '',
+            'study_notes_btn_text': '',
+            'study_notes_btn_link':'',
             'hero_image': None,
             'image_alt_text': '',
             'services_label': '',
@@ -137,6 +139,11 @@ def home_page(request):
                 validated_home['secondary_btn_text'] = home_record.secondary_btn_text
                 validated_home['secondary_btn_link'] = home_record.secondary_btn_link
             
+            # VALIDATION: Only pass the study notes button if BOTH text and link are filled out
+            if home_record.study_notes_btn_text and home_record.study_notes_btn_link:
+                validated_home['study_notes_btn_text'] = home_record.study_notes_btn_text
+                validated_home['study_notes_btn_link'] = home_record.study_notes_btn_link
+
             # VALIDATION: Ensure the image actually exists before passing the file object
             if home_record.hero_image:
                 validated_home['hero_image'] = home_record.hero_image
@@ -172,11 +179,20 @@ def home_page(request):
         # 3. Save this finalized, safe data into the cache for 24 hours (86400 seconds)
         cache.set('home_page_data', validated_home, 86400)
         cache.set('services_data', all_services, 86400)
-        cache.set('tech_data', validated_technologies, 86400) 
+        cache.set('tech_data', validated_technologies, 86400)
+    if request.user.is_authenticated:
+        primary_text = validated_home['study_notes_btn_text']
+        primary_link = validated_home['study_notes_btn_link']
+    else:
+        primary_text = validated_home['primary_btn_text']
+        primary_link = validated_home['primary_btn_link']
+
     context = {
         'services': all_services,
         'technologies': validated_technologies,
         'home': validated_home, # Send the validated dictionary instead of the raw database object
+        'primary_text': primary_text, 
+        'primary_link': primary_link,
     }
     
     return render(request, 'index.html', context)

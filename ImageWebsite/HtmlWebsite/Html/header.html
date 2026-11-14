@@ -27,7 +27,7 @@
     {% if user.is_authenticated %}
     <div class="nav-user-menu">
         <!-- Profile Picture Logic -->
-        {% if user.profile %}
+        {% if user.has_profile_image %}
             <img src="{{ user.profile.url }}" alt="Profile" class="nav-profile-img" />
         {% else %}
             <!-- Default image if user hasn't uploaded one -->
