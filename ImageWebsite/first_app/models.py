@@ -262,6 +262,11 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    @property
+    def has_profile_image(self):
+        if self.profile and self.profile.name:
+            return self.profile.storage.exists(self.profile.name)
+        return False
 
 class BlogCategory(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="e.g. Deep Learning, Web Dev")
