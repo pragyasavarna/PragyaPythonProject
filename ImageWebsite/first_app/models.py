@@ -262,17 +262,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
-    @property
-    def has_profile_image(self):
-        if self.profile and self.profile.name:
-            try:
-                # Safely attempt to check the storage backend
-                return self.profile.storage.exists(self.profile.name)
-            except Exception:
-                # If the server storage throws an error (e.g., missing permissions or AWS crash), don't crash the site.
-                return False
-        return False
 
 class BlogCategory(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="e.g. Deep Learning, Web Dev")
